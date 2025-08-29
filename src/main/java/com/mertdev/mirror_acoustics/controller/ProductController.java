@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import com.mertdev.mirror_acoustics.domain.Product;
 import com.mertdev.mirror_acoustics.service.ProductService;
@@ -38,6 +40,11 @@ public class ProductController {
         model.addAttribute("lang", lang);
         model.addAttribute("title", (lang.equals("en") ? p.getTitleEn() : p.getTitleTr()) + " — Mirror Acoustics");
         model.addAttribute("description", lang.equals("en") ? p.getDescriptionEn() : p.getDescriptionTr());
+        String whatsappMessage = URLEncoder.encode(
+                "Merhaba, " + (lang.equals("en") ? p.getTitleEn() : p.getTitleTr()) +
+                        " hakkında bilgi almak istiyorum",
+                StandardCharsets.UTF_8);
+        model.addAttribute("whatsappMessage", whatsappMessage);
         return "product-detail";
     }
 }
