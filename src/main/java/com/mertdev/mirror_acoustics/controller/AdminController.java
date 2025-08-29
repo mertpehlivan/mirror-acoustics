@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mertdev.mirror_acoustics.domain.Category;
 import com.mertdev.mirror_acoustics.domain.Product;
 import com.mertdev.mirror_acoustics.domain.ProductImage;
+import com.mertdev.mirror_acoustics.repository.CategoryRepository;
 import com.mertdev.mirror_acoustics.repository.ProductRepository;
 import com.mertdev.mirror_acoustics.service.StorageService;
 import com.mertdev.mirror_acoustics.util.Slugger;
@@ -28,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/admin")
 public class AdminController {
     private final ProductRepository repo;
+    private final CategoryRepository categories;
     private final StorageService storage;
 
     @GetMapping("/login")
@@ -49,6 +52,7 @@ public class AdminController {
     @GetMapping("/products/new")
     public String newForm(Model m) {
         m.addAttribute("item", new Product());
+        m.addAttribute("categories", categories.findAll(Sort.by("nameTr")));
         return "admin/product-form";
     }
 
@@ -61,6 +65,7 @@ public class AdminController {
             @RequestParam(required = false) String descriptionEn,
             @RequestParam(defaultValue = "false") boolean featured,
             @RequestParam(required = false) Integer featuredOrder,
+            @RequestParam(required = false) Long categoryId,
             @RequestParam(name = "images", required = false) List<MultipartFile> images) throws Exception {
         Product p = new Product();
         p.setTitleTr(titleTr);
@@ -72,6 +77,9 @@ public class AdminController {
         p.setFeatured(featured);
         p.setFeaturedOrder(featuredOrder);
         p.setSlug(Slugger.slugify(titleTr) + "-" + UUID.randomUUID().toString().substring(0, 8));
+        if (categoryId != null) {
+            categories.findById(categoryId).ifPresent(p::setCategory);
+        }
 
         if (images != null) {
             int i = 0;
@@ -96,5 +104,28 @@ public class AdminController {
     public String delete(@PathVariable Long id) {
         repo.deleteById(id);
         return "redirect:/admin/products";
+    }
+
+    @GetMapping("/categories")
+    public String listCategories(Model m) {
+        m.addAttribute("items", categories.findAll(Sort.by("nameTr")));
+        return "admin/categories";
+    }
+
+    @GetMapping("/categories/new")
+    public String newCategory(Model m) {
+        m.addAttribute("item", new Category());
+        return "admin/category-form";
+    }
+
+    @PostMapping("/categories")
+    public String createCategory(@RequestParam String nameTr,
+            @RequestParam String nameEn) {
+        Category c = new Category();
+        c.setNameTr(nameTr);
+        c.setNameEn(nameEn);
+        c.setSlug(Slugger.slugify(nameTr));
+        categories.save(c);
+        return "redirect:/admin/categories";
     }
 }
