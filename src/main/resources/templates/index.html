@@ -1,31 +1,86 @@
 <!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Ana Sayfa', ~{::content})}">
 <th:block th:fragment="content">
-    <section class="py-10">
-        <div class="text-center">
-            <h1 class="text-3xl sm:text-4xl font-semibold text-amber-900">Mirror Acoustics</h1>
-            <p class="mt-2 text-neutral-600">El yapımı, kişiye özel hi‑end hoparlör kabinleri ve sistemler.</p>
-            <div class="mt-4">
-                <a class="inline-flex items-center px-5 py-2 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
+    <!-- Kahraman Bölüm -->
+    <section class="relative -mx-4 sm:-mx-6 lg:-mx-8">
+        <div
+            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center">
+        </div>
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="relative px-4 sm:px-6 lg:px-8 py-32 text-center text-amber-50">
+            <h1 class="text-4xl sm:text-5xl font-semibold tracking-wide">Mirror Acoustics</h1>
+            <p class="mt-4 text-lg text-amber-100">El yapımı, kişiye özel hi‑end hoparlör kabinleri ve sistemler.</p>
+            <div class="mt-8">
+                <a class="inline-flex items-center px-6 py-3 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
                     th:href="@{/urun}">Ürünlere Git</a>
             </div>
         </div>
     </section>
 
-    <section class="py-6" th:if="${featured != null and !featured.empty}">
-        <h2 class="text-xl font-semibold text-amber-900 mb-3">Vitrin</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Özellikler -->
+    <section class="py-16">
+        <h2 class="text-2xl font-semibold text-amber-900 text-center mb-10">Öne Çıkan Özellikler</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="text-4xl mb-4">🛠️</div>
+                <h3 class="text-lg font-medium text-neutral-900 mb-2">El Yapımı</h3>
+                <p class="text-sm text-neutral-600">Her kabin usta zanaatkarlar tarafından özenle hazırlanır.</p>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl mb-4">🎨</div>
+                <h3 class="text-lg font-medium text-neutral-900 mb-2">Kişiye Özel Tasarım</h3>
+                <p class="text-sm text-neutral-600">İhtiyacınıza göre tasarım ve malzeme seçenekleri.</p>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl mb-4">🔊</div>
+                <h3 class="text-lg font-medium text-neutral-900 mb-2">Hi‑End Ses Kalitesi</h3>
+                <p class="text-sm text-neutral-600">Üst düzey performans için akustik olarak optimize edildi.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="py-16 bg-neutral-50">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <img
+                src="https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=800&q=80"
+                alt="Workshop" class="rounded-lg shadow-md">
+            <div>
+                <h2 class="text-2xl font-semibold text-amber-900 mb-4">Hakkımızda</h2>
+                <p class="text-neutral-600 mb-4">Mirror Acoustics, müziğin doğal ve saf hâlini sunmak için el yapımı
+                    hoparlör sistemleri üretir. Her detayda kalite ve kişiselleştirme ön plandadır.</p>
+                <a class="inline-flex items-center px-5 py-2 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
+                    th:href="@{/urun}">Ürünleri Keşfet</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vitrin -->
+    <section class="py-16" th:if="${featured != null and !featured.empty}">
+        <h2 class="text-2xl font-semibold text-amber-900 mb-6 text-center">Vitrin</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:each="p : ${featured}"
                 th:href="@{|/urun/${p.slug}|}">
                 <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-44 object-cover"
                     th:alt="${lang=='en'? p.titleEn : p.titleTr}" />
-                <div class="p-3">
+                <div class="p-4">
                     <div class="font-medium text-neutral-900 group-hover:text-amber-900"
                         th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün</div>
                     <div class="text-sm text-neutral-500"
-                        th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</div>
+                        th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00
+                    </div>
                 </div>
             </a>
+        </div>
+    </section>
+
+    <!-- Alt CTA -->
+    <section class="py-20 text-center">
+        <h2 class="text-2xl font-semibold text-amber-900">Sesin Yansımasını Keşfet</h2>
+        <p class="text-neutral-600 mt-2">Kişiye özel hoparlör kabinleri için bizimle iletişime geçin.</p>
+        <div class="mt-6">
+            <a class="inline-flex items-center px-6 py-3 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
+                th:href="@{/urun}">Başla</a>
         </div>
     </section>
 </th:block>
