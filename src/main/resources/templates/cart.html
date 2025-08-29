@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{layout :: layout(${title}, ~{::content})}">
+<th:block th:fragment="content">
+    <section class="py-6">
+        <h1 class="text-2xl font-semibold text-amber-900 mb-4" th:text="${lang=='en' ? 'Cart' : 'Sepet'}">Sepet</h1>
+        <div th:if="${#lists.isEmpty(cart.items)}" class="text-neutral-600" th:text="${lang=='en' ? 'Your cart is empty.' : 'Sepetiniz boş.'}">Sepetiniz boş.</div>
+        <div th:if="${!#lists.isEmpty(cart.items)}">
+            <table class="min-w-full text-left">
+                <thead>
+                    <tr class="border-b">
+                        <th class="py-2" th:text="${lang=='en' ? 'Product' : 'Ürün'}">Ürün</th>
+                        <th class="py-2" th:text="${lang=='en' ? 'Quantity' : 'Adet'}">Adet</th>
+                        <th class="py-2" th:text="${lang=='en' ? 'Price' : 'Fiyat'}">Fiyat</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${cart.items}" class="border-b">
+                        <td class="py-2" th:text="${lang=='en' ? item.product.titleEn : item.product.titleTr}">Ürün</td>
+                        <td class="py-2" th:text="${item.quantity}">1</td>
+                        <td class="py-2" th:text="${item.product.currency} + ' ' + ${#numbers.formatDecimal(item.totalPrice, 1, 'POINT', 2, 'POINT')}">₺ 0,00</td>
+                        <td class="py-2">
+                            <form th:action="@{/cart/remove}" method="post">
+                                <input type="hidden" name="productId" th:value="${item.product.id}" />
+                                <input type="hidden" name="lang" th:value="${lang}" />
+                                <button type="submit" class="text-red-600" th:text="${lang=='en' ? 'Remove' : 'Kaldır'}">Kaldır</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-right mt-4 font-semibold">
+                <span th:text="${lang=='en' ? 'Total:' : 'Toplam:'}">Toplam:</span>
+                <span th:text="${cart.items.get(0).product.currency} + ' ' + ${#numbers.formatDecimal(cart.total, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>
