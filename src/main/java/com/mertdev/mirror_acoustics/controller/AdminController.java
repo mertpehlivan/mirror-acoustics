@@ -21,6 +21,7 @@ import com.mertdev.mirror_acoustics.domain.ProductImage;
 import com.mertdev.mirror_acoustics.repository.CategoryRepository;
 import com.mertdev.mirror_acoustics.repository.ProductRepository;
 import com.mertdev.mirror_acoustics.service.StorageService;
+import com.mertdev.mirror_acoustics.service.SettingService;
 import com.mertdev.mirror_acoustics.util.Slugger;
 
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class AdminController {
     private final ProductRepository repo;
     private final CategoryRepository categories;
     private final StorageService storage;
+    private final SettingService settings;
 
     @GetMapping("/login")
     public String login() {
@@ -127,5 +129,50 @@ public class AdminController {
         c.setSlug(Slugger.slugify(nameTr));
         categories.save(c);
         return "redirect:/admin/categories";
+    }
+
+    @GetMapping("/settings")
+    public String settingsForm(Model m) {
+        m.addAttribute("heroTitleTr", settings.get("hero.title", "tr"));
+        m.addAttribute("heroTitleEn", settings.get("hero.title", "en"));
+        m.addAttribute("heroSubtitleTr", settings.get("hero.subtitle", "tr"));
+        m.addAttribute("heroSubtitleEn", settings.get("hero.subtitle", "en"));
+        m.addAttribute("aboutTitleTr", settings.get("about.title", "tr"));
+        m.addAttribute("aboutTitleEn", settings.get("about.title", "en"));
+        m.addAttribute("aboutP1Tr", settings.get("about.p1", "tr"));
+        m.addAttribute("aboutP1En", settings.get("about.p1", "en"));
+        m.addAttribute("aboutP2Tr", settings.get("about.p2", "tr"));
+        m.addAttribute("aboutP2En", settings.get("about.p2", "en"));
+        m.addAttribute("contactAddressTr", settings.get("contact.address", "tr"));
+        m.addAttribute("contactAddressEn", settings.get("contact.address", "en"));
+        m.addAttribute("contactEmail", settings.get("contact.email", "tr"));
+        m.addAttribute("contactPhone", settings.get("contact.phone", "tr"));
+        return "admin/settings";
+    }
+
+    @PostMapping("/settings")
+    public String saveSettings(@RequestParam String heroTitleTr,
+            @RequestParam String heroTitleEn,
+            @RequestParam String heroSubtitleTr,
+            @RequestParam String heroSubtitleEn,
+            @RequestParam String aboutTitleTr,
+            @RequestParam String aboutTitleEn,
+            @RequestParam String aboutP1Tr,
+            @RequestParam String aboutP1En,
+            @RequestParam String aboutP2Tr,
+            @RequestParam String aboutP2En,
+            @RequestParam String contactAddressTr,
+            @RequestParam String contactAddressEn,
+            @RequestParam String contactEmail,
+            @RequestParam String contactPhone) {
+        settings.save("hero.title", heroTitleTr, heroTitleEn);
+        settings.save("hero.subtitle", heroSubtitleTr, heroSubtitleEn);
+        settings.save("about.title", aboutTitleTr, aboutTitleEn);
+        settings.save("about.p1", aboutP1Tr, aboutP1En);
+        settings.save("about.p2", aboutP2Tr, aboutP2En);
+        settings.save("contact.address", contactAddressTr, contactAddressEn);
+        settings.save("contact.email", contactEmail, contactEmail);
+        settings.save("contact.phone", contactPhone, contactPhone);
+        return "redirect:/admin/settings";
     }
 }
