@@ -31,6 +31,11 @@
             }
         }
     </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
     <style>
         body {
             padding-top: 4.5rem;
@@ -58,16 +63,21 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
                     <a th:href="@{/}" class="font-semibold tracking-wide text-amber-100 hover:text-white">Mirror Acoustics</a>
-                    <nav class="hidden md:flex items-center gap-6" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-                        <a th:href="@{/}" class="hover:text-white/90">Ana Sayfa</a>
-                        <a th:href="@{/urun}" class="hover:text-white/90">Ürünler</a>
-                        <a th:href="@{|/cart?lang=${lang}|}" th:text="${lang=='en' ? 'Cart' : 'Sepet'}" class="hover:text-white/90">Sepet</a>
-                        <a sec:authorize="!isAuthenticated()" th:href="@{/admin/login}" class="hover:text-white/90">Admin</a>
-                        <a sec:authorize="isAuthenticated()" th:href="@{/admin/products}" class="hover:text-white/90">Yönetim</a>
-                        <form sec:authorize="isAuthenticated()" th:action="@{/admin/logout}" method="post">
-                            <button class="hover:text-white/90" type="submit">Çıkış</button>
-                        </form>
-                    </nav>
+                    <div class="flex items-center gap-6">
+                        <nav class="hidden md:flex items-center gap-6" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+                            <a th:href="@{/}" class="hover:text-white/90">Ana Sayfa</a>
+                            <a th:href="@{/urun}" class="hover:text-white/90">Ürünler</a>
+                            <a th:href="@{|/cart?lang=${lang}|}" th:text="${lang=='en' ? 'Cart' : 'Sepet'}" class="hover:text-white/90">Sepet</a>
+                            <a sec:authorize="!isAuthenticated()" th:href="@{/admin/login}" class="hover:text-white/90">Admin</a>
+                            <a sec:authorize="isAuthenticated()" th:href="@{/admin/products}" class="hover:text-white/90">Yönetim</a>
+                            <form sec:authorize="isAuthenticated()" th:action="@{/admin/logout}" method="post">
+                                <button class="hover:text-white/90" type="submit">Çıkış</button>
+                            </form>
+                        </nav>
+                        <button type="button" onclick="themeToggle()" class="text-xl hover:text-white/90" aria-label="Tema değiştir">
+                            🌓
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -93,6 +103,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    <script>
+        function themeToggle() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+    </script>
 </body>
 
 </html>
