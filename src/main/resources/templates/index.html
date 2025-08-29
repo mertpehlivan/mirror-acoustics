@@ -2,9 +2,10 @@
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Ana Sayfa', ~{::content})}">
 <th:block th:fragment="content">
     <!-- Kahraman Bölüm -->
-    <section class="relative -mx-4 sm:-mx-6 lg:-mx-8">
+    <section class="relative">
         <div
-            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center">
+            class="absolute inset-0 bg-cover bg-center"
+            style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80');">
         </div>
         <div class="absolute inset-0 bg-black/60"></div>
         <div class="relative px-4 sm:px-6 lg:px-8 py-32 text-center text-amber-50">
@@ -44,19 +45,28 @@
         <h2 class="text-2xl font-semibold text-amber-900 text-center mb-10">Kategoriler</h2>
         <div class="grid md:grid-cols-3 gap-8">
             <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:href="@{/urun}">
-                <img src="https://images.unsplash.com/photo-1586105251261-72a756497a11?auto=format&fit=crop&w=800&q=80" alt="Hoparlör Kabinleri" class="w-full h-48 object-cover" />
+                <img
+                    src="https://images.unsplash.com/photo-1586105251261-72a756497a11?auto=format&fit=crop&w=800&q=80"
+                    alt="Hoparlör Kabinleri"
+                    class="w-full h-48 object-cover" />
                 <div class="p-4">
                     <h3 class="font-medium text-neutral-900 group-hover:text-amber-900">Hoparlör Kabinleri</h3>
                 </div>
             </a>
             <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:href="@{/urun}">
-                <img src="https://images.unsplash.com/photo-1517135325050-4f1a88c7a1d0?auto=format&fit=crop&w=800&q=80" alt="Amplifikatörler" class="w-full h-48 object-cover" />
+                <img
+                    src="https://images.unsplash.com/photo-1517135325050-4f1a88c7a1d0?auto=format&fit=crop&w=800&q=80"
+                    alt="Amplifikatörler"
+                    class="w-full h-48 object-cover" />
                 <div class="p-4">
                     <h3 class="font-medium text-neutral-900 group-hover:text-amber-900">Amplifikatörler</h3>
                 </div>
             </a>
             <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:href="@{/urun}">
-                <img src="https://images.unsplash.com/photo-1598032891054-6c56f3c3a0d5?auto=format&fit=crop&w=800&q=80" alt="Aksesuarlar" class="w-full h-48 object-cover" />
+                <img
+                    src="https://images.unsplash.com/photo-1598032891054-6c56f3c3a0d5?auto=format&fit=crop&w=800&q=80"
+                    alt="Aksesuarlar"
+                    class="w-full h-48 object-cover" />
                 <div class="p-4">
                     <h3 class="font-medium text-neutral-900 group-hover:text-amber-900">Aksesuarlar</h3>
                 </div>
@@ -69,7 +79,8 @@
         <div class="grid md:grid-cols-2 gap-8 items-center">
             <img
                 src="https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=800&q=80"
-                alt="Workshop" class="rounded-lg shadow-md">
+                alt="Workshop"
+                class="rounded-lg shadow-md">
             <div>
                 <h2 class="text-2xl font-semibold text-amber-900 mb-4">Hakkımızda</h2>
                 <p class="text-neutral-600 mb-4">Mirror Acoustics, müziğin doğal ve saf hâlini sunmak için el yapımı
