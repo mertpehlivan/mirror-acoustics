@@ -91,6 +91,25 @@
         </div>
     </section>
 
+    <!-- Müşteri Yorumları -->
+    <section class="py-16">
+        <h2 class="text-2xl font-semibold text-amber-900 text-center mb-10">Müşteri Yorumları</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-neutral-50 p-6 rounded-lg shadow-md">
+                <p class="text-neutral-700 italic">“Beklediğimden çok daha iyi bir ses deneyimi.”</p>
+                <div class="mt-4 font-medium text-amber-900">Ayşe K.</div>
+            </div>
+            <div class="bg-neutral-50 p-6 rounded-lg shadow-md">
+                <p class="text-neutral-700 italic">“El işçiliği ve detaylar gerçekten inanılmaz.”</p>
+                <div class="mt-4 font-medium text-amber-900">Mehmet T.</div>
+            </div>
+            <div class="bg-neutral-50 p-6 rounded-lg shadow-md">
+                <p class="text-neutral-700 italic">“Evin merkezinde konumlanan mükemmel hoparlörler.”</p>
+                <div class="mt-4 font-medium text-amber-900">Zeynep D.</div>
+            </div>
+        </div>
+    </section>
+
     <!-- Öne Çıkan Ürünler -->
     <section class="py-16" th:if="${featured != null and !featured.empty}">
         <h2 class="text-2xl font-semibold text-amber-900 mb-6 text-center">Öne Çıkan Ürünler</h2>
@@ -126,6 +145,18 @@
                     </div>
                 </div>
             </a>
+        </div>
+    </section>
+
+    <!-- Bülten Kaydı -->
+    <section class="py-16 bg-neutral-50">
+        <div class="max-w-xl mx-auto text-center">
+            <h2 class="text-2xl font-semibold text-amber-900 mb-4">Bültenimize Katılın</h2>
+            <p class="text-neutral-600 mb-6">Yeni ürünler ve özel tekliflerden haberdar olmak için e-posta listenize katılın.</p>
+            <form class="flex flex-col sm:flex-row gap-4 justify-center">
+                <input type="email" placeholder="E-posta" class="flex-1 px-4 py-2 rounded-md border" />
+                <button type="submit" class="px-6 py-2 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800">Kaydol</button>
+            </form>
         </div>
     </section>
 
