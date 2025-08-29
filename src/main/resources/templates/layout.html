@@ -61,6 +61,7 @@
                     <nav class="hidden md:flex items-center gap-6" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                         <a th:href="@{/}" class="hover:text-white/90">Ana Sayfa</a>
                         <a th:href="@{/urun}" class="hover:text-white/90">Ürünler</a>
+                        <a th:href="@{|/cart?lang=${lang}|}" th:text="${lang=='en' ? 'Cart' : 'Sepet'}" class="hover:text-white/90">Sepet</a>
                         <a sec:authorize="!isAuthenticated()" th:href="@{/admin/login}" class="hover:text-white/90">Admin</a>
                         <a sec:authorize="isAuthenticated()" th:href="@{/admin/products}" class="hover:text-white/90">Yönetim</a>
                         <form sec:authorize="isAuthenticated()" th:action="@{/admin/logout}" method="post">
