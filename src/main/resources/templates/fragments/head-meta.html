@@ -1,0 +1,21 @@
+<th:block th:fragment="seoMeta(p, lang)">
+    <th:block th:if="${p != null}">
+        <meta property="og:type" content="product" />
+        <meta property="og:title" th:content="${lang=='en'? p.titleEn : p.titleTr}" />
+        <meta property="og:description" th:content="${lang=='en'? p.descriptionEn : p.descriptionTr}" />
+        <meta property="og:image" th:content="${p.images.size()>0? p.images.get(0).url : '/images/og.jpg'}" />
+        <script type="application/ld+json" th:inline="javascript">
+      /*<![CDATA[*/
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "[[${lang=='en'? p.titleEn : p.titleTr}]]",
+        "image": [[${#lists.size(p.images) > 0 ? '['+ #strings.arrayJoin(#lists.listToArray(#lists.map(p.images, 'url')), ',') +']' : '[]'}]],
+        "description": "[[${lang=='en'? p.descriptionEn : p.descriptionTr}]]",
+        "brand": {"@type":"Brand","name":"Mirror Acoustics"},
+        "offers": {"@type":"Offer","priceCurrency":"[[${p.currency}]]","price":"[[${p.price}]]","availability":"https://schema.org/PreOrder"}
+      }
+      /*]]>*/
+    </script>
+    </th:block>
+</th:block>

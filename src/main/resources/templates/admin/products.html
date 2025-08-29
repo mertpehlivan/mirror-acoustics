@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Ürünler', ~{::content})}">
+<th:block th:fragment="content">
+
+    <div class="mt-2 mb-3 flex items-center justify-between">
+        <h1 class="text-xl font-semibold text-amber-900 m-0">Ürünler</h1>
+        <a class="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
+            th:href="@{/admin/products/new}">Yeni Ürün</a>
+    </div>
+
+    <div th:if="${items == null or #lists.isEmpty(items)}" class="alert alert-info">
+        Gösterilecek ürün bulunamadı.
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        th:if="${items != null and !#lists.isEmpty(items)}">
+        <div class="rounded-lg overflow-hidden border bg-white" th:each="p : ${items}">
+            <div class="p-4">
+                <h2 class="text-base font-medium" th:text="${p.titleTr} ?: ${p.titleEn}">Ürün Başlığı</h2>
+                <p class="text-sm text-neutral-600 line-clamp" th:text="${p.descriptionTr} ?: ${p.descriptionEn}">
+                    Kısa açıklama burada…
+                </p>
+            </div>
+            <div class="px-4 py-3 border-t flex items-center gap-2">
+                <span class="font-semibold"
+                    th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
+                <span class="ml-auto"></span>
+                <a class="px-3 py-1 rounded border hover:bg-neutral-50" th:href="@{|/urun/${p.slug}|}">Görüntüle</a>
+                <form th:action="@{|/admin/products/${p.id}/delete|}" method="post"
+                    onsubmit="return confirm('Silinsin mi?');">
+                    <button class="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700" type="submit">Sil</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+
+</html>

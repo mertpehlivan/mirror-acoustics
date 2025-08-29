@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom components */
+.btn-brand { @apply inline-flex items-center px-4 py-2 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800; }
+.card { @apply rounded-lg overflow-hidden border bg-white; }
+.card-body { @apply p-4; }
+
+

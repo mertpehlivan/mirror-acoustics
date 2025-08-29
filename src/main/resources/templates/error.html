@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Hata', ~{::content})}">
+<th:block th:fragment="content">
+    <div class="text-center py-5">
+        <h1 class="display-6">Bir şeyler ters gitti</h1>
+        <p class="lead text-muted" th:text="${message} ?: 'Beklenmeyen bir hata oluştu.'">
+            Beklenmeyen bir hata oluştu.
+        </p>
+        <a th:href="@{/}" class="btn btn-primary">Ana Sayfa</a>
+    </div>
+</th:block>
+
+</html>

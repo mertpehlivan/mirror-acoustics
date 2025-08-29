@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Yeni Ürün', ~{::content})}">
+<th:block th:fragment="content">
+    <h1 class="h3 mb-3">Yeni Ürün</h1>
+
+    <!-- Sunucudan gelen olası mesajlar -->
+    <div th:if="${param.success}" class="alert alert-success">Ürün kaydedildi.</div>
+    <div th:if="${param.error}" class="alert alert-danger" th:text="${param.error}">Bir hata oluştu.</div>
+
+    <form th:action="@{/admin/products}" method="post" enctype="multipart/form-data" class="vstack gap-3"
+        id="productForm">
+        <div>
+            <label class="form-label">Başlık (TR) <span class="text-danger">*</span></label>
+            <input class="form-control" name="titleTr" required maxlength="200" placeholder="Örn: Akustik Panel">
+            <div class="form-text">Maksimum 200 karakter.</div>
+        </div>
+
+        <div>
+            <label class="form-label">Title (EN) <span class="text-danger">*</span></label>
+            <input class="form-control" name="titleEn" required maxlength="200" placeholder="e.g. Acoustic Panel">
+        </div>
+
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <label class="form-label">Fiyat <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input class="form-control" name="price" type="number" step="0.01" min="0" required
+                        placeholder="0.00">
+                    <span class="input-group-text" id="cur-addon">TRY</span>
+                </div>
+                <div class="form-text">Ondalık için nokta (.) kullanın.</div>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label">Para Birimi</label>
+                <input class="form-control" name="currency" value="TRY" aria-describedby="cur-addon" maxlength="3">
+            </div>
+        </div>
+
+        <div class="row g-3 mt-0">
+            <div class="col-sm-6 d-flex align-items-center">
+                <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" name="featured" id="featured">
+                    <label class="form-check-label" for="featured">Vitrine çıkar</label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label class="form-label">Vitrin Sırası</label>
+                <input class="form-control" name="featuredOrder" type="number" min="0">
+            </div>
+        </div>
+
+        <div>
+            <label class="form-label">Açıklama (TR)</label>
+            <textarea class="form-control" name="descriptionTr" rows="4" maxlength="2000"
+                placeholder="Ürün özellikleri, kullanım alanları..."></textarea>
+            <div class="form-text"><span id="trCount">0</span>/2000</div>
+        </div>
+
+        <div>
+            <label class="form-label">Description (EN)</label>
+            <textarea class="form-control" name="descriptionEn" rows="4" maxlength="2000"
+                placeholder="Product details, specs..."></textarea>
+            <div class="form-text"><span id="enCount">0</span>/2000</div>
+        </div>
+
+        <div>
+            <label class="form-label">Görseller</label>
+            <input class="form-control" id="imagesInput" name="images" type="file" multiple accept="image/*">
+            <div class="form-text">
+                Maksimum <strong>25 MB</strong> toplam boyut (tek dosya ve toplam). Önerilen: JPG/PNG, en az 1200px
+                genişlik.
+            </div>
+
+            <!-- Dosya özetleri -->
+            <div class="mt-2 d-flex align-items-center gap-3">
+                <div><strong>Toplam:</strong> <span id="totalSize">0 B</span></div>
+                <div class="text-muted">|</div>
+                <div><strong>Seçili dosya:</strong> <span id="fileCount">0</span> adet</div>
+                <div class="ms-auto">
+                    <span id="limitBadge" class="badge bg-secondary">Limit: 25 MB</span>
+                </div>
+            </div>
+
+            <!-- Uyarılar -->
+            <div id="imageErrors" class="mt-2"></div>
+
+            <!-- Önizlemeler -->
+            <div id="previewGrid" class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3 mt-1"></div>
+        </div>
+
+        <div class="mt-3 d-flex gap-2">
+            <button type="submit" id="submitBtn" class="btn btn-primary">Kaydet</button>
+            <a class="btn btn-outline-secondary" th:href="@{/admin/products}">Listeye Dön</a>
+        </div>
+    </form>
+
+    <script>
+        // ---- Yardımcılar ----
+        const MB = 1024 * 1024;
+        const MAX_TOTAL = 25 * MB;   // toplam 25MB
+        const MAX_SINGLE = 25 * MB;  // tek dosya 25MB
+
+        const form = document.getElementById('productForm');
+        const trDesc = form.querySelector('textarea[name="descriptionTr"]');
+        const enDesc = form.querySelector('textarea[name="descriptionEn"]');
+        const trCount = document.getElementById('trCount');
+        const enCount = document.getElementById('enCount');
+
+        const input = document.getElementById('imagesInput');
+        const previewGrid = document.getElementById('previewGrid');
+        const totalSizeEl = document.getElementById('totalSize');
+        const fileCountEl = document.getElementById('fileCount');
+        const imageErrors = document.getElementById('imageErrors');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const fmtSize = (bytes) => {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < MB) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / MB).toFixed(2) + ' MB';
+        };
+
+        const setError = (messages) => {
+            if (!Array.isArray(messages)) messages = [messages];
+            imageErrors.innerHTML = messages.map(m => `
+                <div class="alert alert-danger py-2 my-1" role="alert">
+                    ${m}
+                </div>`).join('');
+        };
+
+        const clearError = () => imageErrors.innerHTML = '';
+
+        const updateCounters = () => {
+            trCount.textContent = trDesc.value.length;
+            enCount.textContent = enDesc.value.length;
+        };
+
+        trDesc.addEventListener('input', updateCounters);
+        enDesc.addEventListener('input', updateCounters);
+        updateCounters();
+
+        // ---- Görsel önizleme ve doğrulama ----
+        input.addEventListener('change', async (e) => {
+            clearError();
+            previewGrid.innerHTML = '';
+            let files = Array.from(e.target.files || []);
+            fileCountEl.textContent = files.length;
+
+            // Boyut kontrolleri
+            let total = files.reduce((acc, f) => acc + f.size, 0);
+            totalSizeEl.textContent = fmtSize(total);
+
+            let errors = [];
+
+            files.forEach(f => {
+                if (f.size > MAX_SINGLE) {
+                    errors.push(`"${f.name}" dosyası ${fmtSize(f.size)} — tek dosya limiti 25 MB.`);
+                }
+            });
+
+            if (total > MAX_TOTAL) {
+                errors.push(`Toplam boyut ${fmtSize(total)} — toplam limit 25 MB.`);
+            }
+
+            // Önizleme kartlarını oluştur (boyut + piksel ölçüsü)
+            for (const file of files) {
+                const url = URL.createObjectURL(file);
+                const img = new Image();
+                const card = document.createElement('div');
+                card.className = 'col';
+
+                // Kart iskeleti
+                card.innerHTML = `
+                    <div class="card h-100 shadow-sm">
+                        <img class="card-img-top" alt="">
+                        <div class="card-body p-2">
+                            <div class="small text-truncate" title="${file.name}"><strong>${file.name}</strong></div>
+                            <div class="text-muted small">Dosya: ${fmtSize(file.size)}</div>
+                            <div class="text-muted small dims">Yükleniyor…</div>
+                        </div>
+                    </div>
+                `;
+                const imgEl = card.querySelector('img');
+                const dimsEl = card.querySelector('.dims');
+                imgEl.src = url;
+
+                await new Promise(res => {
+                    img.onload = () => {
+                        dimsEl.textContent = `Ölçü: ${img.width}×${img.height}px`;
+                        URL.revokeObjectURL(url);
+                        res();
+                    };
+                    imgEl.onerror = () => {
+                        dimsEl.textContent = 'Önizleme açılamadı';
+                        res();
+                    };
+                });
+
+                previewGrid.appendChild(card);
+            }
+
+            // Hata varsa gönderimi engelle
+            if (errors.length) {
+                setError(errors);
+                submitBtn.disabled = true;
+            } else {
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Son savunma hattı: submit öncesi kontrol
+        form.addEventListener('submit', (e) => {
+            clearError();
+            const files = Array.from(input.files || []);
+            const total = files.reduce((a, f) => a + f.size, 0);
+            const tooBigSingle = files.find(f => f.size > MAX_SINGLE);
+            if (tooBigSingle || total > MAX_TOTAL) {
+                e.preventDefault();
+                const msgs = [];
+                if (tooBigSingle) msgs.push(`"${tooBigSingle.name}" dosyası ${fmtSize(tooBigSingle.size)} — tek dosya limiti 25 MB.`);
+                if (total > MAX_TOTAL) msgs.push(`Toplam boyut ${fmtSize(total)} — toplam limit 25 MB.`);
+                setError(msgs);
+                submitBtn.disabled = true;
+            }
+        });
+    </script>
+</th:block>
+
+</html>

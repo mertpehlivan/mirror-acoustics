@@ -1,0 +1,16 @@
+{
+  "name": "mirror-acoustics-ui",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:css": "tailwindcss -i ./src/main/resources/static/css/tailwind.css -o ./src/main/resources/static/css/app.css --watch",
+    "build:css": "tailwindcss -i ./src/main/resources/static/css/tailwind.css -o ./src/main/resources/static/css/app.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10",
+    "postcss": "^8.4.38",
+    "autoprefixer": "^10.4.20"
+  }
+}
+
+
