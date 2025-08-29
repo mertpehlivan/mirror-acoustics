@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Site Ayarları', ~{::content})}">
+<th:block th:fragment="content">
+    <h1 class="h3 mb-3">Site Ayarları</h1>
+    <form th:action="@{/admin/settings}" method="post" class="vstack gap-3">
+        <div>
+            <label class="form-label">Kahraman Başlığı (TR)</label>
+            <input class="form-control" name="heroTitleTr" th:value="${heroTitleTr}">
+        </div>
+        <div>
+            <label class="form-label">Hero Title (EN)</label>
+            <input class="form-control" name="heroTitleEn" th:value="${heroTitleEn}">
+        </div>
+        <div>
+            <label class="form-label">Kahraman Alt Başlığı (TR)</label>
+            <input class="form-control" name="heroSubtitleTr" th:value="${heroSubtitleTr}">
+        </div>
+        <div>
+            <label class="form-label">Hero Subtitle (EN)</label>
+            <input class="form-control" name="heroSubtitleEn" th:value="${heroSubtitleEn}">
+        </div>
+        <div>
+            <label class="form-label">Hakkımızda Başlığı (TR)</label>
+            <input class="form-control" name="aboutTitleTr" th:value="${aboutTitleTr}">
+        </div>
+        <div>
+            <label class="form-label">About Title (EN)</label>
+            <input class="form-control" name="aboutTitleEn" th:value="${aboutTitleEn}">
+        </div>
+        <div>
+            <label class="form-label">Hakkımızda Paragraf 1 (TR)</label>
+            <textarea class="form-control" name="aboutP1Tr" rows="3" th:text="${aboutP1Tr}"></textarea>
+        </div>
+        <div>
+            <label class="form-label">About Paragraph 1 (EN)</label>
+            <textarea class="form-control" name="aboutP1En" rows="3" th:text="${aboutP1En}"></textarea>
+        </div>
+        <div>
+            <label class="form-label">Hakkımızda Paragraf 2 (TR)</label>
+            <textarea class="form-control" name="aboutP2Tr" rows="3" th:text="${aboutP2Tr}"></textarea>
+        </div>
+        <div>
+            <label class="form-label">About Paragraph 2 (EN)</label>
+            <textarea class="form-control" name="aboutP2En" rows="3" th:text="${aboutP2En}"></textarea>
+        </div>
+        <div>
+            <label class="form-label">Adres (TR)</label>
+            <input class="form-control" name="contactAddressTr" th:value="${contactAddressTr}">
+        </div>
+        <div>
+            <label class="form-label">Address (EN)</label>
+            <input class="form-control" name="contactAddressEn" th:value="${contactAddressEn}">
+        </div>
+        <div>
+            <label class="form-label">Email</label>
+            <input class="form-control" name="contactEmail" th:value="${contactEmail}">
+        </div>
+        <div>
+            <label class="form-label">Telefon</label>
+            <input class="form-control" name="contactPhone" th:value="${contactPhone}">
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+        </div>
+    </form>
+</th:block>
+</html>
