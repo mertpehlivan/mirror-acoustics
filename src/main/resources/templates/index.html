@@ -48,6 +48,7 @@
                 <img
                     src="https://images.unsplash.com/photo-1586105251261-72a756497a11?auto=format&fit=crop&w=800&q=80"
                     alt="Hoparlör Kabinleri"
+                    loading="lazy"
                     class="w-full h-48 object-cover" />
                 <div class="p-4">
                     <h3 class="font-medium text-neutral-900 group-hover:text-amber-900">Hoparlör Kabinleri</h3>
@@ -57,6 +58,7 @@
                 <img
                     src="https://images.unsplash.com/photo-1517135325050-4f1a88c7a1d0?auto=format&fit=crop&w=800&q=80"
                     alt="Amplifikatörler"
+                    loading="lazy"
                     class="w-full h-48 object-cover" />
                 <div class="p-4">
                     <h3 class="font-medium text-neutral-900 group-hover:text-amber-900">Amplifikatörler</h3>
@@ -66,6 +68,7 @@
                 <img
                     src="https://images.unsplash.com/photo-1598032891054-6c56f3c3a0d5?auto=format&fit=crop&w=800&q=80"
                     alt="Aksesuarlar"
+                    loading="lazy"
                     class="w-full h-48 object-cover" />
                 <div class="p-4">
                     <h3 class="font-medium text-neutral-900 group-hover:text-amber-900">Aksesuarlar</h3>
@@ -80,6 +83,7 @@
             <img
                 src="https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=800&q=80"
                 alt="Workshop"
+                loading="lazy"
                 class="rounded-lg shadow-md">
             <div>
                 <h2 class="text-2xl font-semibold text-amber-900 mb-4">Hakkımızda</h2>
@@ -117,7 +121,7 @@
             <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:each="p : ${featured}"
                 th:href="@{|/urun/${p.slug}|}">
                 <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-44 object-cover"
-                    th:alt="${lang=='en'? p.titleEn : p.titleTr}" />
+                    th:alt="${lang=='en'? p.titleEn : p.titleTr}" loading="lazy" />
                 <div class="p-4">
                     <div class="font-medium text-neutral-900 group-hover:text-amber-900"
                         th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün</div>
@@ -136,7 +140,7 @@
             <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:each="p : ${page.content}"
                 th:href="@{|/urun/${p.slug}|}">
                 <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-44 object-cover"
-                    th:alt="${lang=='en'? p.titleEn : p.titleTr}" />
+                    th:alt="${lang=='en'? p.titleEn : p.titleTr}" loading="lazy" />
                 <div class="p-4">
                     <div class="font-medium text-neutral-900 group-hover:text-amber-900"
                         th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün</div>
