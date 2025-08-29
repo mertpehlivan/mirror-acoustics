@@ -48,11 +48,6 @@ public class ProductController {
         model.addAttribute("lang", lang);
         model.addAttribute("title", (lang.equals("en") ? p.getTitleEn() : p.getTitleTr()) + " — Mirror Acoustics");
         model.addAttribute("description", lang.equals("en") ? p.getDescriptionEn() : p.getDescriptionTr());
-        String whatsappMessage = URLEncoder.encode(
-                "Merhaba, " + (lang.equals("en") ? p.getTitleEn() : p.getTitleTr()) +
-                        " hakkında bilgi almak istiyorum",
-                StandardCharsets.UTF_8);
-        model.addAttribute("whatsappMessage", whatsappMessage);
         return "product-detail";
     }
 }
