@@ -7,9 +7,9 @@
         Ürün bulunamadı.
     </div>
 
-    <div th:if="${p} != null" class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-4">
-        <div class="md:col-span-3">
-            <h1 class="text-2xl font-semibold text-amber-900" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün Başlığı</h1>
+        <div th:if="${p} != null" class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-4">
+            <div class="md:col-span-3">
+                <h1 class="text-2xl font-semibold text-amber-900" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün Başlığı</h1>
             <div class="text-sm text-neutral-500 mt-1">
                 <span>Oluşturulma:</span>
                 <span th:text="${#temporals.format(p.createdAt, 'dd.MM.yyyy')}">01.01.2025</span>
@@ -25,6 +25,11 @@
                     <span class="text-xl font-semibold text-amber-900" th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
                 </div>
             </div>
+            <a th:href="'https://wa.me/905555555555?text=' + ${T(java.net.URLEncoder).encode('Merhaba, ' + (lang=='en'? p.titleEn : p.titleTr) + ' hakkında bilgi almak istiyorum', 'UTF-8')}"
+               target="_blank"
+               class="mt-4 block w-full rounded-full bg-green-500 px-4 py-2 text-center font-medium text-white shadow-lg transition hover:bg-green-600">
+                WhatsApp ile İletişime Geç
+            </a>
         </div>
     </div>
 </th:block>
