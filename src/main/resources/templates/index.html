@@ -1,86 +1,206 @@
 <!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Ana Sayfa', ~{::content})}">
+
 <th:block th:fragment="content">
-    <!-- Kahraman Bölüm -->
-    <section class="relative -mx-4 sm:-mx-6 lg:-mx-8">
-        <div
-            class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center">
+    <!-- HERO -->
+    <section id="hero" class="relative -mx-4 sm:-mx-6 lg:-mx-8">
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=1600&q=80"
+                alt="" class="h-full w-full object-cover" loading="eager" fetchpriority="high" />
+            <!-- gradient + overlay + noise -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/40"></div>
+            <div
+                class="absolute inset-0 mix-blend-overlay [background-image:radial-gradient(circle_at_20%_0%,#ffffff1a,transparent_40%),radial-gradient(circle_at_80%_100%,#ffffff1a,transparent_40%)]">
+            </div>
         </div>
-        <div class="absolute inset-0 bg-black/60"></div>
-        <div class="relative px-4 sm:px-6 lg:px-8 py-32 text-center text-amber-50">
-            <h1 class="text-4xl sm:text-5xl font-semibold tracking-wide">Mirror Acoustics</h1>
-            <p class="mt-4 text-lg text-amber-100">El yapımı, kişiye özel hi‑end hoparlör kabinleri ve sistemler.</p>
-            <div class="mt-8">
-                <a class="inline-flex items-center px-6 py-3 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
-                    th:href="@{/urun}">Ürünlere Git</a>
+
+        <div class="relative px-4 sm:px-6 lg:px-8 py-28 sm:py-36 text-center text-amber-50">
+            <div class="mx-auto max-w-3xl">
+                <span
+                    class="inline-flex items-center gap-2 rounded-full border border-amber-200/20 bg-white/5 px-3 py-1 text-xs tracking-wide backdrop-blur">
+                    <span>🔊</span>
+                    <span class="uppercase text-amber-100/80">Hi-End • El Yapımı • Kişiye Özel</span>
+                </span>
+
+                <h1 class="mt-6 text-4xl sm:text-6xl font-semibold tracking-tight leading-tight">
+                    Mirror Acoustics
+                </h1>
+
+                <p class="mt-5 text-lg sm:text-xl text-amber-100/90">
+                    El yapımı, kişiye özel hi-end hoparlör kabinleri ve sistemler.
+                    Zanaat ile akustiğin kusursuz buluşu.
+                </p>
+
+                <div class="mt-10 flex items-center justify-center gap-3">
+                    <a th:href="@{/urun}"
+                        class="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-6 py-3 font-medium text-amber-50 shadow-lg shadow-amber-600/30 transition hover:-translate-y-0.5 hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                        Ürünlere Git
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </a>
+
+                    <a th:href="@{/hakkimizda}"
+                        class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3 font-medium text-amber-50 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/40">
+                        Hakkımızda
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Özellikler -->
-    <section class="py-16">
-        <h2 class="text-2xl font-semibold text-amber-900 text-center mb-10">Öne Çıkan Özellikler</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="text-center">
-                <div class="text-4xl mb-4">🛠️</div>
-                <h3 class="text-lg font-medium text-neutral-900 mb-2">El Yapımı</h3>
-                <p class="text-sm text-neutral-600">Her kabin usta zanaatkarlar tarafından özenle hazırlanır.</p>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl mb-4">🎨</div>
-                <h3 class="text-lg font-medium text-neutral-900 mb-2">Kişiye Özel Tasarım</h3>
-                <p class="text-sm text-neutral-600">İhtiyacınıza göre tasarım ve malzeme seçenekleri.</p>
-            </div>
-            <div class="text-center">
-                <div class="text-4xl mb-4">🔊</div>
-                <h3 class="text-lg font-medium text-neutral-900 mb-2">Hi‑End Ses Kalitesi</h3>
-                <p class="text-sm text-neutral-600">Üst düzey performans için akustik olarak optimize edildi.</p>
+    <!-- ÖZELLİKLER -->
+    <section id="features" class="relative py-16 sm:py-20">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-center text-2xl sm:text-3xl font-semibold text-amber-900 dark:text-amber-200">Öne Çıkan
+                Özellikler</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-center text-neutral-600 dark:text-neutral-300">
+                Her detayda kişiselleştirme ve üst düzey akustik performans.
+            </p>
+
+            <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Card -->
+                <article
+                    class="group relative overflow-hidden rounded-2xl border border-neutral-200/70 bg-white p-6 shadow-sm transition hover:shadow-xl dark:border-neutral-700/60 dark:bg-neutral-900">
+                    <div class="text-4xl">🛠️</div>
+                    <h3 class="mt-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">El Yapımı</h3>
+                    <p class="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                        Her kabin usta zanaatkârlar tarafından özenle hazırlanır.
+                    </p>
+                    <div
+                        class="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-amber-500/10 blur-2xl transition group-hover:bg-amber-500/20">
+                    </div>
+                </article>
+
+                <article
+                    class="group relative overflow-hidden rounded-2xl border border-neutral-200/70 bg-white p-6 shadow-sm transition hover:shadow-xl dark:border-neutral-700/60 dark:bg-neutral-900">
+                    <div class="text-4xl">🎨</div>
+                    <h3 class="mt-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">Kişiye Özel Tasarım
+                    </h3>
+                    <p class="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                        İhtiyacınıza göre tasarım ve malzeme seçenekleri.
+                    </p>
+                    <div
+                        class="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-amber-500/10 blur-2xl transition group-hover:bg-amber-500/20">
+                    </div>
+                </article>
+
+                <article
+                    class="group relative overflow-hidden rounded-2xl border border-neutral-200/70 bg-white p-6 shadow-sm transition hover:shadow-xl dark:border-neutral-700/60 dark:bg-neutral-900">
+                    <div class="text-4xl">🔊</div>
+                    <h3 class="mt-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">Hi-End Ses Kalitesi
+                    </h3>
+                    <p class="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
+                        Üst düzey performans için akustik olarak optimize edildi.
+                    </p>
+                    <div
+                        class="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-amber-500/10 blur-2xl transition group-hover:bg-amber-500/20">
+                    </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <!-- Hakkımızda -->
-    <section class="py-16 bg-neutral-50">
-        <div class="grid md:grid-cols-2 gap-8 items-center">
-            <img
-                src="https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=800&q=80"
-                alt="Workshop" class="rounded-lg shadow-md">
-            <div>
-                <h2 class="text-2xl font-semibold text-amber-900 mb-4">Hakkımızda</h2>
-                <p class="text-neutral-600 mb-4">Mirror Acoustics, müziğin doğal ve saf hâlini sunmak için el yapımı
-                    hoparlör sistemleri üretir. Her detayda kalite ve kişiselleştirme ön plandadır.</p>
-                <a class="inline-flex items-center px-5 py-2 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
-                    th:href="@{/urun}">Ürünleri Keşfet</a>
+    <!-- HAKKIMIZDA -->
+    <section id="about" class="relative bg-neutral-50 py-16 sm:py-20 dark:bg-neutral-950">
+        <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+            <div class="relative order-2 lg:order-1">
+                <h2 class="text-2xl sm:text-3xl font-semibold text-amber-900 dark:text-amber-200">Hakkımızda</h2>
+                <p class="mt-3 text-neutral-600 dark:text-neutral-300">
+                    Mirror Acoustics, müziğin doğal ve saf hâlini sunmak için el yapımı hoparlör sistemleri üretir.
+                    Her detayda kalite ve kişiselleştirme ön plandadır.
+                </p>
+                <div class="mt-6 flex gap-3">
+                    <a th:href="@{/urun}"
+                        class="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-2.5 font-medium text-amber-50 shadow-lg shadow-amber-600/30 transition hover:-translate-y-0.5 hover:bg-amber-500">
+                        Ürünleri Keşfet
+                    </a>
+                    <a th:href="@{/iletisim}"
+                        class="inline-flex items-center gap-2 rounded-xl border border-amber-900/20 bg-white px-5 py-2.5 font-medium text-amber-900 transition hover:bg-amber-50 dark:border-amber-100/10 dark:bg-neutral-900 dark:text-amber-100 dark:hover:bg-neutral-800">
+                        İletişim
+                    </a>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Vitrin -->
-    <section class="py-16" th:if="${featured != null and !featured.empty}">
-        <h2 class="text-2xl font-semibold text-amber-900 mb-6 text-center">Vitrin</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a class="group rounded-lg overflow-hidden border hover:shadow-md transition" th:each="p : ${featured}"
-                th:href="@{|/urun/${p.slug}|}">
-                <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-44 object-cover"
-                    th:alt="${lang=='en'? p.titleEn : p.titleTr}" />
-                <div class="p-4">
-                    <div class="font-medium text-neutral-900 group-hover:text-amber-900"
-                        th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün</div>
-                    <div class="text-sm text-neutral-500"
-                        th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00
+            <div class="order-1 lg:order-2">
+                <div
+                    class="relative overflow-hidden rounded-2xl border border-neutral-200/70 shadow-lg dark:border-neutral-800">
+                    <img src="https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=1200&q=80"
+                        alt="Workshop" class="h-full w-full object-cover" loading="lazy" />
+                    <div
+                        class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-amber-500/0 via-amber-500/10 to-amber-500/0">
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
     </section>
 
-    <!-- Alt CTA -->
-    <section class="py-20 text-center">
-        <h2 class="text-2xl font-semibold text-amber-900">Sesin Yansımasını Keşfet</h2>
-        <p class="text-neutral-600 mt-2">Kişiye özel hoparlör kabinleri için bizimle iletişime geçin.</p>
-        <div class="mt-6">
-            <a class="inline-flex items-center px-6 py-3 rounded-md bg-amber-900 text-amber-50 hover:bg-amber-800"
-                th:href="@{/urun}">Başla</a>
+    <!-- VİTRİN -->
+    <section id="featured" class="relative py-16 sm:py-20" th:if="${featured != null and !featured.empty}">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <h2 class="text-center text-2xl sm:text-3xl font-semibold text-amber-900 dark:text-amber-200">Vitrin</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-center text-neutral-600 dark:text-neutral-300">
+                En beğenilen tasarımlarımızdan bir seçki.
+            </p>
+
+            <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <a class="group relative overflow-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl dark:border-neutral-700/60 dark:bg-neutral-900"
+                    th:each="p : ${featured}" th:href="@{|/urun/${p.slug}|}">
+                    <div class="aspect-[4/3] w-full overflow-hidden">
+                        <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}"
+                            th:alt="${lang=='en'? p.titleEn : p.titleTr}"
+                            class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.05]"
+                            loading="lazy" />
+                    </div>
+
+                    <div class="p-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="font-semibold text-neutral-900 transition group-hover:text-amber-800 dark:text-neutral-100 dark:group-hover:text-amber-300"
+                                th:text="${lang=='en'? p.titleEn : p.titleTr}">
+                                Ürün
+                            </h3>
+                            <span
+                                class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800 ring-1 ring-amber-200 dark:bg-amber-900/20 dark:text-amber-200 dark:ring-amber-800/40"
+                                th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">
+                                ₺ 0,00
+                            </span>
+                        </div>
+
+                        <p class="mt-1 line-clamp-2 text-sm text-neutral-600 dark:text-neutral-300"
+                            th:text="${lang=='en'? p.shortDescriptionEn : p.shortDescriptionTr}">
+                            Kısa açıklama…
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALT CTA -->
+    <section id="cta" class="relative py-20">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl sm:text-3xl font-semibold text-amber-900 dark:text-amber-200">
+                Sesin Yansımasını Keşfet
+            </h2>
+            <p class="mt-3 text-neutral-600 dark:text-neutral-300">
+                Kişiye özel hoparlör kabinleri için bizimle iletişime geçin.
+            </p>
+            <div class="mt-6 flex items-center justify-center gap-3">
+                <a th:href="@{/urun}"
+                    class="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-6 py-3 font-medium text-amber-50 shadow-lg shadow-amber-600/30 transition hover:-translate-y-0.5 hover:bg-amber-500">
+                    Başla
+                </a>
+                <a th:href="@{/iletisim}"
+                    class="inline-flex items-center gap-2 rounded-xl border border-amber-900/20 bg-white px-6 py-3 font-medium text-amber-900 transition hover:bg-amber-50 dark:border-amber-100/10 dark:bg-neutral-900 dark:text-amber-100 dark:hover:bg-neutral-800">
+                    Teklif Al
+                </a>
+            </div>
+        </div>
+
+        <!-- arkaplan blur dekor -->
+        <div
+            class="pointer-events-none absolute inset-x-0 -bottom-10 mx-auto h-40 w-11/12 rounded-[2rem] bg-amber-500/10 blur-3xl">
         </div>
     </section>
 </th:block>
