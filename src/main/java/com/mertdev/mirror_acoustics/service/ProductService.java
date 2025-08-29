@@ -24,6 +24,10 @@ public class ProductService {
         return repo.findFeatured(PageRequest.of(page, size));
     }
 
+    public Page<Product> search(String q, int page, int size) {
+        return repo.searchActive(q, PageRequest.of(page, size));
+    }
+
     public Product getBySlug(String slug) {
         return repo.findBySlugAndActiveTrue(slug)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

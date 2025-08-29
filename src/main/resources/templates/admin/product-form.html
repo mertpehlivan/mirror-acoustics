@@ -36,6 +36,13 @@
             </div>
         </div>
 
+        <div>
+            <label class="form-label">Kategori</label>
+            <select class="form-select" name="categoryId">
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.nameTr}">Kategori</option>
+            </select>
+        </div>
+
         <div class="row g-3 mt-0">
             <div class="col-sm-6 d-flex align-items-center">
                 <div class="form-check mt-4">

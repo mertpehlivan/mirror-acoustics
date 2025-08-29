@@ -23,11 +23,19 @@ public class ProductController {
 
     @GetMapping
     public String list(@RequestHeader(name = "Accept-Language", required = false) String al,
-            @RequestParam(defaultValue = "0") int page, Model model) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String q,
+            Model model) {
         String lang = al != null && al.toLowerCase().startsWith("en") ? "en" : "tr";
-        model.addAttribute("page", products.listActive(page, 12));
         model.addAttribute("lang", lang);
-        model.addAttribute("title", lang.equals("en") ? "Products" : "Ürünler");
+        model.addAttribute("q", q);
+        if (q != null && !q.isBlank()) {
+            model.addAttribute("page", products.search(q, page, 12));
+            model.addAttribute("title", (lang.equals("en") ? "Search" : "Arama") + ": " + q);
+        } else {
+            model.addAttribute("page", products.listActive(page, 12));
+            model.addAttribute("title", lang.equals("en") ? "Products" : "Ürünler");
+        }
         return "products";
     }
 
