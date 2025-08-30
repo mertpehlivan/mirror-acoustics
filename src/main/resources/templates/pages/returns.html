@@ -2,8 +2,190 @@
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('İade & Değişim', ~{::content})}">
 <th:block th:fragment="content">
     <section class="py-6">
-        <h1 class="text-2xl font-semibold text-amber-900 mb-4">İade & Değişim</h1>
-        <p>İade ve değişim politikalarınızı burada müşterilere açıklayabilirsiniz.</p>
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-3xl font-bold text-amber-900 mb-8 text-center">İade & Değişim Politikası</h1>
+            
+            <div class="space-y-8">
+                <!-- Overview Section -->
+                <div class="bg-gradient-to-r from-amber-50 to-amber-100 p-8 rounded-lg">
+                    <h2 class="text-2xl font-semibold text-amber-900 mb-4">Özel Üretim Ürünler</h2>
+                    <p class="text-lg text-amber-800 leading-relaxed">
+                        Mirror Acoustics ürünleri, her müşteri için özel olarak tasarlanır ve üretilir. 
+                        Bu nedenle standart e-ticaret ürünlerinden farklı iade koşulları uygulanır.
+                    </p>
+                </div>
+
+                <!-- Main Policy -->
+                <div class="bg-white border border-amber-200 rounded-lg p-8 shadow-sm">
+                    <h2 class="text-2xl font-semibold text-amber-900 mb-6">İade Koşulları</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-amber-900 text-lg">Kişiye Özel Üretim</h3>
+                                <p class="text-amber-800">
+                                    Ürünlerimiz müşteri taleplerine göre kişiye özel üretildiği için standart e-ticaret 
+                                    cayma hakkı kapsamı sınırlıdır. Her ürün, belirli müşteri isteklerine göre tasarlanır.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-amber-900 text-lg">Üretim Hataları</h3>
+                                <p class="text-amber-800">
+                                    Üretim hatasına bağlı durumlarda onarım, parça değişimi veya yeniden üretim 
+                                    seçenekleri sunulur. Kalite standartlarımız gereği tüm ürünler test edilir.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specific Conditions -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+                        <h3 class="font-semibold text-amber-900 text-lg mb-4">Üretim Kaynaklı Sorunlar</h3>
+                        <ul class="space-y-3 text-amber-800">
+                            <li class="flex items-start space-x-2">
+                                <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span><strong>14 gün içinde</strong> bildirim yapılması gerekir</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Detaylı fotoğraf ve açıklama gerekli</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Ücretsiz onarım veya yeniden üretim</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+                        <h3 class="font-semibold text-amber-900 text-lg mb-4">Kargo Hasarı</h3>
+                        <ul class="space-y-3 text-amber-800">
+                            <li class="flex items-start space-x-2">
+                                <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span><strong>Teslimat anında</strong> tutanak tutulması gerekir</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Kargo firması ile iletişim kurulur</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Sigorta kapsamında değerlendirilir</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Process Steps -->
+                <div class="bg-white border border-amber-200 rounded-lg p-8 shadow-sm">
+                    <h3 class="text-2xl font-semibold text-amber-900 mb-6">İade Süreci</h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-amber-600">1</span>
+                            </div>
+                            <h4 class="font-semibold text-amber-900 mb-2">Bildirim</h4>
+                            <p class="text-amber-800 text-sm">Sorunu WhatsApp veya e-posta ile bildirin</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-amber-600">2</span>
+                            </div>
+                            <h4 class="font-semibold text-amber-900 mb-2">İnceleme</h4>
+                            <p class="text-amber-800 text-sm">Teknik ekibimiz durumu değerlendirir</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-2xl font-bold text-amber-600">3</span>
+                            </div>
+                            <h4 class="font-semibold text-amber-900 mb-2">Çözüm</h4>
+                            <p class="text-amber-800 text-sm">Onarım, değişim veya yeniden üretim</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Notes -->
+                <div class="bg-amber-900 text-white p-8 rounded-lg">
+                    <h3 class="text-2xl font-semibold mb-6 text-center">Önemli Notlar</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <svg class="w-6 h-6 text-amber-300 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <p>Kişiselleştirilmiş ürünlerde iade, inceleme sonucuna göre değerlendirilir.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <svg class="w-6 h-6 text-amber-300 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <p>Ürün kullanımı sırasında oluşan hasarlar garanti kapsamında değildir.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <svg class="w-6 h-6 text-amber-300 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <p>İade sürecinde ürünün orijinal paketinde olması gerekir.</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <svg class="w-6 h-6 text-amber-300 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <p>Detaylı bilgi için bizimle iletişime geçin.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact CTA -->
+                <div class="text-center bg-gradient-to-r from-amber-100 to-amber-200 p-8 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-amber-900 mb-4">Sorunuz mu Var?</h3>
+                    <p class="text-amber-800 mb-6">
+                        İade ve değişim konularında detaylı bilgi almak için bizimle iletişime geçebilirsiniz.
+                    </p>
+                    <a href="/iletisim" class="inline-flex items-center px-6 py-3 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        İletişime Geç
+                    </a>
+                </div>
+            </div>
+        </div>
     </section>
 </th:block>
 </html>

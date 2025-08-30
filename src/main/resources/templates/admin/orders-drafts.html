@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('WhatsApp Taslak Siparişler', ~{::content})}">
+<th:block th:fragment="content">
+    <th:block th:replace="~{admin/_nav :: adminNav}"></th:block>
+    <div class="py-6">
+        <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-semibold text-amber-900 m-0">WhatsApp Taslak Siparişler</h1>
+            <form class="flex items-center gap-2">
+                <input type="text" name="q" placeholder="Ara (isim/telefon)" class="rounded border px-3 py-2" />
+                <button class="rounded bg-amber-900 text-amber-50 px-3 py-2">Ara</button>
+            </form>
+        </div>
+        <div class="rounded-xl overflow-hidden border bg-white">
+            <table class="min-w-full text-left">
+                <thead class="bg-neutral-50">
+                    <tr class="border-b">
+                        <th class="py-2 px-3">ID</th>
+                        <th class="py-2 px-3">Zaman</th>
+                        <th class="py-2 px-3">İsim</th>
+                        <th class="py-2 px-3">Telefon</th>
+                        <th class="py-2 px-3">Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="d : ${items}" class="border-b hover:bg-neutral-50">
+                        <td class="py-2 px-3" th:text="${d.id}">1</td>
+                        <td class="py-2 px-3" th:text="${#temporals.format(d.createdAt, 'dd.MM.yyyy HH:mm')}">01.01.2025</td>
+                        <td class="py-2 px-3" th:text="${d.name}">Ad Soyad</td>
+                        <td class="py-2 px-3" th:text="${d.phone}">+90</td>
+                        <td class="py-2 px-3"><span class="inline-block rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-xs" th:text="${d.status}">draft_whatsapp</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+</html>
+
+

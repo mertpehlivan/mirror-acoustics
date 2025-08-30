@@ -2,8 +2,161 @@
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Hakkımızda', ~{::content})}">
 <th:block th:fragment="content">
     <section class="py-6">
-        <h1 class="text-2xl font-semibold text-amber-900 mb-4">Hakkımızda</h1>
-        <p>Bu sayfa şirketiniz hakkında bilgi vermek için örnek metin içermektedir.</p>
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Hero Section -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-amber-900 mb-4">Mirror Acoustics Custom Audio Products</h1>
+                <p class="text-xl text-amber-700 font-medium">El Yapımı Sanatın En Üst Seviyesi</p>
+            </div>
+
+            <!-- Main Content -->
+            <div class="prose prose-lg max-w-none">
+                <div class="bg-amber-50 p-6 rounded-lg mb-8">
+                    <p class="text-lg leading-relaxed text-amber-900">
+                        Mirror Acoustics, İstanbul merkezli bir atölyede İsmet Çataloğlu tarafından kurulmuş ve onun titiz çalışmalarıyla büyüyen özel bir ses sistemleri markasıdır. Her bir ürün, yüksek mühendislik bilgisi ile el işçiliğinin zarif birleşimini yansıtır.
+                    </p>
+                </div>
+
+                <p class="text-lg leading-relaxed mb-6">
+                    Bizim için hoparlörler sadece birer elektronik cihaz değil, aynı zamanda sanat eseri ve yaşam alanlarınıza değer katan tasarımlardır. Seçtiğiniz ahşap türü ve özel tasarım talepleriniz doğrultusunda, tamamen kişiye özel hoparlör kabinleri ve sistemler üretiyoruz.
+                </p>
+
+                <!-- Why Choose Us Section -->
+                <div class="bg-gradient-to-r from-amber-100 to-amber-200 p-8 rounded-lg mb-8">
+                    <h2 class="text-3xl font-bold text-amber-900 mb-6 text-center">Neden Mirror Acoustics?</h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">Özel Tasarım</h3>
+                                    <p class="text-amber-800">Tüm ürünlerimiz müşteri isteğine göre kişiselleştirilir.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">El Yapımı & CNC Hassasiyeti</h3>
+                                    <p class="text-amber-800">Tüm kabinler masif ahşaptan, CNC teknolojisi ile en ince ayrıntısına kadar işlenir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">Mühendislik & Deneyim</h3>
+                                    <p class="text-amber-800">Kurucumuz İsmet Çataloğlu, Makine Mühendisliği Teknolojisi ve ses endüstrisindeki uzun yıllara dayanan deneyimiyle her bir tasarıma hayat verir.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">Üst Düzey Ses Deneyimi</h3>
+                                    <p class="text-amber-800">Evleriniz için geliştirdiğimiz sistemler, hi-end seviyede müzik performansı sunar.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 text-center">
+                        <div class="flex items-start space-x-3 justify-center">
+                            <div class="w-8 h-8 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-amber-900">Doğrudan Satış Modeli</h3>
+                                <p class="text-amber-800">Aracı olmadan, üreticiden direkt size ulaşır.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order & Delivery Section -->
+                <div class="bg-gradient-to-r from-amber-50 to-amber-100 p-8 rounded-lg mb-8">
+                    <h2 class="text-3xl font-bold text-amber-900 mb-6 text-center">Sipariş & Teslimat</h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-white text-sm font-bold">1</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">Teslimat Süresi</h3>
+                                    <p class="text-amber-800">Sipariş tarihinden itibaren ortalama 2 – 4 ay</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-white text-sm font-bold">2</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">Ödeme Planı</h3>
+                                    <p class="text-amber-800">%50 peşinat alınır, kalan tutar kargo öncesinde ödenir</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-white text-sm font-bold">3</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">Güvenli Ödeme</h3>
+                                    <p class="text-amber-800">Ödeme işlemleri güvenli bağlantı üzerinden yapılabilir</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-3">
+                                <div class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                                    <span class="text-white text-sm font-bold">4</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-amber-900">İletişim</h3>
+                                    <p class="text-amber-800">Sipariş vermeden önce mutlaka bizimle iletişime geçmenizi öneriyoruz</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Final Message -->
+                <div class="text-center bg-amber-900 text-white p-8 rounded-lg">
+                    <p class="text-xl leading-relaxed mb-4">
+                        Beş yılı aşkın süredir, tutkuyla ve özveriyle müziğin en saf halini yaşam alanlarınıza taşıyoruz.
+                    </p>
+                    <div class="flex items-center justify-center space-x-4 text-amber-200">
+                        <span>📍 Mirror Acoustics Custom Audio Products – İstanbul, Türkiye</span>
+                        <span>🎵 Sanatla yoğrulmuş ses deneyimi için buradayız</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </th:block>
 </html>

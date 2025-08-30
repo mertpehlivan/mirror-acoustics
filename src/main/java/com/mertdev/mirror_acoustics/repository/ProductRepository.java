@@ -21,4 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where p.active=true and (lower(p.titleTr) like lower(concat('%', :q, '%')) or lower(p.titleEn) like lower(concat('%', :q, '%'))) order by p.createdAt desc")
     Page<Product> searchActive(@Param("q") String q, Pageable pageable);
+
+    @Query("select p from Product p where p.active=true and p.category.slug = :slug order by p.createdAt desc")
+    Page<Product> findActiveByCategorySlug(@Param("slug") String slug, Pageable pageable);
 }

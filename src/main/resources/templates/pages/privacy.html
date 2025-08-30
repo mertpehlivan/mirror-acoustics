@@ -2,8 +2,113 @@
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('KVKK & Gizlilik', ~{::content})}">
 <th:block th:fragment="content">
     <section class="py-6">
-        <h1 class="text-2xl font-semibold text-amber-900 mb-4">KVKK & Gizlilik</h1>
-        <p>Bu metin kişisel verilerinizin nasıl işlendiğini açıklamak için örnek olarak hazırlanmıştır.</p>
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-3xl font-bold text-amber-900 mb-8 text-center">KVKK & Gizlilik Politikası</h1>
+            
+            <div class="prose prose-lg max-w-none space-y-6">
+                <div class="bg-amber-50 p-6 rounded-lg">
+                    <h2 class="text-2xl font-semibold text-amber-900 mb-4">Kişisel Verilerin Korunması</h2>
+                    <p class="text-amber-800 leading-relaxed">
+                        Mirror Acoustics olarak, müşterilerimizin kişisel verilerinin güvenliği ve gizliliği bizim için son derece önemlidir. 
+                        Bu politika, kişisel verilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">Toplanan Veriler</h3>
+                        <ul class="list-disc pl-6 space-y-2 text-amber-800">
+                            <li><strong>İletişim Bilgileri:</strong> Ad, soyad, telefon numarası, e-posta adresi</li>
+                            <li><strong>Teslimat Bilgileri:</strong> Adres bilgileri ve kargo tercihleri</li>
+                            <li><strong>Sipariş Bilgileri:</strong> Ürün tercihleri, özel istekler ve notlar</li>
+                            <li><strong>Teknik Veriler:</strong> Web sitesi kullanım verileri ve çerezler</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">Verilerin Kullanım Amacı</h3>
+                        <ul class="list-disc pl-6 space-y-2 text-amber-800">
+                            <li>Sipariş işlemlerinin gerçekleştirilmesi ve takibi</li>
+                            <li>Müşteri hizmetleri ve destek sağlanması</li>
+                            <li>Ürün geliştirme ve kalite iyileştirme</li>
+                            <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+                            <li>İletişim ve pazarlama faaliyetleri (izin dahilinde)</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">Veri Güvenliği</h3>
+                        <p class="text-amber-800 mb-3">
+                            Kişisel verilerinizi korumak için aşağıdaki güvenlik önlemlerini uyguluyoruz:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 text-amber-800">
+                            <li>SSL şifreleme ile güvenli veri transferi</li>
+                            <li>Erişim kontrolü ve yetkilendirme sistemleri</li>
+                            <li>Düzenli güvenlik değerlendirmeleri ve güncellemeleri</li>
+                            <li>Çalışanlarımıza veri güvenliği eğitimleri</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">Veri Paylaşımı</h3>
+                        <p class="text-amber-800 mb-3">
+                            Kişisel verileriniz, aşağıdaki durumlar dışında üçüncü taraflarla paylaşılmaz:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 text-amber-800">
+                            <li>Açık rızanızın bulunması</li>
+                            <li>Yasal yükümlülükler gereği</li>
+                            <li>Hizmet sağlayıcılarımızla (kargo, ödeme sistemleri) sınırlı paylaşım</li>
+                            <li>Güvenlik ve dolandırıcılık önleme amaçlı</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">Haklarınız</h3>
+                        <p class="text-amber-800 mb-3">
+                            KVKK kapsamında aşağıdaki haklara sahipsiniz:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 text-amber-800">
+                            <li>Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
+                            <li>Kişisel verileriniz işlenmişse buna ilişkin bilgi talep etme</li>
+                            <li>Kişisel verilerinizin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme</li>
+                            <li>Yurt içinde veya yurt dışında kişisel verilerinizin aktarıldığı üçüncü kişileri bilme</li>
+                            <li>Kişisel verilerinizin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme</li>
+                            <li>Kişisel verilerinizin silinmesini veya yok edilmesini isteme</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">Çerezler (Cookies)</h3>
+                        <p class="text-amber-800 mb-3">
+                            Web sitemizde kullanıcı deneyimini iyileştirmek için çerezler kullanılmaktadır:
+                        </p>
+                        <ul class="list-disc pl-6 space-y-2 text-amber-800">
+                            <li><strong>Gerekli Çerezler:</strong> Sitenin temel işlevleri için zorunlu</li>
+                            <li><strong>Analitik Çerezler:</strong> Site kullanım istatistikleri için</li>
+                            <li><strong>Fonksiyonel Çerezler:</strong> Kullanıcı tercihlerini hatırlama</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-amber-900 mb-3">İletişim</h3>
+                        <p class="text-amber-800 mb-3">
+                            Kişisel verilerinizle ilgili herhangi bir sorunuz veya talebiniz için:
+                        </p>
+                        <div class="bg-amber-100 p-4 rounded-lg">
+                            <p class="text-amber-900 font-medium">📧 E-posta: info@mirroracoustics.com</p>
+                            <p class="text-amber-900 font-medium">📞 Telefon: +90 555 111 22 33</p>
+                            <p class="text-amber-900 font-medium">📍 Adres: İstanbul, Türkiye</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-900 text-white p-6 rounded-lg text-center">
+                        <p class="text-lg">
+                            Bu politika, 01.01.2024 tarihinden itibaren yürürlüğe girmiştir ve gerektiğinde güncellenebilir.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </th:block>
 </html>

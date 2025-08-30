@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="adminNav">
+    <div class="mb-3 d-flex align-items-center gap-2 flex-wrap">
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/products}">Ürünler</a>
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/categories}">Kategoriler</a>
+        <a class="btn btn-sm btn-outline-secondary" th:href="@{/admin/orders-drafts}">WhatsApp Taslakları</a>
+        
+    </div>
+</th:block>
+</html>
+

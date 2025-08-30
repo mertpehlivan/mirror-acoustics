@@ -2,67 +2,77 @@
 <html lang="tr" xmlns:th="http://www.thymeleaf.org"
     th:replace="~{layout :: layout(${title}, ~{::content})}">
 <th:block th:fragment="content">
-    <section class="py-6">
-        <h1 class="text-2xl font-semibold text-amber-900 mb-4" th:text="${lang=='en' ? 'Cart' : 'Sepet'}">Sepet</h1>
-        <div th:if="${#lists.isEmpty(cart.items)}" class="text-neutral-600" th:text="${lang=='en' ? 'Your cart is empty.' : 'Sepetiniz boş.'}">Sepetiniz boş.</div>
-        <div th:if="${!#lists.isEmpty(cart.items)}">
+    <section class="py-8">
+        <h1 class="text-2xl md:text-3xl font-semibold text-amber-900 mb-4" th:text="#{nav.cart}">Sepet</h1>
+        <div th:if="${#lists.isEmpty(cart.items)}" class="text-neutral-600" th:text="#{cart.empty}">Sepetiniz boş.</div>
+        <div th:if="${!#lists.isEmpty(cart.items)}" class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 rounded-2xl border bg-white">
             <table class="min-w-full text-left">
                 <thead>
                     <tr class="border-b">
-                        <th class="py-2" th:text="${lang=='en' ? 'Product' : 'Ürün'}">Ürün</th>
-                        <th class="py-2" th:text="${lang=='en' ? 'Quantity' : 'Adet'}">Adet</th>
-                        <th class="py-2" th:text="${lang=='en' ? 'Price' : 'Fiyat'}">Fiyat</th>
-                        <th></th>
+                        <th class="py-3 px-3" th:text="#{cart.product}">Ürün</th>
+                        <th class="py-3 px-3" th:text="#{cart.quantity}">Adet</th>
+                        <th class="py-3 px-3" th:text="#{cart.price}">Fiyat</th>
+                        <th class="py-3 px-3"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="item : ${cart.items}" class="border-b">
-                        <td class="py-2" th:text="${lang=='en' ? item.product.titleEn : item.product.titleTr}">Ürün</td>
-                        <td class="py-2" th:text="${item.quantity}">1</td>
-                        <td class="py-2" th:text="${item.product.currency} + ' ' + ${#numbers.formatDecimal(item.totalPrice, 1, 'POINT', 2, 'POINT')}">₺ 0,00</td>
-                        <td class="py-2">
-                            <form th:action="@{/cart/remove}" method="post">
-                                <input type="hidden" name="productId" th:value="${item.product.id}" />
-                                <input type="hidden" name="lang" th:value="${lang}" />
-                                <button type="submit" class="text-red-600" th:text="${lang=='en' ? 'Remove' : 'Kaldır'}">Kaldır</button>
-                            </form>
+                        <td class="py-3 px-3" th:text="${lang=='en' ? item.product.titleEn : item.product.titleTr}">Ürün</td>
+                        <td class="py-3 px-3" th:text="${item.quantity}">1</td>
+                        <td class="py-3 px-3" th:text="${item.product.currency} + ' ' + ${#numbers.formatDecimal(item.totalPrice, 1, 'POINT', 2, 'POINT')}">₺ 0,00</td>
+                        <td class="py-3 px-3 text-right">
+                                                         <form th:action="@{/cart/remove}" method="post">
+                                 <input type="hidden" name="productId" th:value="${item.product.id}" />
+                                 <button type="submit" class="text-red-600 hover:underline" th:text="#{cart.remove}">Kaldır</button>
+                             </form>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <div class="text-right mt-4 font-semibold">
-                <span th:text="${lang=='en' ? 'Total:' : 'Toplam:'}">Toplam:</span>
+            </div>
+            <div class="rounded-2xl border bg-white p-4 h-fit">
+            <div class="text-right mt-1 font-semibold">
+                <span th:text="#{cart.total}">Toplam:</span>
                 <span th:text="${cart.items.get(0).product.currency} + ' ' + ${#numbers.formatDecimal(cart.total, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
             </div>
 
-            <form th:action="@{/cart/whatsapp}" method="post" class="mt-6 space-y-2">
-                <input type="hidden" name="lang" th:value="${lang}" />
+            <div class="mt-6">
+                <h2 class="text-lg font-semibold mb-2" th:text="#{cart.favorites}">Favoriler</h2>
+                <div class="text-neutral-600" th:if="${favorites == null or favorites.productIds == null or favorites.productIds.isEmpty()}" th:text="#{cart.noFavorites}">Henüz favori yok.</div>
+                <div class="flex flex-wrap gap-2" th:if="${favorites != null and favorites.productIds != null and !favorites.productIds.isEmpty()}">
+                    <span class="px-2 py-1 rounded bg-neutral-100" th:each="pid : ${favorites.productIds}" th:text="${pid}">1</span>
+                </div>
+            </div>
+
+            <form th:action="@{/cart/whatsapp}" method="post" class="mt-4 space-y-2">
                 <div>
-                    <label class="block text-sm" th:text="${lang=='en' ? 'Name Surname' : 'Ad Soyad'}">Ad Soyad</label>
-                    <input type="text" name="name" required class="w-full rounded border p-2" />
+                    <label class="block text-sm" th:text="#{cart.nameSurname}">Ad Soyad</label>
+                    <input type="text" name="name" required class="w-full rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
                 </div>
                 <div>
-                    <label class="block text-sm" th:text="${lang=='en' ? 'Phone' : 'Telefon'}">Telefon</label>
-                    <input type="text" name="phone" required class="w-full rounded border p-2" />
+                    <label class="block text-sm" th:text="#{cart.phone}">Telefon</label>
+                    <input type="text" name="phone" required class="w-full rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
                 </div>
                 <div>
-                    <label class="block text-sm" th:text="${lang=='en' ? 'Email' : 'E-posta'}">E-posta</label>
-                    <input type="email" name="email" class="w-full rounded border p-2" />
+                    <label class="block text-sm" th:text="#{cart.email}">E-posta</label>
+                    <input type="email" name="email" class="w-full rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
                 </div>
                 <div>
-                    <label class="block text-sm" th:text="${lang=='en' ? 'Address' : 'Adres'}">Adres</label>
-                    <textarea name="address" required class="w-full rounded border p-2"></textarea>
+                    <label class="block text-sm" th:text="#{cart.address}">Adres</label>
+                    <textarea name="address" required class="w-full rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
                 </div>
                 <div>
-                    <label class="block text-sm" th:text="${lang=='en' ? 'Shipping Preference' : 'Kargo Tercihi'}">Kargo Tercihi</label>
-                    <input type="text" name="shipping" class="w-full rounded border p-2" />
+                    <label class="block text-sm" th:text="#{cart.shippingPreference}">Kargo Tercihi</label>
+                    <input type="text" name="shipping" class="w-full rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-400" />
                 </div>
                 <div>
-                    <label class="block text-sm" th:text="${lang=='en' ? 'Note' : 'Not'}">Not</label>
-                    <textarea name="note" class="w-full rounded border p-2"></textarea>
+                    <label class="block text-sm" th:text="#{cart.note}">Not</label>
+                    <textarea name="note" class="w-full rounded-lg border p-2 focus:outline-none focus:ring-2 focus:ring-amber-400"></textarea>
                 </div>
-                <button type="submit" class="mt-4 w-full rounded bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-500" th:text="${lang=='en' ? 'Order via WhatsApp' : 'WhatsApp\'tan Toplu Sipariş'}">WhatsApp'tan Toplu Sipariş</button>
+                <button type="submit" class="mt-4 w-full rounded-lg bg-green-600 px-4 py-3 font-medium text-white hover:bg-green-500" th:text="#{cart.orderViaWhatsApp}">WhatsApp'tan Toplu Sipariş</button>
             </form>
+            </div>
         </div>
     </section>
 </th:block>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Yeni Kategori', ~{::content})}">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:with="isEdit=${item != null and item.id != null}" th:replace="~{layout :: layout(${isEdit} ? 'Kategoriyi Düzenle' : 'Yeni Kategori', ~{::content})}">
 <th:block th:fragment="content">
-    <h1 class="h3 mb-3">Yeni Kategori</h1>
-    <form th:action="@{/admin/categories}" method="post" class="vstack gap-3">
+    <h1 class="h3 mb-3" th:text="${isEdit} ? 'Kategoriyi Düzenle' : 'Yeni Kategori'">Yeni Kategori</h1>
+    <form th:action="${isEdit} ? @{|/admin/categories/${item.id}|} : @{/admin/categories}" method="post" class="vstack gap-3">
         <div>
             <label class="form-label">Ad (TR) <span class="text-danger">*</span></label>
-            <input class="form-control" name="nameTr" required maxlength="200">
+            <input class="form-control" name="nameTr" required maxlength="200" th:value="${item.nameTr}">
         </div>
         <div>
             <label class="form-label">Name (EN) <span class="text-danger">*</span></label>
-            <input class="form-control" name="nameEn" required maxlength="200">
+            <input class="form-control" name="nameEn" required maxlength="200" th:value="${item.nameEn}">
         </div>
         <div class="mt-3 d-flex gap-2">
             <button type="submit" class="btn btn-primary">Kaydet</button>

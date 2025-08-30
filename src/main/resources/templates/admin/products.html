@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Ürünler', ~{::content})}">
 <th:block th:fragment="content">
+    <th:block th:replace="~{admin/_nav :: adminNav}"></th:block>
 
     <div class="mt-2 mb-3 flex items-center justify-between">
         <h1 class="text-xl font-semibold text-amber-900 m-0">Ürünler</h1>
@@ -30,6 +31,7 @@
                     th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
                 <span class="ml-auto"></span>
                 <a class="px-3 py-1 rounded border hover:bg-neutral-50" th:href="@{|/urun/${p.slug}|}">Görüntüle</a>
+                <a class="px-3 py-1 rounded border hover:bg-neutral-50" th:href="@{|/admin/products/${p.id}/edit|}">Düzenle</a>
                 <form th:action="@{|/admin/products/${p.id}/delete|}" method="post"
                     onsubmit="return confirm('Silinsin mi?');">
                     <button class="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700" type="submit">Sil</button>

@@ -18,7 +18,6 @@ spring:
     basename: messages
 
   web:
-    locale-resolver: FIXED
     locale: tr
 
   security:
@@ -34,6 +33,8 @@ spring:
 app:
   upload:
     dir: uploads
+  whatsapp:
+    phone: "905062515796"
 
 site:
   base-url: https://www.mirroracoustics.example

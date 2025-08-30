@@ -2,8 +2,127 @@
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('SSS', ~{::content})}">
 <th:block th:fragment="content">
     <section class="py-6">
-        <h1 class="text-2xl font-semibold text-amber-900 mb-4">Sık Sorulan Sorular</h1>
-        <p>Bu alan müşteri sorularına cevap vermek için kullanılabilir.</p>
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-3xl font-bold text-amber-900 mb-8 text-center">Sık Sorulan Sorular</h1>
+            
+            <div class="space-y-6">
+                <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <summary class="font-semibold text-amber-900 cursor-pointer text-lg flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Teslimat süresi nedir?</span>
+                    </summary>
+                    <div class="mt-4 text-amber-800 leading-relaxed">
+                        <p>Sipariş tarihinden itibaren ortalama <strong>2-4 ay</strong> sürmektedir. Bu süre, ürünün karmaşıklığına ve sipariş yoğunluğuna göre değişebilir.</p>
+                        <p class="mt-2 text-sm text-amber-600">* Özel tasarım talepleri daha uzun sürebilir</p>
+                    </div>
+                </details>
+
+                <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <summary class="font-semibold text-amber-900 cursor-pointer text-lg flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Ödeme nasıl yapılır?</span>
+                    </summary>
+                    <div class="mt-4 text-amber-800 leading-relaxed">
+                        <p>Ödeme planımız şu şekildedir:</p>
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li><strong>%50 peşinat:</strong> Sipariş onayı sonrası</li>
+                            <li><strong>%50 kalan tutar:</strong> Kargo öncesi</li>
+                            <li><strong>Güvenli ödeme:</strong> SSL şifreli bağlantı ile</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <summary class="font-semibold text-amber-900 cursor-pointer text-lg flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Ürünler kişiselleştirilebilir mi?</span>
+                    </summary>
+                    <div class="mt-4 text-amber-800 leading-relaxed">
+                        <p><strong>Evet!</strong> Tüm ürünlerimiz tamamen kişiye özel olarak üretilir:</p>
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>Ahşap türü seçimi (ceviz, meşe, kiraz, vb.)</li>
+                            <li>Renk ve cila tercihleri</li>
+                            <li>Boyut ve şekil özelleştirmeleri</li>
+                            <li>Teknik özellik ayarlamaları</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <summary class="font-semibold text-amber-900 cursor-pointer text-lg flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Garanti ve servis nasıl?</span>
+                    </summary>
+                    <div class="mt-4 text-amber-800 leading-relaxed">
+                        <p>El işçiliği ve mühendislik kalitesiyle üretilen tüm kabinlerimiz için kapsamlı destek sağlarız:</p>
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li><strong>2 yıl garanti</strong> üretim hatalarına karşı</li>
+                            <li><strong>Ömür boyu teknik destek</strong></li>
+                            <li><strong>Yedek parça temini</strong></li>
+                            <li><strong>Bakım ve onarım hizmetleri</strong></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <summary class="font-semibold text-amber-900 cursor-pointer text-lg flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Atölye ziyareti yapabilir miyim?</span>
+                    </summary>
+                    <div class="mt-4 text-amber-800 leading-relaxed">
+                        <p><strong>Evet!</strong> Atölyemizi ziyaret etmek istiyorsanız:</p>
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>Önceden randevu almanız gerekir</li>
+                            <li>Çalışma saatleri: Pazartesi-Cuma 09:00-18:00</li>
+                            <li>Üretim süreçlerini görebilirsiniz</li>
+                            <li>Ürünlerimizi test edebilirsiniz</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <summary class="font-semibold text-amber-900 cursor-pointer text-lg flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Kargo ve teslimat detayları?</span>
+                    </summary>
+                    <div class="mt-4 text-amber-800 leading-relaxed">
+                        <p>Kargo süreçlerimiz hakkında detaylı bilgi:</p>
+                        <ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li><strong>Sigortalı kargo:</strong> Aras, MNG, PTT Kargo</li>
+                            <li><strong>Özel paketleme:</strong> Köpük ve çift katmanlı koruma</li>
+                            <li><strong>Teslimat süresi:</strong> Türkiye geneli 1-3 iş günü</li>
+                            <li><strong>7/24 takip:</strong> Kargo numarası ile anlık bilgi</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Contact CTA -->
+            <div class="mt-12 text-center bg-gradient-to-r from-amber-100 to-amber-200 p-8 rounded-lg">
+                <h3 class="text-2xl font-semibold text-amber-900 mb-4">Başka Sorunuz mu Var?</h3>
+                <p class="text-amber-800 mb-6">
+                    Burada yanıtını bulamadığınız sorularınız için bizimle iletişime geçebilirsiniz.
+                </p>
+                <a href="/iletisim" class="inline-flex items-center px-6 py-3 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    İletişime Geç
+                </a>
+            </div>
+        </div>
     </section>
 </th:block>
 </html>

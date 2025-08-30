@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/whatsapp_shop
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.format_sql: true
+      hibernate.jdbc.time_zone: UTC
+    open-in-view: false
+  thymeleaf:
+    cache: false
+  messages:
+    basename: messages
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: no-reply@example.com
+    password: change-me
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+
+app:
+  whatsapp:
+    phone: "905551112233"
+
+server:
+  port: 8080
+
+logging.level.org.hibernate.SQL: warn
+

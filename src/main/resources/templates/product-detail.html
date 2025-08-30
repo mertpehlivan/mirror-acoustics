@@ -4,37 +4,39 @@
 <th:block th:fragment="content">
 
     <div th:if="${p} == null" class="alert alert-warning mt-3">
-        Ürün bulunamadı.
+        <span th:text="#{products.notFound}">Ürün bulunamadı.</span>
     </div>
 
-        <div th:if="${p} != null" class="grid grid-cols-1 md:grid-cols-5 gap-6 mt-4">
-            <div class="md:col-span-3">
-                <h1 class="text-2xl font-semibold text-amber-900" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün Başlığı</h1>
+        <div th:if="${p} != null" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+        <div>
+            <div class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100">
+                <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-full object-cover" th:alt="${lang=='en'? p.titleEn : p.titleTr}" />
+            </div>
+            <div class="grid grid-cols-4 gap-3 mt-3" th:if="${#lists.size(p.images)>1}">
+                <img th:each="img : ${p.images}" th:src="${img.url}" class="w-full h-20 object-cover rounded-lg border" th:alt="${img.altTextTr}" loading="lazy" />
+            </div>
+        </div>
+        <div>
+            <h1 class="text-3xl font-semibold text-brand-900" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün Başlığı</h1>
             <div class="text-sm text-neutral-500 mt-1">
-                <span>Oluşturulma:</span>
+                <span th:text="#{products.createdAt}">Oluşturulma: </span>
                 <span th:text="${#temporals.format(p.createdAt, 'dd.MM.yyyy')}">01.01.2025</span>
             </div>
-            <p class="mt-3 text-neutral-800" th:text="${lang=='en'? p.descriptionEn : p.descriptionTr}">
-                Ürün açıklaması…
-            </p>
-        </div>
-        <div class="md:col-span-2">
-            <div class="rounded-lg border p-4 bg-white/70">
+            <p class="mt-4 text-neutral-800" th:text="${lang=='en'? p.descriptionEn : p.descriptionTr}">Ürün açıklaması…</p>
+            <div class="mt-6 rounded-2xl border p-5 bg-white/70">
                 <div class="flex items-center justify-between">
-                    <span class="text-neutral-500">Fiyat</span>
-                    <span class="text-xl font-semibold text-amber-900" th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
+                    <span class="text-neutral-500" th:text="#{products.price}">Fiyat</span>
+                    <span class="text-2xl font-semibold text-brand-900" th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
                 </div>
                 <form th:action="@{/cart/add}" method="post" class="mt-4 flex gap-2">
                     <input type="hidden" name="productId" th:value="${p.id}" />
-                    <input type="hidden" name="lang" th:value="${lang}" />
-                    <button type="submit" class="px-4 py-2 bg-amber-900 text-amber-50 rounded hover:bg-amber-800" th:text="${lang=='en' ? 'Add to Cart' : 'Sepete Ekle'}">Sepete Ekle</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-700 text-white rounded-lg hover:bg-brand-600" th:text="#{products.addToCart}">Sepete Ekle</button>
                 </form>
-                <form th:action="@{/cart/add}" method="post" class="mt-4">
+                <form th:action="@{/cart/whatsapp/direct}" method="post" class="mt-3">
                     <input type="hidden" name="productId" th:value="${p.id}" />
-                    <input type="hidden" name="lang" th:value="${lang}" />
-                    <input type="hidden" name="redirect" value="whatsapp" />
-                    <button type="submit" class="w-full rounded bg-green-600 px-4 py-2 text-white hover:bg-green-500" th:text="${lang=='en' ? 'Order via WhatsApp' : 'WhatsApp\'tan Sipariş Ver'}">WhatsApp'tan Sipariş Ver</button>
+                    <button type="submit" class="w-full rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-500" th:text="#{products.orderViaWhatsApp}">WhatsApp'tan Sipariş Ver</button>
                 </form>
+                <p class="mt-2 text-xs text-neutral-500" th:text="#{products.whatsappInfo}">Mobilde WhatsApp açılır, masaüstünde WhatsApp Web kullanılır.</p>
             </div>
         </div>
     </div>

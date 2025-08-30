@@ -20,8 +20,9 @@ import com.mertdev.mirror_acoustics.domain.Product;
 import com.mertdev.mirror_acoustics.domain.ProductImage;
 import com.mertdev.mirror_acoustics.repository.CategoryRepository;
 import com.mertdev.mirror_acoustics.repository.ProductRepository;
+import com.mertdev.mirror_acoustics.repository.ProductImageRepository;
+import com.mertdev.mirror_acoustics.repository.OrderDraftRepository;
 import com.mertdev.mirror_acoustics.service.StorageService;
-import com.mertdev.mirror_acoustics.service.SettingService;
 import com.mertdev.mirror_acoustics.util.Slugger;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class AdminController {
     private final ProductRepository repo;
     private final CategoryRepository categories;
     private final StorageService storage;
-    private final SettingService settings;
+    private final OrderDraftRepository orderDrafts;
+    private final ProductImageRepository imagesRepo;
 
     @GetMapping("/login")
     public String login() {
@@ -55,6 +57,17 @@ public class AdminController {
     public String newForm(Model m) {
         m.addAttribute("item", new Product());
         m.addAttribute("categories", categories.findAll(Sort.by("nameTr")));
+        m.addAttribute("isEdit", false);
+        return "admin/product-form";
+    }
+
+    @GetMapping("/products/{id}/edit")
+    public String editForm(@PathVariable Long id, Model m) {
+        Product p = repo.findById(id).orElseThrow();
+        m.addAttribute("item", p);
+        m.addAttribute("categories", categories.findAll(Sort.by("nameTr")));
+        m.addAttribute("images", imagesRepo.findByProductIdOrderBySortOrderAsc(id));
+        m.addAttribute("isEdit", true);
         return "admin/product-form";
     }
 
@@ -102,6 +115,87 @@ public class AdminController {
         return "redirect:/admin/products";
     }
 
+    @PostMapping("/products/{id}/images/{imgId}/delete")
+    public String deleteImage(@PathVariable Long id, @PathVariable Long imgId) {
+        imagesRepo.deleteById(imgId);
+        return "redirect:/admin/products/" + id + "/edit";
+    }
+
+    @PostMapping("/products/{id}/images/{imgId}/cover")
+    public String setCover(@PathVariable Long id, @PathVariable Long imgId) {
+        List<ProductImage> imgs = imagesRepo.findByProductIdOrderBySortOrderAsc(id);
+        int i = 0;
+        for (ProductImage pi : imgs) {
+            if (pi.getId().equals(imgId)) {
+                pi.setSortOrder(0);
+            } else {
+                pi.setSortOrder(++i);
+            }
+        }
+        imagesRepo.saveAll(imgs);
+        return "redirect:/admin/products/" + id + "/edit";
+    }
+
+    @PostMapping("/products/{id}/images/reorder")
+    public String reorderImages(@PathVariable Long id, @RequestParam List<Long> orderedIds) {
+        List<ProductImage> imgs = imagesRepo.findByProductIdOrderBySortOrderAsc(id);
+        for (int i = 0; i < orderedIds.size(); i++) {
+            final int idx = i;
+            Long targetId = orderedIds.get(i);
+            imgs.stream().filter(pi -> pi.getId().equals(targetId)).findFirst()
+                .ifPresent(pi -> pi.setSortOrder(idx));
+        }
+        imagesRepo.saveAll(imgs);
+        return "redirect:/admin/products/" + id + "/edit";
+    }
+
+    @PostMapping(value = "/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String update(@PathVariable Long id,
+            @RequestParam String titleTr,
+            @RequestParam String titleEn,
+            @RequestParam BigDecimal price,
+            @RequestParam(defaultValue = "TRY") String currency,
+            @RequestParam(required = false) String descriptionTr,
+            @RequestParam(required = false) String descriptionEn,
+            @RequestParam(defaultValue = "false") boolean featured,
+            @RequestParam(required = false) Integer featuredOrder,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(name = "images", required = false) List<MultipartFile> images) throws Exception {
+        Product p = repo.findById(id).orElseThrow();
+        p.setTitleTr(titleTr);
+        p.setTitleEn(titleEn);
+        p.setPrice(price);
+        p.setCurrency(currency);
+        p.setDescriptionTr(descriptionTr);
+        p.setDescriptionEn(descriptionEn);
+        p.setFeatured(featured);
+        p.setFeaturedOrder(featuredOrder);
+        if (categoryId != null) {
+            categories.findById(categoryId).ifPresent(p::setCategory);
+        } else {
+            p.setCategory(null);
+        }
+        // Basit: Yeni yüklenen görselleri sona ekle (mevcutları koru)
+        if (images != null) {
+            int start = p.getImages() != null ? p.getImages().size() : 0;
+            for (int i = 0; i < images.size(); i++) {
+                MultipartFile f = images.get(i);
+                String url = storage.save(f);
+                if (url != null) {
+                    ProductImage img = new ProductImage();
+                    img.setProduct(p);
+                    img.setUrl(url);
+                    img.setSortOrder(start + i);
+                    img.setAltTextTr(titleTr);
+                    img.setAltTextEn(titleEn);
+                    p.getImages().add(img);
+                }
+            }
+        }
+        repo.save(p);
+        return "redirect:/admin/products";
+    }
+
     @PostMapping("/products/{id}/delete")
     public String delete(@PathVariable Long id) {
         repo.deleteById(id);
@@ -131,48 +225,35 @@ public class AdminController {
         return "redirect:/admin/categories";
     }
 
-    @GetMapping("/settings")
-    public String settingsForm(Model m) {
-        m.addAttribute("heroTitleTr", settings.get("hero.title", "tr"));
-        m.addAttribute("heroTitleEn", settings.get("hero.title", "en"));
-        m.addAttribute("heroSubtitleTr", settings.get("hero.subtitle", "tr"));
-        m.addAttribute("heroSubtitleEn", settings.get("hero.subtitle", "en"));
-        m.addAttribute("aboutTitleTr", settings.get("about.title", "tr"));
-        m.addAttribute("aboutTitleEn", settings.get("about.title", "en"));
-        m.addAttribute("aboutP1Tr", settings.get("about.p1", "tr"));
-        m.addAttribute("aboutP1En", settings.get("about.p1", "en"));
-        m.addAttribute("aboutP2Tr", settings.get("about.p2", "tr"));
-        m.addAttribute("aboutP2En", settings.get("about.p2", "en"));
-        m.addAttribute("contactAddressTr", settings.get("contact.address", "tr"));
-        m.addAttribute("contactAddressEn", settings.get("contact.address", "en"));
-        m.addAttribute("contactEmail", settings.get("contact.email", "tr"));
-        m.addAttribute("contactPhone", settings.get("contact.phone", "tr"));
-        return "admin/settings";
+    @GetMapping("/categories/{id}/edit")
+    public String editCategory(@PathVariable Long id, Model m) {
+        Category c = categories.findById(id).orElseThrow();
+        m.addAttribute("item", c);
+        return "admin/category-form";
     }
 
-    @PostMapping("/settings")
-    public String saveSettings(@RequestParam String heroTitleTr,
-            @RequestParam String heroTitleEn,
-            @RequestParam String heroSubtitleTr,
-            @RequestParam String heroSubtitleEn,
-            @RequestParam String aboutTitleTr,
-            @RequestParam String aboutTitleEn,
-            @RequestParam String aboutP1Tr,
-            @RequestParam String aboutP1En,
-            @RequestParam String aboutP2Tr,
-            @RequestParam String aboutP2En,
-            @RequestParam String contactAddressTr,
-            @RequestParam String contactAddressEn,
-            @RequestParam String contactEmail,
-            @RequestParam String contactPhone) {
-        settings.save("hero.title", heroTitleTr, heroTitleEn);
-        settings.save("hero.subtitle", heroSubtitleTr, heroSubtitleEn);
-        settings.save("about.title", aboutTitleTr, aboutTitleEn);
-        settings.save("about.p1", aboutP1Tr, aboutP1En);
-        settings.save("about.p2", aboutP2Tr, aboutP2En);
-        settings.save("contact.address", contactAddressTr, contactAddressEn);
-        settings.save("contact.email", contactEmail, contactEmail);
-        settings.save("contact.phone", contactPhone, contactPhone);
-        return "redirect:/admin/settings";
+    @PostMapping("/categories/{id}")
+    public String updateCategory(@PathVariable Long id,
+            @RequestParam String nameTr,
+            @RequestParam String nameEn) {
+        Category c = categories.findById(id).orElseThrow();
+        c.setNameTr(nameTr);
+        c.setNameEn(nameEn);
+        c.setSlug(Slugger.slugify(nameTr));
+        categories.save(c);
+        return "redirect:/admin/categories";
+    }
+
+    @PostMapping("/categories/{id}/delete")
+    public String deleteCategory(@PathVariable Long id) {
+        categories.deleteById(id);
+        return "redirect:/admin/categories";
+    }
+
+
+    @GetMapping("/orders-drafts")
+    public String listOrderDrafts(Model m) {
+        m.addAttribute("items", orderDrafts.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
+        return "admin/orders-drafts";
     }
 }

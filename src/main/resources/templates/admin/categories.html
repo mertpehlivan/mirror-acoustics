@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Kategoriler', ~{::content})}">
 <th:block th:fragment="content">
+    <th:block th:replace="~{admin/_nav :: adminNav}"></th:block>
 
     <div class="mt-2 mb-3 flex items-center justify-between">
         <h1 class="text-xl font-semibold text-amber-900 m-0">Kategoriler</h1>
@@ -12,7 +13,14 @@
     </div>
 
     <ul th:if="${items != null and !#lists.isEmpty(items)}" class="list-group">
-        <li class="list-group-item" th:each="c : ${items}" th:text="${c.nameTr}">Kategori</li>
+        <li class="list-group-item d-flex align-items-center gap-2" th:each="c : ${items}">
+            <span th:text="${c.nameTr}">Kategori</span>
+            <span class="ms-auto"></span>
+            <a class="btn btn-sm btn-outline-secondary" th:href="@{|/admin/categories/${c.id}/edit|}">Düzenle</a>
+            <form th:action="@{|/admin/categories/${c.id}/delete|}" method="post" onsubmit="return confirm('Silinsin mi?');">
+                <button class="btn btn-sm btn-outline-danger" type="submit">Sil</button>
+            </form>
+        </li>
     </ul>
 
 </th:block>

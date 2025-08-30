@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:fragment="layout (content)">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${pageTitle} ?: 'Mağaza'">Mağaza</title>
+  <meta name="description" th:content="${pageDescription} ?: 'Kaliteli ürünler'}" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" th:href="${canonical} ?: ${#httpServletRequest.requestURL}" />
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" th:content="${pageTitle}" />
+  <meta property="og:description" th:content="${pageDescription}" />
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <header class="bg-white shadow">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="/" class="font-bold text-xl">WhatsApp Shop</a>
+      <nav class="space-x-4">
+        <a href="/" class="hover:text-emerald-700">Anasayfa</a>
+        <a href="/cart" class="hover:text-emerald-700">Sepet</a>
+        <a href="/checkout" class="hover:text-emerald-700">Sipariş</a>
+      </nav>
+    </div>
+  </header>
+  <main class="max-w-6xl mx-auto px-4 py-6" th:replace="${content}"></main>
+  <footer class="border-t py-6 text-sm text-gray-500">
+    <div class="max-w-6xl mx-auto px-4">© Demo</div>
+  </footer>
+</body>
+</html>
+
+

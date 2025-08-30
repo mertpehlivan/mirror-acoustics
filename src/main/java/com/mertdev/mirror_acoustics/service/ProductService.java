@@ -38,6 +38,10 @@ public class ProductService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    public Page<Product> listByCategorySlug(String slug, int page, int size) {
+        return repo.findActiveByCategorySlug(slug, PageRequest.of(page, size));
+    }
+
     public Product save(Product p) {
         return repo.save(p);
     } // basic
