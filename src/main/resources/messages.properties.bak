@@ -1,0 +1,144 @@
+# Navigation
+nav.home=Home
+nav.products=Products
+nav.cart=Cart
+nav.about=About
+nav.contact=Contact
+nav.admin=Admin
+nav.management=Management
+nav.logout=Logout
+
+# Hero Section
+hero.tagline=Handcrafted hi-end speaker cabinets and systems in Istanbul.
+hero.subtitle=The Highest Level of Handcrafted Art
+hero.description=The elegant combination of engineering and craftsmanship: the purest form of music with custom speaker systems.
+hero.discoverProducts=Discover Products
+hero.contactUs=Contact Us
+hero.experience=Years Experience
+hero.handcrafted=Handcrafted
+hero.customization=Customization
+
+# About Section
+about.title=About Us
+about.badge=About
+about.description=Mirror Acoustics is a special audio systems brand founded by İsmet Çataloğlu in a workshop in central Istanbul and grown through his meticulous work. Each product reflects the elegant combination of high engineering knowledge and craftsmanship.
+about.description2=For us, speakers are not just electronic devices, but also works of art and designs that add value to your living spaces. We produce completely custom speaker cabinets and systems according to your chosen wood type and special design requests.
+about.expertise=15+ Years of Expertise
+about.expertiseDesc=We bring the purest form of music to your living spaces with passion and dedication.
+about.quality=Quality Guarantee
+about.qualityDesc=Every product undergoes detailed tests and meets our quality standards.
+
+# Why Us Section
+why.title=Why Mirror Acoustics?
+why.badge=Why Us?
+why.subtitle=We elevate your music experience to the highest level with handcrafted works of art.
+why.customDesign=Custom Design
+why.customDesignDesc=All our products are personalized according to customer requests and designed according to your special needs.
+why.handcraftedCNC=Handcrafted & CNC
+why.handcraftedCNCDesc=Precise production down to the finest detail with solid wood and CNC processing.
+why.engineering=Engineering & Experience
+why.engineeringDesc=The sectoral experience and engineering knowledge of our founder İsmet Çataloğlu.
+why.hiendAudio=Hi-End Audio Experience
+why.hiendAudioDesc=Hi-end performance for home, with world-famous components.
+why.directSales=Direct Sales
+why.directSalesDesc=No intermediaries: from producer to you — at the fairest price.
+why.expertise=15+ Years of Expertise
+why.expertiseDesc=Professional follow-up and experience from process to delivery.
+
+# Featured Products
+featured.title=Featured Products
+featured.badge=Our Products
+featured.subtitle=Selections from our handcrafted, custom speaker systems
+featured.viewAll=View All Products
+featured.noProducts=No products available yet.
+featured.viewDetails=View Details →
+featured.currency=₺
+
+# CTA Section
+cta.title=Let's Design Your Custom Speaker System
+cta.subtitle=Contact us today for handcrafted speaker systems customized to your musical taste and living space.
+cta.contact=Contact Us
+cta.whatsapp=Write on WhatsApp
+cta.contactBeforeOrder=Contact us before ordering
+
+# Cart
+cart.empty=Your cart is empty.
+cart.product=Product
+cart.quantity=Quantity
+cart.price=Price
+cart.total=Total
+cart.remove=Remove
+cart.favorites=Favorites
+cart.noFavorites=No favorites yet.
+cart.nameSurname=Name Surname
+cart.phone=Phone
+cart.email=Email
+cart.address=Address
+cart.shippingPreference=Shipping Preference
+cart.note=Note
+cart.orderViaWhatsApp=Bulk Order via WhatsApp
+
+# Products
+products.category=Category:
+products.searchPlaceholder=Search products...
+products.noProducts=No products yet.
+products.notFound=Product not found.
+products.createdAt=Created:
+products.price=Price
+products.addToCart=Add to Cart
+products.orderViaWhatsApp=Order via WhatsApp
+products.whatsappInfo=Opens WhatsApp on mobile, uses WhatsApp Web on desktop.
+
+# Process
+process.title=Our Production Process
+process.step1=1. CNC Cutting
+process.step1Desc=Precise wood cutting with CNC machines
+process.step2=2. Handcrafting
+process.step2Desc=Detail work with expert hands
+process.step3=3. Assembly
+process.step3Desc=Precise assembly and testing process
+process.step4=4. Quality Control
+process.step4Desc=Detailed testing and quality control
+
+# Footer
+footer.rights=All rights reserved.
+footer.madeWith=Made with ❤️ in Istanbul
+
+# Common
+common.loading=Loading...
+common.error=Error
+common.success=Success
+common.save=Save
+common.cancel=Cancel
+common.edit=Edit
+common.delete=Delete
+common.back=Back
+common.next=Next
+common.previous=Previous
+common.search=Search
+common.filter=Filter
+common.sort=Sort
+common.close=Close
+common.open=Open
+common.yes=Yes
+common.no=No
+common.ok=OK
+
+# Language
+lang.en=English
+lang.tr=Turkish
+lang.current=Current Language
+
+# Theme
+theme.light=Light
+theme.dark=Dark
+theme.auto=Auto
+theme.toggle=Toggle Theme
+
+# Accessibility
+accessibility.menuToggle=Toggle Menu
+accessibility.searchToggle=Toggle Search
+accessibility.navigation=Main Navigation
+accessibility.mainContent=Main Content
+accessibility.footer=Footer
+accessibility.skipToContent=Skip to main content

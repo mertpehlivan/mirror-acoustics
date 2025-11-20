@@ -1,21 +1,42 @@
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Admin Giriş', ~{::content})}">
+<th:block th:fragment="content">
+    <section class="py-16">
+        <div class="max-w-md mx-auto">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-semibold text-brand-900">Yönetim Paneli</h1>
+                <p class="text-sm text-neutral-500">Lütfen giriş bilgilerinizi girin</p>
+            </div>
 
-<head>
-    <meta charset="utf-8">
-    <title>Admin Login</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-</head>
+            <div class="rounded-2xl border bg-white/70 dark:bg-gray-900/60 p-6 shadow-sm">
+                <div th:if="${param.error}" class="mb-4 rounded-md bg-red-50 text-red-700 border border-red-200 px-3 py-2 text-sm">
+                    Hatalı kullanıcı adı veya şifre.
+                </div>
+                <div th:if="${param.logout}" class="mb-4 rounded-md bg-green-50 text-green-700 border border-green-200 px-3 py-2 text-sm">
+                    Çıkış yapıldı.
+                </div>
 
-<body class="wood">
-    <div class="login-box">
-        <form method="post" th:action="@{/admin/login}">
-            <h2>Admin</h2>
-            <label>Kullanıcı</label><input name="username" />
-            <label>Şifre</label><input name="password" type="password" />
-            <button type="submit">Giriş</button>
-        </form>
-    </div>
-</body>
+                <form method="post" th:action="@{/admin/login}" class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm text-neutral-600">Kullanıcı Adı</label>
+                        <input id="username" name="username" autocomplete="username"
+                               class="mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white/80 dark:bg-gray-800"
+                               required />
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm text-neutral-600">Şifre</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password"
+                               class="mt-1 w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white/80 dark:bg-gray-800"
+                               required />
+                    </div>
+                    <button type="submit" class="w-full inline-flex justify-center items-center gap-2 rounded-lg bg-brand-700 text-white px-4 py-2 hover:bg-brand-600">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Giriş Yap
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</th:block>
 
 </html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('SSS', ~{::content})}">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(#{pages.faq.title}, ~{::content})}">
 <th:block th:fragment="content">
     <section class="py-6">
         <div class="max-w-4xl mx-auto px-4">
-            <h1 class="text-3xl font-bold text-amber-900 mb-8 text-center">Sık Sorulan Sorular</h1>
+            <h1 class="text-3xl font-bold text-amber-900 mb-8 text-center" th:text="#{pages.faq.title}">FAQ</h1>
             
             <div class="space-y-6">
                 <details class="rounded-lg border border-amber-200 p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -126,3 +126,4 @@
     </section>
 </th:block>
 </html>
+

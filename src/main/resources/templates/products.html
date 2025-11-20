@@ -1,6 +1,36 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(${title}, ~{::content})}">
 <th:block th:fragment="content">
+    <style>
+        .product-card-media {
+            width: 100%;
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            background-color: #f4f4f5;
+        }
+
+        @media (max-width: 1024px) {
+            .product-card-media {
+                height: 240px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .product-card-media {
+                height: 200px;
+            }
+        }
+
+        .product-card-media-img {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
     <div class="py-8">
         <div class="flex items-end justify-between mb-6 gap-4 flex-wrap">
             <div>
@@ -17,18 +47,21 @@
         </div>
 
         <div th:if="${page == null or page.empty}" class="text-muted">
-            <p th:text="#{products.noProducts}">Henüz ürün yok.</p>
+            <p th:text="#{products.noProducts}">HenÃ¼z Ã¼rÃ¼n yok.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" th:if="${page != null and !page.empty}">
-            <a class="group rounded-2xl overflow-hidden border border-neutral-200 bg-white hover:shadow-lg hover:shadow-lg hover:-translate-y-0.5 transition p-3" th:each="p : ${page}"
-                th:href="@{|/urun/${p.slug}|}">
-                <div class="aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100">
-                    <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-full object-cover group-hover:scale-105 transition" th:alt="${lang=='en'? p.titleEn : p.titleTr}" loading="lazy" />
-                </div>
+            <a class="group rounded-2xl overflow-hidden border border-neutral-200 bg-white hover:shadow-lg hover:-translate-y-0.5 transition p-3" th:each="p,iter : ${page}"
+                th:href="@{|/urun/${p.slug}|}" th:attr="data-index=${iter.index},data-src=${#lists.size(p.images)>0 ? p.images.get(0).url : ''},data-title=${lang=='en'?p.titleEn:p.titleTr}">
+                <div class="product-card-media">
+                        <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="product-card-media-img" th:alt="${lang=='en'? p.titleEn : p.titleTr}" loading="lazy" />
+                    </div>
                 <div class="pt-3">
                     <h2 class="text-base font-semibold text-neutral-900 group-hover:text-brand-900 line-clamp" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün Adı</h2>
-                    <div class="mt-1 text-sm text-neutral-600" th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</div>
+                    <div class="mt-1 text-sm text-neutral-600">
+                        <span th:text="${p.currency}">TRY</span>
+                        <span th:text="${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">0.00</span>
+                    </div>
                 </div>
             </a>
         </div>
@@ -37,7 +70,7 @@
             <div class="flex items-center gap-2 justify-center">
                 <a class="px-3 py-1 rounded-lg border hover:bg-neutral-50"
                     th:classappend="${page.first}? 'pointer-events-none opacity-50'"
-                    th:href="@{|/urun?page=${page.number-1}&q=${q}|}" th:text="#{common.previous}">Önceki</a>
+                    th:href="@{|/urun?page=${page.number-1}&q=${q}|}" th:text="#{common.previous}">Ã–nceki</a>
                 <span class="text-sm text-neutral-500" th:text="${page.number+1} + ' / ' + ${page.totalPages}">1 / 1</span>
                 <a class="px-3 py-1 rounded-lg border hover:bg-neutral-50"
                     th:classappend="${page.last}? 'pointer-events-none opacity-50'"
@@ -45,6 +78,64 @@
             </div>
         </nav>
     </div>
+    <!-- Product modal (lightbox-like) -->
+    <div id="productModal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:1200;">
+        <div style="position:relative;max-width:95%;max-height:95%;">
+            <button id="pmClose" style="position:absolute;top:-36px;right:0;background:transparent;color:#fff;border:none;font-size:28px;cursor:pointer;">&times;</button>
+            <img id="pmImage" src="" style="max-width:100%;max-height:100%;display:block;margin:0 auto;" />
+            <div id="pmTitle" style="color:#fff;text-align:center;margin-top:8px;"></div>
+            <button id="pmPrev" style="position:absolute;left:-60px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:40px;cursor:pointer;">&#9664;</button>
+            <button id="pmNext" style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:40px;cursor:pointer;">&#9654;</button>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            const anchors = Array.from(document.querySelectorAll('.group[th\:each]'));
+            // fallback: select by group link items
+            const items = Array.from(document.querySelectorAll('.group'));
+            const modal = document.getElementById('productModal');
+            const imgEl = document.getElementById('pmImage');
+            const titleEl = document.getElementById('pmTitle');
+            const btnClose = document.getElementById('pmClose');
+            const btnPrev = document.getElementById('pmPrev');
+            const btnNext = document.getElementById('pmNext');
+            let current = 0;
+
+            function show(i){
+                const list = Array.from(document.querySelectorAll('.group'));
+                if (!list.length) return;
+                current = Math.max(0, Math.min(i, list.length - 1));
+                const el = list[current];
+                const src = el.getAttribute('data-src') || el.querySelector('img')?.src;
+                const title = el.getAttribute('data-title') || '';
+                imgEl.src = src;
+                titleEl.textContent = title;
+                modal.style.display = 'flex';
+            }
+            function hide(){ modal.style.display = 'none'; }
+            function prev(){ show((current -1 + document.querySelectorAll('.group').length) % document.querySelectorAll('.group').length); }
+            function next(){ show((current +1) % document.querySelectorAll('.group').length); }
+
+            document.querySelectorAll('.group').forEach((el, idx) => {
+                el.addEventListener('click', function(e){
+                    // if clicking the link target (href to product) allow navigation when Ctrl/Meta pressed
+                    if (e.ctrlKey || e.metaKey) return;
+                    e.preventDefault();
+                    show(idx);
+                });
+            });
+
+            btnClose.addEventListener('click', hide);
+            btnPrev.addEventListener('click', prev);
+            btnNext.addEventListener('click', next);
+            modal.addEventListener('click', function(e){ if (e.target === modal) hide(); });
+            document.addEventListener('keydown', function(e){ if (modal.style.display !== 'flex') return; if (e.key==='Escape') hide(); if (e.key==='ArrowLeft') prev(); if (e.key==='ArrowRight') next(); });
+        })();
+    </script>
+
+   
 </th:block>
 
 </html>
+

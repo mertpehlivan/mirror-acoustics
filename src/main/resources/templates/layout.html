@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:fragment="layout (title, content)">
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout (title, content)" th:attr="lang=${#locale.language}">
 
 <head>
     <meta charset="UTF-8" />
@@ -7,6 +7,25 @@
     <title th:text="${title} ?: 'Mirror Acoustics'">Mirror Acoustics</title>
     <meta th:if="${description}" name="description" th:content="${description}" />
     <th:block th:replace="~{fragments/head-meta :: seoMeta(${p}, ${lang})}"></th:block>
+    <!-- Favicons & App Icons -->
+    <meta name="theme-color" content="#b45309" />
+    <link rel="shortcut icon" href="/images/favicon.ico" th:href="@{/images/favicon.ico}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" th:href="@{/images/favicon-32x32.png}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" th:href="@{/images/favicon-16x16.png}" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png" th:href="@{/images/favicon-96x96.png}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png" th:href="@{/images/apple-icon-180x180.png}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png" th:href="@{/images/apple-icon-152x152.png}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png" th:href="@{/images/apple-icon-144x144.png}" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png" th:href="@{/images/apple-icon-120x120.png}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png" th:href="@{/images/apple-icon-114x114.png}" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png" th:href="@{/images/apple-icon-76x76.png}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png" th:href="@{/images/apple-icon-72x72.png}" />
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png" th:href="@{/images/apple-icon-60x60.png}" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png" th:href="@{/images/apple-icon-57x57.png}" />
+    <link rel="manifest" href="/images/manifest.json" th:href="@{/images/manifest.json}" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/android-icon-192x192.png" th:href="@{/images/android-icon-192x192.png}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link th:href="@{/css/app.css}" rel="stylesheet" />
@@ -40,11 +59,7 @@
             }
         }
     </script>
-    <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
+    <!-- Dark mode auto-detection removed -->
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -67,69 +82,312 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+        /* Showcase draggable resizer */
+        .showcase-resizer {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 8px;
+            cursor: ns-resize;
+            z-index: 40;
+            background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(0,0,0,0.06));
+            backdrop-filter: blur(2px);
+        }
+        .showcase-resizer::before {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            margin: 2px auto;
+            border-radius: 9999px;
+            background: rgba(127,127,127,0.35);
+        }
     </style>
 </head>
 
-<body class="bg-gradient-to-b from-brand-50 to-white dark:from-gray-950 dark:to-gray-900">
+<body class="bg-gradient-to-b from-brand-50 to-white dark:from-gray-950 dark:to-gray-900 text-neutral-900 dark:text-brand-200">
     <header class="sticky top-0 z-50 backdrop-blur bg-white/80 dark:bg-gray-900/70 border-b border-neutral-100 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between">
-                <a th:href="@{/}" class="title-font text-2xl font-bold text-brand-900 dark:text-brand-100">MIRROR ACOUSTICS</a>
+            <div class="flex h-16 md:h-20 items-center justify-between">
+                <a th:href="@{/}" class="flex items-center title-font text-2xl font-bold text-brand-900 dark:text-brand-100">
+                    <img src="/images/apple-icon-180x180.png" th:src="@{/images/apple-icon-180x180.png}"
+                         alt="Mirror Acoustics logo"
+                         class="h-14 w-14 md:h-16 md:w-16 object-contain rounded-lg shadow-sm ring-1 ring-black/5" />
+                </a>
                 <nav class="hidden md:flex items-center space-x-8" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <a th:href="@{/}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.home}">Ana Sayfa</a>
-                    <a th:href="@{/urun}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.products}">Ürünler</a>
+                    <a th:href="@{/urun}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.products}">ÃœrÃ¼nler</a>
                     <a th:href="@{/cart}" th:text="#{nav.cart}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200">Sepet</a>
-                    <a th:href="@{/hakkimizda}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.about}">Hakkımızda</a>
-                    <a th:href="@{/iletisim}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.contact}">İletişim</a>
+                    <a th:href="${#locale.language == 'en'} ? @{/en/showcase} : @{/vitrin}" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.showcase}">Vitrin</a>
+                    <a th:href="@{/hakkimizda}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.about}">HakkÄ±mÄ±zda</a>
+                    <a th:href="@{/iletisim}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.contact}">Ä°letiÅŸim</a>
                     <a sec:authorize="!isAuthenticated()" th:href="@{/admin/login}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.admin}">Admin</a>
-                    <a sec:authorize="isAuthenticated()" th:href="@{/admin/products}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.management}">Yönetim</a>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/admin/products}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.management}">YÃ¶netim</a>
+                    <a sec:authorize="isAuthenticated()" th:href="@{/admin/contact-settings}" class="text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="'Contact settings'">Contact settings</a>
                     <form sec:authorize="isAuthenticated()" th:action="@{/admin/logout}" method="post">
-                        <button class="text-gray-700 hover:text-amber-700 dark:text-gray-200" type="submit" th:text="#{nav.logout}">Çıkış</button>
+                        <button class="text-gray-700 hover:text-amber-700 dark:text-gray-200" type="submit" th:text="#{nav.logout}">??</button>
                     </form>
                 </nav>
                 <div class="flex items-center gap-3">
-                    <a th:href="@{/?lang=en}"
-                       th:class="${lang == 'en'} ? 'hidden md:inline text-sm px-2 py-1 rounded border bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' : 'hidden md:inline text-sm px-2 py-1 rounded border hover:bg-neutral-50 dark:hover:bg-gray-800'"
+                    <a th:href="@{'?lang=en'}"
+                       th:class="${#locale.language == 'en'} ? 'hidden md:inline text-sm px-2 py-1 rounded border bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' : 'hidden md:inline text-sm px-2 py-1 rounded border hover:bg-neutral-50 dark:hover:bg-gray-800'"
                        th:text="#{lang.en}">EN</a>
-                    <a th:href="@{/?lang=tr}"
-                       th:class="${lang == 'tr'} ? 'hidden md:inline text-sm px-2 py-1 rounded border bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' : 'hidden md:inline text-sm px-2 py-1 rounded border hover:bg-neutral-50 dark:hover:bg-gray-800'"
+                    <a th:href="@{'?lang=tr'}"
+                       th:class="${#locale.language == 'tr'} ? 'hidden md:inline text-sm px-2 py-1 rounded border bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' : 'hidden md:inline text-sm px-2 py-1 rounded border hover:bg-neutral-50 dark:hover:bg-gray-800'"
                        th:text="#{lang.tr}">TR</a>
-                    <button type="button" onclick="themeToggle()" class="text-xl text-gray-800 hover:text-amber-600 dark:text-gray-100" aria-label="Tema değiştir">🌓</button>
+                    <!-- Mobile menu button -->
+                    <button id="menu-toggle" type="button" aria-label="Menüyü aç/kapat" aria-controls="mobile-menu" aria-expanded="false"
+                            class="md:hidden inline-flex items-center justify-center p-2 rounded text-gray-700 dark:text-gray-200 hover:bg-neutral-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                        <!-- Hamburger icon -->
+                        <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-7 w-7">
+                            <path fill-rule="evenodd" d="M3.75 5.25a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Zm0 6a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Zm0 6a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                        </svg>
+                        <!-- Close icon -->
+                        <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-7 w-7 hidden">
+                            <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <!-- Theme toggle removed -->
                 </div>
             </div>
         </div>
     </header>
+    <!-- Mobile menu panel -->
+    <div id="mobile-menu" class="md:hidden hidden border-t border-neutral-100 dark:border-gray-800 bg-white/95 dark:bg-gray-900/90 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <nav class="flex flex-col gap-2" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+                <a th:href="@{/}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.home}">Ana Sayfa</a>
+                <a th:href="@{/urun}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.products}">�orǬnler</a>
+                <a th:href="@{/cart}" th:text="#{nav.cart}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200">Sepet</a>
+                <a th:href="${#locale.language == 'en'} ? @{/en/showcase} : @{/vitrin}" class="py-2 text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.showcase}">Vitrin</a>
+                <a th:href="@{/hakkimizda}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.about}">Hakk��m��zda</a>
+                <a th:href="@{/iletisim}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.contact}">��leti�Yim</a>
+                <a sec:authorize="!isAuthenticated()" th:href="@{/admin/login}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.admin}">Admin</a>
+                <a sec:authorize="isAuthenticated()" th:href="@{/admin/products}" class="py-2 text-gray-700 hover:text-brand-700 dark:text-gray-200" th:text="#{nav.management}">Y��netim</a>
+                <form sec:authorize="isAuthenticated()" th:action="@{/admin/logout}" method="post" class="py-2">
+                    <button class="text-gray-700 hover:text-amber-700 dark:text-gray-200" type="submit" th:text="#{nav.logout}">??</button>
+                </form>
+                <div class="flex gap-2 pt-2">
+                    <a th:href="@{'?lang=en'}" class="text-sm px-2 py-1 rounded border hover:bg-neutral-50 dark:hover:bg-gray-800" th:text="#{lang.en}">EN</a>
+                    <a th:href="@{'?lang=tr'}" class="text-sm px-2 py-1 rounded border hover:bg-neutral-50 dark:hover:bg-gray-800" th:text="#{lang.tr}">TR</a>
+                </div>
+            </nav>
+        </div>
+    </div>
 
     <main>
-        <th:block th:replace="${content}">
-            <!-- Content will be inserted here -->
-        </th:block>
+        <div class="max-w-7xl mx-auto md:px-4 lg:px-8">
+            <th:block th:replace="${content}">
+                <!-- Content will be inserted here -->
+            </th:block>
+        </div>
     </main>
 
     <footer class="bg-white dark:bg-neutral-950 border-t border-black/5 dark:border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid md:grid-cols-3 gap-8 items-center">
             <div class="text-sm text-gray-600 dark:text-gray-400">
-                © <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy')}"></span> Mirror Acoustics. 
-                <span th:text="#{footer.rights}">Tüm hakları saklıdır.</span>
+                Â© <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy')}"></span> Mirror Acoustics. 
+                <span th:text="#{footer.rights}">TÃ¼m haklarÄ± saklÄ±dÄ±r.</span>
             </div>
             <div class="justify-self-center text-sm flex items-center gap-4">
-                <a th:href="@{/urun}" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.products}">Ürünler</a>
-                <a th:href="@{/iletisim}" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.contact}">İletişim</a>
-                <a href="#about" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.about}">Hakkımızda</a>
+                <a th:href="@{/urun}" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.products}">ÃœrÃ¼nler</a>
+                <a th:href="@{/iletisim}" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.contact}">Ä°letiÅŸim</a>
+                <a th:href="${#locale.language == 'en'} ? @{/en/showcase} : @{/vitrin}" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.showcase}">Vitrin</a>
+                <a href="#about" class="text-gray-700 dark:text-gray-200 hover:text-amber-700" th:text="#{nav.about}">HakkÄ±mÄ±zda</a>
             </div>
             <div class="justify-self-end text-sm text-gray-600 dark:text-gray-400" th:text="#{footer.madeWith}">
-                İstanbul'da ❤️ ile yapıldı
+                Ä°stanbul'da â¤ï¸ ile yapÄ±ldÄ±
             </div>
         </div>
     </footer>
 
+    <!-- Mobile menu toggle script -->
+    <script th:inline="javascript">
+        (function () {
+            const btn = document.getElementById('menu-toggle');
+            const panel = document.getElementById('mobile-menu');
+            const iconMenu = document.getElementById('icon-menu');
+            const iconClose = document.getElementById('icon-close');
+            if (!btn || !panel) return;
+            btn.addEventListener('click', function () {
+                const isHidden = panel.classList.toggle('hidden');
+                this.setAttribute('aria-expanded', (!isHidden).toString());
+                if (iconMenu && iconClose) {
+                    iconMenu.classList.toggle('hidden');
+                    iconClose.classList.toggle('hidden');
+                }
+                this.setAttribute('aria-label', isHidden ? 'Menüyü aç' : 'Menüyü kapat');
+            });
+        })();
+
+        // Replace plain phone text on pages with configured phone
+        (function () {
+            try {
+                var configuredPhone = /*[[${whatsappPhone}]]*/ '905327040949';
+                if (!configuredPhone) return;
+                var targetText = '+90 555 111 22 33';
+                var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+                var node;
+                while ((node = walker.nextNode())) {
+                    if (node.nodeValue && node.nodeValue.trim() === targetText) {
+                        node.nodeValue = configuredPhone;
+                    }
+                }
+            } catch (e) { /* noop */ }
+        })();
+    </script>
+    <!-- Showcase size control & persistence -->
     <script>
-        function themeToggle() {
-            const root = document.documentElement;
-            const isDark = root.classList.toggle('dark');
-            localStorage.theme = isDark ? 'dark' : 'light';
-        }
+        (function () {
+            const STORAGE_KEY_REM = 'showcaseImageHeight'; // value in rem
+            const STORAGE_KEY_PX = 'showcaseImageHeightPx'; // value in px (integer)
+
+            function applyRemHeight(remValue) {
+                if (!remValue) return;
+                document.documentElement.style.setProperty('--showcase-height', remValue + 'rem');
+                document.querySelectorAll('[data-showcase-img]').forEach(img => {
+                    // don't overwrite admin-enforced pixel frameHeight (th:attr already sets it)
+                    // also skip images that explicitly preserve original dimensions
+                    if (!img.hasAttribute('data-admin-frame') && !img.hasAttribute('data-preserve-original')) {
+                        img.style.height = remValue + 'rem';
+                    }
+                });
+            }
+
+            function applyPxHeight(px) {
+                if (!px) return;
+                document.querySelectorAll('[data-showcase-img]').forEach(img => {
+                    if (!img.hasAttribute('data-admin-frame') && !img.hasAttribute('data-preserve-original')) {
+                        img.style.height = px + 'px';
+                    }
+                });
+            }
+
+            function createResizer(container) {
+                if (!container) return null;
+                // avoid double-inserting
+                if (container.querySelector('.showcase-resizer')) return container.querySelector('.showcase-resizer');
+                const r = document.createElement('div');
+                r.className = 'showcase-resizer';
+                // position at bottom of first showcase-area child
+                r.style.bottom = '0';
+                container.style.position = container.style.position || 'relative';
+                container.appendChild(r);
+                return r;
+            }
+
+            function initDrag() {
+                // look for the showcase container on the homepage or showcase page
+                const showcaseContainers = document.querySelectorAll('section.py-10, section[th\:if*="showcase"]');
+                // fallback: look for any horizontal showcase wrapper
+                let target = document.querySelector('section.py-10') || document.querySelector('div.relative');
+                if (!target) return;
+                const resizer = createResizer(target);
+                if (!resizer) return;
+
+                let dragging = false;
+                const minPx = 80;
+                const maxPx = Math.max(window.innerHeight - 100, 600);
+
+                function start(e) {
+                    dragging = true;
+                    document.body.classList.add('cursor-ns-resize');
+                    e.preventDefault();
+                }
+
+                function move(e) {
+                    if (!dragging) return;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    // compute top of showcase area
+                    const rect = target.getBoundingClientRect();
+                    const newHeight = Math.max(minPx, Math.min(maxPx, clientY - rect.top));
+                    // apply to images that are not admin-enforced
+                    applyPxHeight(Math.round(newHeight));
+                }
+
+                function end() {
+                    if (!dragging) return;
+                    dragging = false;
+                    document.body.classList.remove('cursor-ns-resize');
+                    // persist last height (px)
+                    // find current height by measuring first image
+                    const img = document.querySelector('[data-showcase-img]');
+                    if (img) {
+                        const h = img.getBoundingClientRect().height;
+                        localStorage.setItem(STORAGE_KEY_PX, String(Math.round(h)));
+                    }
+                }
+
+                resizer.addEventListener('mousedown', start);
+                document.addEventListener('mousemove', move);
+                document.addEventListener('mouseup', end);
+
+                // touch
+                resizer.addEventListener('touchstart', start, {passive: false});
+                document.addEventListener('touchmove', move, {passive: false});
+                document.addEventListener('touchend', end);
+            }
+
+            function initControls() {
+                // init rem slider if present
+                const slider = document.getElementById('showcase-size-slider');
+                const resetBtn = document.getElementById('showcase-size-reset');
+                if (slider) {
+                    const storedRem = localStorage.getItem(STORAGE_KEY_REM);
+                    const initial = storedRem ? parseFloat(storedRem) : parseFloat(slider.value || 15);
+                    slider.value = initial;
+                    applyRemHeight(initial);
+
+                    slider.addEventListener('input', function () {
+                        const val = parseFloat(this.value);
+                        applyRemHeight(val);
+                    });
+                    slider.addEventListener('change', function () {
+                        const val = parseFloat(this.value);
+                        localStorage.setItem(STORAGE_KEY_REM, String(val));
+                        // remove pixel override when using rem
+                        localStorage.removeItem(STORAGE_KEY_PX);
+                    });
+
+                    if (resetBtn) {
+                        resetBtn.addEventListener('click', function () {
+                            localStorage.removeItem(STORAGE_KEY_REM);
+                            localStorage.removeItem(STORAGE_KEY_PX);
+                            const defaultVal = 15;
+                            slider.value = defaultVal;
+                            applyRemHeight(defaultVal);
+                        });
+                    }
+                }
+
+                // apply persisted px if present
+                try {
+                    const storedPx = localStorage.getItem(STORAGE_KEY_PX);
+                    if (storedPx) applyPxHeight(parseInt(storedPx, 10));
+                } catch (e) { /* noop */ }
+
+                // mark images with admin frame so JS won't override admin-enforced heights
+                document.querySelectorAll('img[th\:attr],[th\:style]').forEach(img => {
+                    // If server-side set a frameHeight it was rendered inline; detect pixels in style
+                    const s = img.getAttribute('style') || '';
+                    if (/height:\s*\d+px/.test(s)) {
+                        img.setAttribute('data-admin-frame', '1');
+                    }
+                });
+
+                // init draggable resizer
+                initDrag();
+            }
+
+            // run on DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initControls);
+            } else {
+                initControls();
+            }
+        })();
     </script>
 </body>
 
 </html>
+

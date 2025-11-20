@@ -1,0 +1,48 @@
+*** Begin Patch
+*** Update File: src/main/resources/templates/product-detail.html
+@@
+-            <div th:if="${#lists.size(p.images)>0}"
+-                 th:with="first=${p.images.get(0)},
+-                          firstType=${first.type != null ? first.type : 'image'},
+-                          firstHasVideo=${first.type != null and first.type == 'video'},
+-                          firstVideoSrc=${(first.type != null and first.type == 'video') ? (!#strings.isEmpty(first.videoUrl) ? first.videoUrl : first.url) : ''},
+-                          firstAlt=${lang=='en'
+-                                ? (!#strings.isEmpty(first.altTextEn) ? first.altTextEn : (!#strings.isEmpty(first.altTextTr) ? first.altTextTr : p.titleEn))
+-                                : (!#strings.isEmpty(first.altTextTr) ? first.altTextTr : (!#strings.isEmpty(first.altTextEn) ? first.altTextEn : p.titleTr))}">
++            <div th:if="${#lists.size(p.images)>0}"
++                 th:with="first=${p.images.get(0)},
++                          firstVideoSource=${!#strings.isEmpty(first.videoUrl) ? first.videoUrl : first.url},
++                          firstIsVideo=${(first.type != null and #strings.equalsIgnoreCase(first.type, 'video'))
++                                         or (#strings.endsWithIgnoreCase(firstVideoSource, '.mp4'))
++                                         or (#strings.endsWithIgnoreCase(firstVideoSource, '.webm'))
++                                         or (#strings.endsWithIgnoreCase(firstVideoSource, '.ogg'))},
++                          firstAlt=${lang=='en'
++                                ? (!#strings.isEmpty(first.altTextEn) ? first.altTextEn : (!#strings.isEmpty(first.altTextTr) ? first.altTextTr : p.titleEn))
++                                : (!#strings.isEmpty(first.altTextTr) ? first.altTextTr : (!#strings.isEmpty(first.altTextEn) ? first.altTextEn : p.titleTr))}">
+                 <div class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100 flex items-center justify-center">
+                     <button type="button" id="pdMainTrigger" class="relative h-full w-full">
+                         <img id="pdMainImage"
+                              th:src="${first.url}"
+                              th:alt="${firstAlt}"
+                              class="h-full w-full object-contain"
+-                             th:style="${firstHasVideo} ? 'display:none;' : ''" />
++                             th:style="${firstIsVideo} ? 'display:none;' : ''" />
+                         <video id="pdMainVideo"
+                                class="h-full w-full rounded-xl bg-black object-contain"
+                                controls
+                                playsinline
+                                preload="metadata"
+-                               th:attr="poster=${first.url},src=${firstHasVideo} ? firstVideoSrc : null"
+-                               th:style="${firstHasVideo} ? 'display:block;' : 'display:none;'"></video>
++                               th:attr="poster=${first.url},src=${firstIsVideo} ? firstVideoSource : null"
++                               th:style="${firstIsVideo} ? 'display:block;' : 'display:none;'"></video>
+                         <span id="pdVideoBadge"
+                               class="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-sm font-semibold text-white"
+-                              th:style="${firstHasVideo} ? 'display:inline-flex;' : 'display:none;'">
++                              th:style="${firstIsVideo} ? 'display:inline-flex;' : 'display:none;'">
+                             <span aria-hidden="true">&#9654;</span>
+                             <span>Video</span>
+                         </span>
+                     </button>
+                 </div>
+*** End Patch

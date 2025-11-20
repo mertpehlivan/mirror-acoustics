@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('About settings', ~{::content})}">
+<th:block th:fragment="content">
+    <div class="my-4">
+        <h1 class="h4">Hakkında Önizleme & Düzenleme</h1>
+        <p class="text-muted">Sayfanın görünümünü sağ taraftaki önizlemeden kontrol edin. Kalem ikonuna tıklayın, düzenleyin, sonra "Kaydet".</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/about-settings}" method="post">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-muted small">Aşağıda tüm metin anahtarları saklanır. Düzenleme yapılmadığı sürece mevcut değerler korunur.</p>
+                        <div th:each="s : ${settingsList}">
+                            <input type="hidden" th:id="${#strings.replace(s.key, '.', '_') + '_tr'}" th:name="${#strings.replace(s.key, '.', '_') + '_tr'}" th:value="${s.valueTr}" />
+                            <input type="hidden" th:id="${#strings.replace(s.key, '.', '_') + '_en'}" th:name="${#strings.replace(s.key, '.', '_') + '_en'}" th:value="${s.valueEn}" />
+                        </div>
+
+                        <div class="mt-3 d-grid">
+                            <button class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-end mb-2">
+                            <button type="button" id="lang-tr" class="btn btn-sm btn-outline-secondary active me-2">TR</button>
+                            <button type="button" id="lang-en" class="btn btn-sm btn-outline-secondary">EN</button>
+                        </div>
+
+                        <div id="about-preview" class="bg-white p-4 rounded shadow-sm" style="max-height:70vh; overflow:auto">
+                            <!-- Preview built by JS to replicate pages/about.html layout -->
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+            (function(){
+                function hiddenVal(key, lang) {
+                    const id = key.replaceAll('.', '_') + '_' + lang;
+                    const el = document.getElementById(id);
+                    return el ? el.value : '';
+                }
+                let currentLang = 'tr';
+
+                function t(k){ return hiddenVal(k, currentLang) || ''; }
+
+                function buildPreview(lang) {
+                    currentLang = lang;
+                    const html = `
+                        <section class="py-6">
+                            <div class="max-w-4xl mx-auto px-4">
+                                <div class="text-center mb-12">
+                                    <h1 class="text-4xl md:text-5xl font-bold text-amber-900 mb-4"><span class="editable" data-key="pages.about.title">${escape(t('pages.about.title') || 'About Us')}</span> <button class="btn-edit" data-key="pages.about.title">✏️</button></h1>
+                                    <p class="text-xl text-amber-700 font-medium"><span class="editable" data-key="hero.subtitle">${escape(t('hero.subtitle'))}</span> <button class="btn-edit" data-key="hero.subtitle">✏️</button></p>
+                                </div>
+
+                                <div class="prose prose-lg max-w-none">
+                                    <div class="bg-amber-50 p-6 rounded-lg mb-8">
+                                        <p class="text-lg leading-relaxed text-amber-900"><span class="editable" data-key="about.p1">${escape(t('about.p1'))}</span> <button class="btn-edit" data-key="about.p1">✏️</button></p>
+                                    </div>
+
+                                    <p class="text-lg leading-relaxed mb-6"><span class="editable" data-key="about.p2">${escape(t('about.p2'))}</span> <button class="btn-edit" data-key="about.p2">✏️</button></p>
+
+                                    <div class="bg-gradient-to-r from-amber-100 to-amber-200 p-8 rounded-lg mb-8">
+                                        <h2 class="text-3xl font-bold text-amber-900 mb-6 text-center"><span class="editable" data-key="why.title">${escape(t('why.title'))}</span> <button class="btn-edit" data-key="why.title">✏️</button></h2>
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <div class="space-y-4">
+                                                <div class="flex items-start space-x-3">
+                                                    <div>
+                                                        <h3 class="font-semibold text-amber-900"><span class="editable" data-key="why.customDesign">${escape(t('why.customDesign'))}</span> <button class="btn-edit" data-key="why.customDesign">✏️</button></h3>
+                                                        <p class="text-amber-800"><span class="editable" data-key="why.customDesignDesc">${escape(t('why.customDesignDesc'))}</span> <button class="btn-edit" data-key="why.customDesignDesc">✏️</button></p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-start space-x-3">
+                                                    <div>
+                                                        <h3 class="font-semibold text-amber-900"><span class="editable" data-key="why.handcraftedCNC">${escape(t('why.handcraftedCNC'))}</span> <button class="btn-edit" data-key="why.handcraftedCNC">✏️</button></h3>
+                                                        <p class="text-amber-800"><span class="editable" data-key="why.handcraftedCNCDesc">${escape(t('why.handcraftedCNCDesc'))}</span> <button class="btn-edit" data-key="why.handcraftedCNCDesc">✏️</button></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="space-y-4">
+                                                <div class="flex items-start space-x-3">
+                                                    <div>
+                                                        <h3 class="font-semibold text-amber-900"><span class="editable" data-key="why.engineering">${escape(t('why.engineering'))}</span> <button class="btn-edit" data-key="why.engineering">✏️</button></h3>
+                                                        <p class="text-amber-800"><span class="editable" data-key="why.engineeringDesc">${escape(t('why.engineeringDesc'))}</span> <button class="btn-edit" data-key="why.engineeringDesc">✏️</button></p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-start space-x-3">
+                                                    <div>
+                                                        <h3 class="font-semibold text-amber-900"><span class="editable" data-key="why.hiendAudio">${escape(t('why.hiendAudio'))}</span> <button class="btn-edit" data-key="why.hiendAudio">✏️</button></h3>
+                                                        <p class="text-amber-800"><span class="editable" data-key="why.hiendAudioDesc">${escape(t('why.hiendAudioDesc'))}</span> <button class="btn-edit" data-key="why.hiendAudioDesc">✏️</button></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-gradient-to-r from-amber-50 to-amber-100 p-8 rounded-lg mb-8">
+                                        <h2 class="text-3xl font-bold text-amber-900 mb-6 text-center"><span class="editable" data-key="about.order.title">${escape(t('about.order.title'))}</span> <button class="btn-edit" data-key="about.order.title">✏️</button></h2>
+                                        <div class="grid md:grid-cols-2 gap-6">
+                                            <div class="space-y-4">
+                                                <h3 class="font-semibold text-amber-900"><span class="editable" data-key="about.order.step1.title">${escape(t('about.order.step1.title'))}</span> <button class="btn-edit" data-key="about.order.step1.title">✏️</button></h3>
+                                                <p class="text-amber-800"><span class="editable" data-key="about.order.step1.desc">${escape(t('about.order.step1.desc'))}</span> <button class="btn-edit" data-key="about.order.step1.desc">✏️</button></p>
+                                                <h3 class="font-semibold text-amber-900"><span class="editable" data-key="about.order.step2.title">${escape(t('about.order.step2.title'))}</span> <button class="btn-edit" data-key="about.order.step2.title">✏️</button></h3>
+                                                <p class="text-amber-800"><span class="editable" data-key="about.order.step2.desc">${escape(t('about.order.step2.desc'))}</span> <button class="btn-edit" data-key="about.order.step2.desc">✏️</button></p>
+                                            </div>
+                                            <div class="space-y-4">
+                                                <h3 class="font-semibold text-amber-900"><span class="editable" data-key="about.order.step3.title">${escape(t('about.order.step3.title'))}</span> <button class="btn-edit" data-key="about.order.step3.title">✏️</button></h3>
+                                                <p class="text-amber-800"><span class="editable" data-key="about.order.step3.desc">${escape(t('about.order.step3.desc'))}</span> <button class="btn-edit" data-key="about.order.step3.desc">✏️</button></p>
+                                                <h3 class="font-semibold text-amber-900"><span class="editable" data-key="about.order.step4.title">${escape(t('about.order.step4.title'))}</span> <button class="btn-edit" data-key="about.order.step4.title">✏️</button></h3>
+                                                <p class="text-amber-800"><span class="editable" data-key="about.order.step4.desc">${escape(t('about.order.step4.desc'))}</span> <button class="btn-edit" data-key="about.order.step4.desc">✏️</button></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center bg-amber-900 text-white p-8 rounded-lg">
+                                        <p class="text-xl leading-relaxed mb-4"><span class="editable" data-key="about.final.message">${escape(t('about.final.message'))}</span> <button class="btn-edit" data-key="about.final.message">✏️</button></p>
+                                        <div class="flex items-center justify-center space-x-4 text-amber-200">
+                                            <span class="editable" data-key="about.final.tagline1">${escape(t('about.final.tagline1'))}</span>
+                                            <span class="editable" data-key="about.final.tagline2">${escape(t('about.final.tagline2'))}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    `;
+
+                    const preview = document.getElementById('about-preview');
+                    preview.innerHTML = html;
+
+                    preview.querySelectorAll('.btn-edit').forEach(btn => {
+                        btn.style.marginLeft = '8px';
+                        btn.style.border = 'none';
+                        btn.style.background = 'transparent';
+                        btn.style.cursor = 'pointer';
+                        btn.addEventListener('click', function(e){
+                            const key = this.getAttribute('data-key');
+                            const span = preview.querySelector('.editable[data-key="'+key+'"]');
+                            enableEdit(span, key);
+                        });
+                    });
+                }
+
+                function enableEdit(span, key) {
+                    if (!span) return;
+                    span.setAttribute('contenteditable', 'true');
+                    span.focus();
+                    const range = document.createRange();
+                    range.selectNodeContents(span);
+                    range.collapse(false);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+
+                    function commit() {
+                        span.removeAttribute('contenteditable');
+                        syncHidden(key, span.innerText);
+                        span.removeEventListener('blur', commit);
+                        span.removeEventListener('keydown', onKey);
+                    }
+
+                    function onKey(ev) {
+                        if (ev.key === 'Enter') {
+                            ev.preventDefault();
+                            span.blur();
+                        }
+                    }
+
+                    span.addEventListener('blur', commit);
+                    span.addEventListener('keydown', onKey);
+                }
+
+                function syncHidden(key, value) {
+                    const id = key.replaceAll('.', '_') + '_' + currentLang;
+                    const el = document.getElementById(id);
+                    if (el) el.value = value;
+                }
+
+                function escape(s){ return String(s || ''); }
+
+                document.getElementById('lang-tr').addEventListener('click', function(){ buildPreview('tr'); this.classList.add('active'); document.getElementById('lang-en').classList.remove('active'); });
+                document.getElementById('lang-en').addEventListener('click', function(){ buildPreview('en'); this.classList.add('active'); document.getElementById('lang-tr').classList.remove('active'); });
+
+                buildPreview('tr');
+            })();
+    </script>
+</th:block>
+</html>

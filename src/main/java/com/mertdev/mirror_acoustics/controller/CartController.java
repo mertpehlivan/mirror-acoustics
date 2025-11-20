@@ -17,6 +17,9 @@ import com.mertdev.mirror_acoustics.domain.Product;
 import com.mertdev.mirror_acoustics.service.CartService;
 import com.mertdev.mirror_acoustics.service.OrderDraftService;
 import com.mertdev.mirror_acoustics.service.ProductService;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.mertdev.mirror_acoustics.config.AppProperties;
 
 import lombok.RequiredArgsConstructor;
@@ -31,11 +34,25 @@ public class CartController {
     private final AppProperties appProperties;
 
     @GetMapping
-    public String view(@RequestParam(defaultValue = "tr") String lang, Model model) {
-        model.addAttribute("cart", cartService.getCart());
-        model.addAttribute("favorites", cartService.getFavorites());
+    public String view(@RequestParam(defaultValue = "tr") String lang, HttpServletRequest request, Model model) {
+        // Ensure session is initialized before rendering
+        request.getSession(true);
+
+        var cart = cartService.getCart();
+        var favorites = cartService.getFavorites();
+
+        var items = cart.getItems();
+        boolean hasCartItems = items != null && !items.isEmpty();
+        model.addAttribute("hasCartItems", hasCartItems);
+        model.addAttribute("cartItems", items);
+        model.addAttribute("cartTotal", cart.getTotal());
+        model.addAttribute("cartCurrency", hasCartItems ? items.get(0).getProduct().getCurrency() : "");
+        model.addAttribute("favoritesIds", favorites.getProductIds());
         model.addAttribute("lang", lang);
         model.addAttribute("title", lang.equals("en") ? "Cart" : "Sepet");
+        model.addAttribute("description", lang.equals("en")
+                ? "View items in your cart and proceed to order."
+                : "Sepetinizdeki ürünleri görüntüleyin ve sipariş verin.");
         return "cart";
     }
 
@@ -80,12 +97,12 @@ public class CartController {
         orderDraftService.saveDraft(tempCart, null, null, null, null, null, null,
                 "utm_source=site&utm_campaign=order");
 
-        StringBuilder sb = new StringBuilder("Merhaba, sipariş vermek istiyorum:\n");
-        sb.append("- Ürün: ")
-          .append(lang.equals("en") ? product.getTitleEn() : product.getTitleTr())
-          .append(" | Adet: ").append(qty)
-          .append(" | Fiyat: ").append(product.getPrice())
-          .append("\n");
+                StringBuilder sb = new StringBuilder("Merhaba, sipariş vermek istiyorum:\n");
+                sb.append("- Ürün: ");
+                sb.append(lang.equals("en") ? product.getTitleEn() : product.getTitleTr());
+                sb.append(" | Adet: ").append(qty);
+                sb.append(" | Fiyat: ").append(product.getPrice());
+                sb.append("\n");
         String message = URLEncoder.encode(sb.toString(), StandardCharsets.UTF_8);
         String whatsappPhone = appProperties.getWhatsapp().getPhone();
         String wa = "https://wa.me/" + whatsappPhone + "?text=" + message + "&utm_source=site&utm_medium=whatsapp&utm_campaign=order";
@@ -106,11 +123,11 @@ public class CartController {
 
         StringBuilder sb = new StringBuilder("Merhaba, sipariş vermek istiyorum:\n");
         for (CartItem item : cart.getItems()) {
-            sb.append("- Ürün: ")
-              .append(lang.equals("en") ? item.getProduct().getTitleEn() : item.getProduct().getTitleTr())
-              .append(" | Adet: ").append(item.getQuantity())
-              .append(" | Fiyat: ").append(item.getProduct().getPrice())
-              .append("\n");
+            sb.append("- Ürün: ");
+            sb.append(lang.equals("en") ? item.getProduct().getTitleEn() : item.getProduct().getTitleTr());
+            sb.append(" | Adet: ").append(item.getQuantity());
+            sb.append(" | Fiyat: ").append(item.getProduct().getPrice());
+            sb.append("\n");
         }
         sb.append("Ara Toplam: ").append(cart.getTotal()).append("\n");
         if (shipping != null && !shipping.isBlank()) {

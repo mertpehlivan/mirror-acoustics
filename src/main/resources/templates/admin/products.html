@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Ürünler', ~{::content})}">
 <th:block th:fragment="content">
     <th:block th:replace="~{admin/_nav :: adminNav}"></th:block>
@@ -14,7 +14,7 @@
     </div>
 
     <div th:if="${items == null or #lists.isEmpty(items)}" class="alert alert-info">
-        Gösterilecek ürün bulunamadı.
+        Gösterilecek Ürün Bulunamadı.
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -27,11 +27,14 @@
                 </p>
             </div>
             <div class="px-4 py-3 border-t flex items-center gap-2">
-                <span class="font-semibold"
-                    th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
+                <span class="font-semibold">
+                    <span th:text="${p.currency}">TRY</span>
+                    <span th:text="${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">0.00</span>
+                </span>
                 <span class="ml-auto"></span>
                 <a class="px-3 py-1 rounded border hover:bg-neutral-50" th:href="@{|/urun/${p.slug}|}">Görüntüle</a>
-                <a class="px-3 py-1 rounded border hover:bg-neutral-50" th:href="@{|/admin/products/${p.id}/edit|}">Düzenle</a>
+                <a class="px-3 py-1 rounded border hover:bg-neutral-50"
+                    th:href="@{|/admin/products/${p.id}/edit|}">Düzenle</a>
                 <form th:action="@{|/admin/products/${p.id}/delete|}" method="post"
                     onsubmit="return confirm('Silinsin mi?');">
                     <button class="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700" type="submit">Sil</button>

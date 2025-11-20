@@ -1,9 +1,33 @@
 <th:block th:fragment="seoMeta(p, lang)">
-    <th:block th:if="${p != null}">
-        <meta property="og:type" content="product" />
-        <meta property="og:title" th:content="${lang=='en'? p.titleEn : p.titleTr}" />
-        <meta property="og:description" th:content="${lang=='en'? p.descriptionEn : p.descriptionTr}" />
-        <meta property="og:image" th:content="${p.images.size()>0? p.images.get(0).url : '/images/og.jpg'}" />
-        
-    </th:block>
+    <!-- Canonical & hreflang -->
+    <link rel="canonical"
+          th:if="${#httpServletRequest != null}"
+          th:href="${#httpServletRequest.requestURL}" />
+    <link rel="alternate" hreflang="tr" href="?lang=tr" />
+    <link rel="alternate" hreflang="en" href="?lang=en" />
+
+    <!-- Robots: noindex for admin -->
+    <meta th:if="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin')}" name="robots" content="noindex, nofollow" />
+    <meta th:unless="${#httpServletRequest != null and #httpServletRequest.requestURI.startsWith('/admin')}" name="robots" content="index, follow" />
+
+    <!-- Open Graph (default) -->
+    <meta property="og:site_name" content="Mirror Acoustics" />
+    <meta property="og:locale" th:content="${(#locale.language=='en') ? 'en_US' : 'tr_TR'}" />
+    <meta property="og:url" th:if="${#httpServletRequest != null}" th:content="${#httpServletRequest.requestURL}" />
+    <meta property="og:type" th:content="${(p!=null) ? 'product' : 'website'}" />
+    <meta property="og:title"
+          th:content="${(p!=null) ? ((#locale.language=='en') ? p.titleEn : p.titleTr) : ((title != null and !#strings.isEmpty(title)) ? title : 'Mirror Acoustics')}" />
+    <meta property="og:description"
+          th:content="${(p!=null) ? ((#locale.language=='en') ? p.descriptionEn : p.descriptionTr) : ((description != null and !#strings.isEmpty(description)) ? description : ((#locale.language=='en') ? 'Handcrafted, custom hi-end speaker enclosures and systems.' : 'El yapımı, kişiye özel hi-end hoparlör kabinleri ve sistemler.'))}" />
+    <meta property="og:image"
+          th:content="${(p!=null and p.images!=null and #lists.size(p.images)>0) ? p.images.get(0).url : '/images/montaj.jpg'}" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title"
+          th:content="${(p!=null) ? ((#locale.language=='en') ? p.titleEn : p.titleTr) : ((title != null and !#strings.isEmpty(title)) ? title : 'Mirror Acoustics')}" />
+    <meta name="twitter:description"
+          th:content="${(p!=null) ? ((#locale.language=='en') ? p.descriptionEn : p.descriptionTr) : ((description != null and !#strings.isEmpty(description)) ? description : ((#locale.language=='en') ? 'Handcrafted, custom hi-end speaker enclosures and systems.' : 'El yapımı, kişiye özel hi-end hoparlör kabinleri ve sistemler.'))}" />
+    <meta name="twitter:image"
+          th:content="${(p!=null and p.images!=null and #lists.size(p.images)>0) ? p.images.get(0).url : '/images/montaj.jpg'}" />
 </th:block>

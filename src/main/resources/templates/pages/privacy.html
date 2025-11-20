@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('KVKK & Gizlilik', ~{::content})}">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(#{pages.privacy.title}, ~{::content})}">
 <th:block th:fragment="content">
     <section class="py-6">
         <div class="max-w-4xl mx-auto px-4">
@@ -112,3 +112,4 @@
     </section>
 </th:block>
 </html>
+

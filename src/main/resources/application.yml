@@ -1,44 +1,59 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/mirroracoustics
-    username: postgres
-    password: postgres
+    username: mirrorapp
+    password: DEGISTIR-BUNU-COK-GUCLU
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
+    open-in-view: false
   thymeleaf:
-    cache: false
-
-  messages:
-    basename: messages
-
+    cache: true
   web:
+    locale-resolver: FIXED
     locale: tr
-
-  security:
-    user:
-      name: admin
-      password: admin123
-      roles: ADMIN
   servlet:
     multipart:
       max-file-size: 25MB
       max-request-size: 25MB
 
+server:
+  port: 8080
+  forward-headers-strategy: NATIVE
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,application/json,application/javascript,image/svg+xml
+    min-response-size: 1024
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint.health.probes.enabled: true
+
 app:
+  admin:
+    username: admin
+    default-password: admin123
   upload:
-    dir: uploads
+    dir: /opt/myapp/uploads
+  showcase:
+    image:
+      width: 1500
+      height: 1000
+      quality: 0.9
   whatsapp:
-    phone: "905062515796"
+    phone: "905327040949"
 
 site:
-  base-url: https://www.mirroracoustics.example
+  base-url: https://mirroracoustic.com
   brand: Mirror Acoustics Custom Audio Products
   locale-default: tr
 
-
+logging:
+  file.name: /opt/myapp/logs/app.log
+  level.root: INFO

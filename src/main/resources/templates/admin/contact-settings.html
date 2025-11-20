@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Contact settings', ~{::content})}">
+<th:block th:fragment="content">
+    <div class="my-4">
+        <h1 class="h4">Contact Settings</h1>
+        <p class="text-muted">Edit contact information for both Turkish (TR) and English (EN). Use the live preview on the right.</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/contact-settings}" method="post">
+                <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+                <div class="row">
+                    <!-- Form column -->
+                    <div class="col-12 col-md-8">
+                        <div th:each="entry : ${settingsGroups}">
+                            <h5 th:text="${entry.key}" class="mt-3 mb-2"></h5>
+                            <div class="row g-2 mb-3" th:each="s : ${entry.value}" th:with="suffix=${s.key.substring(s.key.lastIndexOf('.') + 1)}">
+                                <div class="col-12 col-sm-4 text-muted small" th:text="${suffix} + ':'"></div>
+
+                                <!-- TR input -->
+                                <div class="col-12 col-sm-4">
+                                    <div>
+                                        <textarea th:if="${suffix == 'note' or suffix == 'prefill'}" th:name="${#strings.replace(s.key, '.', '_') + '_tr'}" th:attr="data-key=${s.key}" class="form-control" rows="2" th:text="${s.valueTr}"></textarea>
+                                        <input th:if="${suffix == 'number'}" type="tel" th:name="${#strings.replace(s.key, '.', '_') + '_tr'}" th:attr="data-key=${s.key}" th:value="${s.valueTr}" class="form-control"/>
+                                        <input th:if="${suffix == 'address'}" type="text" th:name="${#strings.replace(s.key, '.', '_') + '_tr'}" th:attr="data-key=${s.key}" th:value="${s.valueTr}" class="form-control"/>
+                                        <input th:if="${suffix == 'email'}" type="email" th:name="${#strings.replace(s.key, '.', '_') + '_tr'}" th:attr="data-key=${s.key}" th:value="${s.valueTr}" class="form-control"/>
+                                        <input th:if="${suffix != 'note' and suffix != 'prefill' and suffix != 'number' and suffix != 'address' and suffix != 'email'}" type="text" th:name="${#strings.replace(s.key, '.', '_') + '_tr'}" th:attr="data-key=${s.key}" th:value="${s.valueTr}" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <!-- EN input + copy button -->
+                                <div class="col-12 col-sm-4 d-flex align-items-start gap-2">
+                                    <div class="flex-grow-1">
+                                        <div>
+                                            <textarea th:if="${suffix == 'note' or suffix == 'prefill'}" th:name="${#strings.replace(s.key, '.', '_') + '_en'}" th:attr="data-key=${s.key}" class="form-control" rows="2" th:text="${s.valueEn}"></textarea>
+                                            <input th:if="${suffix == 'number'}" type="tel" th:name="${#strings.replace(s.key, '.', '_') + '_en'}" th:attr="data-key=${s.key}" th:value="${s.valueEn}" class="form-control"/>
+                                            <input th:if="${suffix == 'address'}" type="text" th:name="${#strings.replace(s.key, '.', '_') + '_en'}" th:attr="data-key=${s.key}" th:value="${s.valueEn}" class="form-control"/>
+                                            <input th:if="${suffix == 'email'}" type="email" th:name="${#strings.replace(s.key, '.', '_') + '_en'}" th:attr="data-key=${s.key}" th:value="${s.valueEn}" class="form-control"/>
+                                            <input th:if="${suffix != 'note' and suffix != 'prefill' and suffix != 'number' and suffix != 'address' and suffix != 'email'}" type="text" th:name="${#strings.replace(s.key, '.', '_') + '_en'}" th:attr="data-key=${s.key}" th:value="${s.valueEn}" class="form-control"/>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm copy-btn" th:attr="data-target=${#strings.replace(s.key, '.', '_') + '_en'}" title="Copy">Copy</button>
+                                </div>
+
+                            </div>
+                            <hr/>
+                        </div>
+
+                        <div class="mt-3 d-flex">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="/admin" class="btn btn-secondary ms-2">Back to Admin</a>
+                        </div>
+                    </div>
+
+                    <!-- Preview column -->
+                    <div class="col-12 col-md-4 border-start ps-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Live Preview</h5>
+                            <div class="btn-group" role="group" aria-label="language toggle">
+                                <button type="button" class="btn btn-sm btn-outline-primary active" data-lang="tr">TR</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary" data-lang="en">EN</button>
+                            </div>
+                        </div>
+
+                        <div id="preview">
+                            <div th:each="entry : ${settingsGroups}">
+                                <h6 th:text="${entry.key}" class="small text-muted mt-2"></h6>
+                                <div th:each="s : ${entry.value}" class="mb-2">
+                                    <div class="small text-muted" th:text="${s.key.substring(s.key.lastIndexOf('.') + 1)} + ':'"></div>
+                                    <div>
+                                        <div class="preview-tr" th:utext="${s.valueTr}"></div>
+                                        <div class="preview-en d-none" th:utext="${s.valueEn}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<script>
+    (function(){
+        function setPreviewLang(lang){
+            document.querySelectorAll('#preview .preview-tr, #preview .preview-en').forEach(el => el.classList.add('d-none'));
+            if (lang === 'tr') document.querySelectorAll('#preview .preview-tr').forEach(el => el.classList.remove('d-none'));
+            else document.querySelectorAll('#preview .preview-en').forEach(el => el.classList.remove('d-none'));
+            // toggle active on buttons
+            document.querySelectorAll('[data-lang]').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === lang));
+        }
+
+        // copy buttons + preview sync
+        document.addEventListener('DOMContentLoaded', function(){
+            // copy buttons
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function(){
+                    const targetName = btn.getAttribute('data-target');
+                    const el = document.querySelector('[name="' + targetName + '"]');
+                    if (!el) return;
+                    const val = el.value || el.textContent || '';
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(val).then(()=>{
+                            const prev = btn.textContent;
+                            btn.textContent = 'Copied';
+                            setTimeout(()=> btn.textContent = prev, 1200);
+                        });
+                    } else if (el.select) {
+                        el.select();
+                        try { document.execCommand('copy'); btn.textContent = 'Copied'; setTimeout(()=> btn.textContent = 'Copy', 1200);} catch(e){}
+                    }
+                });
+            });
+
+            // language toggle
+            document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', function(){ setPreviewLang(this.getAttribute('data-lang')); }));
+
+            // sync inputs to preview
+            function updatePreviewForKey(key){
+                const trEl = document.querySelector('[name="' + key.replace('.', '_') + '_tr"]');
+                const enEl = document.querySelector('[name="' + key.replace('.', '_') + '_en"]');
+                const previewTr = document.querySelector('#preview .preview-tr[th\:utext]:not([data-key])');
+                // instead, find preview elements by matching data-key via attribute we rendered on inputs
+                // We'll match preview blocks by searching for divs where the previous small text matches the suffix; simpler: find preview elements by iterating preview pairs
+                // Better approach: mark preview elements with data-key server-side. But for now, update by mapping keys to preview elements via attribute data-key in inputs and matching order.
+                // We'll implement a simpler sync: for each input with data-key, find preview blocks where small text contains the suffix and update corresponding preview-tr/en child.
+                document.querySelectorAll('[data-key]').forEach(inp => {
+                    const k = inp.getAttribute('data-key');
+                    const suffix = k.substring(k.lastIndexOf('.') + 1);
+                    // find the preview block whose small label matches suffix (approx)
+                    const previewLabels = Array.from(document.querySelectorAll('#preview .small.text-muted'));
+                    for (let i = 0; i < previewLabels.length; i++){
+                        const label = previewLabels[i].textContent.trim();
+                        if (label.startsWith(suffix + ':')){
+                            const previewBlock = previewLabels[i].nextElementSibling;
+                            if (!previewBlock) continue;
+                            const tr = previewBlock.querySelector('.preview-tr');
+                            const en = previewBlock.querySelector('.preview-en');
+                            const trInput = document.querySelector('[name="' + k.replace('.', '_') + '_tr"]');
+                            const enInput = document.querySelector('[name="' + k.replace('.', '_') + '_en"]');
+                            if (tr && trInput) tr.innerText = trInput.value || trInput.textContent || '';
+                            if (en && enInput) en.innerText = enInput.value || enInput.textContent || '';
+                            break;
+                        }
+                    }
+                });
+            }
+
+            // initial sync
+            updatePreviewForKey();
+
+            // listen to inputs
+            document.querySelectorAll('input[data-key], textarea[data-key]').forEach(el => {
+                el.addEventListener('input', function(){ updatePreviewForKey(this.getAttribute('data-key')); });
+            });
+
+            // autofocus first input
+            const first = document.querySelector('form input, form textarea');
+            if (first) first.focus();
+
+            // default preview language
+            setPreviewLang('tr');
+        });
+    })();
+</script>
+</html>

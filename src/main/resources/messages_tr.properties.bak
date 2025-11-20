@@ -1,0 +1,144 @@
+# Navigation
+nav.home=Ana Sayfa
+nav.products=Ürünler
+nav.cart=Sepet
+nav.about=Hakkımızda
+nav.contact=İletişim
+nav.admin=Admin
+nav.management=Yönetim
+nav.logout=Çıkış
+
+# Hero Section
+hero.tagline=İstanbul'da el yapımı hi‑end hoparlör kabinleri ve sistemler.
+hero.subtitle=El Yapımı Sanatın En Üst Seviyesi
+hero.description=Mühendislikle el işçiliğinin zarif birleşimi: Kişiye özel hoparlör sistemleriyle müziğin en saf hâli.
+hero.discoverProducts=Ürünleri Keşfet
+hero.contactUs=Bize Ulaşın
+hero.experience=Yıllık Deneyim
+hero.handcrafted=El Yapımı
+hero.customization=Özelleştirme
+
+# About Section
+about.title=Hakkımızda
+about.badge=Hakkımızda
+about.description=Mirror Acoustics, İstanbul merkezli bir atölyede İsmet Çataloğlu tarafından kurulmuş ve onun titiz çalışmalarıyla büyüyen özel bir ses sistemleri markasıdır. Her bir ürün, yüksek mühendislik bilgisi ile el işçiliğinin zarif birleşimini yansıtır.
+about.description2=Bizim için hoparlörler sadece birer elektronik cihaz değil, aynı zamanda sanat eseri ve yaşam alanlarınıza değer katan tasarımlardır. Seçtiğiniz ahşap türü ve özel tasarım talepleriniz doğrultusunda, tamamen kişiye özel hoparlör kabinleri ve sistemler üretiyoruz.
+about.expertise=Beş Yıllık Uzmanlık
+about.expertiseDesc=Tutkuyla ve özveriyle müziğin en saf hâlini yaşam alanlarınıza taşıyoruz.
+about.quality=Kalite Garantisi
+about.qualityDesc=Her ürün detaylı testlerden geçer ve kalite standartlarımızı karşılar.
+
+# Why Us Section
+why.title=Neden Mirror Acoustics?
+why.badge=Neden Biz?
+why.subtitle=El yapımı sanat eserleriyle müzik deneyiminizi üst seviyeye taşıyoruz.
+why.customDesign=Özel Tasarım
+why.customDesignDesc=Tüm ürünlerimiz müşteri isteğine göre kişiselleştirilir ve özel ihtiyaçlarınıza göre tasarlanır.
+why.handcraftedCNC=El Yapımı & CNC
+why.handcraftedCNCDesc=Masif ahşap ve CNC işleme ile en ince ayrıntısına kadar hassas üretim.
+why.engineering=Mühendislik & Deneyim
+why.engineeringDesc=Kurucumuz İsmet Çataloğlu'nun sektörel tecrübesi ve mühendislik bilgisi.
+why.hiendAudio=Hi-End Ses Deneyimi
+why.hiendAudioDesc=Ev için hi-end performans, dünyaca ünlü bileşenlerle.
+why.directSales=Doğrudan Satış
+why.directSalesDesc=Aracı yok: üreticiden size — en adil fiyatla.
+why.expertise=15+ Yıllık Uzmanlık
+why.expertiseDesc=Süreçten teslimata kadar profesyonel takip ve deneyim.
+
+# Featured Products
+featured.title=Öne Çıkan Ürünler
+featured.badge=Ürünlerimiz
+featured.subtitle=El yapımı, kişiye özel hoparlör sistemlerimizden seçkiler
+featured.viewAll=Tüm Ürünleri Görüntüle
+featured.noProducts=Henüz ürün bulunmamaktadır.
+featured.viewDetails=Detay Görüntüle →
+featured.currency=₺
+
+# CTA Section
+cta.title=Kişiye Özel Hoparlör Sisteminizi Tasarlayalım
+cta.subtitle=Müzik zevkinize ve yaşam alanınıza özel, el yapımı hoparlör sistemleri için bugün bizimle iletişime geçin.
+cta.contact=İletişime Geçin
+cta.whatsapp=WhatsApp ile Yazın
+cta.contactBeforeOrder=Siparişten önce bizimle iletişime geçin
+
+# Cart
+cart.empty=Sepetiniz boş.
+cart.product=Ürün
+cart.quantity=Adet
+cart.price=Fiyat
+cart.total=Toplam
+cart.remove=Kaldır
+cart.favorites=Favoriler
+cart.noFavorites=Henüz favori yok.
+cart.nameSurname=Ad Soyad
+cart.phone=Telefon
+cart.email=E-posta
+cart.address=Adres
+cart.shippingPreference=Kargo Tercihi
+cart.note=Not
+cart.orderViaWhatsApp=WhatsApp'tan Toplu Sipariş
+
+# Products
+products.category=Kategori:
+products.searchPlaceholder=Ürün ara...
+products.noProducts=Henüz ürün yok.
+products.notFound=Ürün bulunamadı.
+products.createdAt=Oluşturulma:
+products.price=Fiyat
+products.addToCart=Sepete Ekle
+products.orderViaWhatsApp=WhatsApp'tan Sipariş Ver
+products.whatsappInfo=Mobilde WhatsApp açılır, masaüstünde WhatsApp Web kullanılır.
+
+# Process
+process.title=Üretim Sürecimiz
+process.step1=1. CNC Kesim
+process.step1Desc=Hassas CNC makineleriyle ahşap kesimi
+process.step2=2. El İşçiliği
+process.step2Desc=Uzman ellerle detay işçiliği
+process.step3=3. Montaj
+process.step3Desc=Hassas montaj ve test süreci
+process.step4=4. Kalite Kontrol
+process.step4Desc=Detaylı test ve kalite kontrolü
+
+# Footer
+footer.rights=Tüm hakları saklıdır.
+footer.madeWith=İstanbul'da ❤️ ile yapıldı
+
+# Common
+common.loading=Yükleniyor...
+common.error=Hata
+common.success=Başarılı
+common.save=Kaydet
+common.cancel=İptal
+common.edit=Düzenle
+common.delete=Sil
+common.back=Geri
+common.next=İleri
+common.previous=Önceki
+common.search=Ara
+common.filter=Filtrele
+common.sort=Sırala
+common.close=Kapat
+common.open=Aç
+common.yes=Evet
+common.no=Hayır
+common.ok=Tamam
+
+# Language
+lang.en=İngilizce
+lang.tr=Türkçe
+lang.current=Mevcut Dil
+
+# Theme
+theme.light=Açık
+theme.dark=Koyu
+theme.auto=Otomatik
+theme.toggle=Temayı Değiştir
+
+# Accessibility
+accessibility.menuToggle=Menüyü Aç/Kapat
+accessibility.searchToggle=Aramayı Aç/Kapat
+accessibility.navigation=Ana Navigasyon
+accessibility.mainContent=Ana İçerik
+accessibility.footer=Alt Bilgi
+accessibility.skipToContent=Ana içeriğe geç

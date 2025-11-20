@@ -73,7 +73,7 @@
 
         <div>
             <label class="form-label">Görseller</label>
-            <input class="form-control" id="imagesInput" name="images" type="file" multiple accept="image/*">
+            <input class="form-control" id="imagesInput" name="images" type="file" multiple accept="image/*,video/*">
             <div class="form-text">
                 Maksimum <strong>25 MB</strong> toplam boyut (tek dosya ve toplam). Önerilen: JPG/PNG, en az 1200px
                 genişlik.
@@ -106,11 +106,45 @@
         <h2 class="h5 mb-3">Görseller</h2>
         <form th:action="@{|/admin/products/${item.id}/images/reorder|}" method="post">
             <div class="row g-3" id="imgList">
-                <div class="col-sm-6 col-md-4" th:each="img : ${images}">
+                <div class="col-sm-6 col-md-4" th:each="img : ${images}"
+                    th:with="rawType=${img.type != null ? #strings.trim(#strings.toLowerCase(img.type)) : null},
+                             videoCandidate=${!#strings.isEmpty(img.videoUrl) ? img.videoUrl : img.url},
+                             videoCandidateLc=${!#strings.isEmpty(videoCandidate) ? #strings.toLowerCase(videoCandidate) : ''},
+                             isVideo=${(rawType != null and rawType == 'video') or
+                                       (!#strings.isEmpty(videoCandidateLc) and (
+                                           #strings.endsWith(videoCandidateLc, '.mp4') or
+                                           #strings.endsWith(videoCandidateLc, '.webm') or
+                                           #strings.endsWith(videoCandidateLc, '.ogg') or
+                                           #strings.endsWith(videoCandidateLc, '.mov') or
+                                           #strings.endsWith(videoCandidateLc, '.avi')
+                                       ))},
+                             imgType=${isVideo ? 'video' : 'image'},
+                             videoSrc=${isVideo ? videoCandidate : null}">
                     <div class="card h-100">
-                        <img th:src="${img.url}" th:alt="${img.altTextTr}" class="card-img-top"/>
-                        <div class="card-body d-flex gap-2 align-items-center">
+                        <div th:if="${imgType == 'image'}">
+                            <img th:src="${img.url}" th:alt="${img.altTextTr}" class="card-img-top"/>
+                        </div>
+                        <div th:if="${imgType == 'video'}">
+                            <video th:src="${videoSrc}" controls class="card-img-top" style="max-width:100%;max-height:200px;object-fit:contain;">
+                                Tarayıcınız video etiketini desteklemiyor.
+                            </video>
+                        </div>
+                        <div class="card-body d-flex flex-column gap-2 align-items-start">
                             <input type="hidden" name="orderedIds" th:value="${img.id}"/>
+                            <form th:action="@{|/admin/products/${item.id}/images/${img.id}/update|}" method="post" class="w-100">
+                                <div class="mb-2">
+                                    <label class="form-label">Tür</label>
+                                    <select class="form-select form-select-sm" name="type">
+                                        <option value="image" th:selected="${imgType == 'image'}">Resim</option>
+                                        <option value="video" th:selected="${imgType == 'video'}">Video</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2" th:if="${imgType == 'video'}">
+                                    <label class="form-label">Video URL</label>
+                                    <input class="form-control form-control-sm" name="videoUrl" th:value="${img.videoUrl}" placeholder="/uploads/video.mp4 veya https://..." />
+                                </div>
+                                <button class="btn btn-sm btn-outline-success" type="submit">Kaydet</button>
+                            </form>
                             <form th:action="@{|/admin/products/${item.id}/images/${img.id}/cover|}" method="post" onsubmit="return confirm('Kapak yapılsın mı?');">
                                 <button class="btn btn-sm btn-outline-primary" type="submit">Kapak Yap</button>
                             </form>
@@ -198,37 +232,57 @@
             // Önizleme kartlarını oluştur (boyut + piksel ölçüsü)
             for (const file of files) {
                 const url = URL.createObjectURL(file);
-                const img = new Image();
                 const card = document.createElement('div');
                 card.className = 'col';
 
-                // Kart iskeleti
+                let mediaPreview = '';
+                let dimsElText = 'Yükleniyor…';
+                if (file.type.startsWith('image/')) {
+                    mediaPreview = `<img class="card-img-top" alt="">`;
+                } else if (file.type.startsWith('video/')) {
+                    mediaPreview = `<video class="card-img-top" controls style="max-width:100%;max-height:160px;"></video>`;
+                }
+
                 card.innerHTML = `
                     <div class="card h-100 shadow-sm">
-                        <img class="card-img-top" alt="">
+                        ${mediaPreview}
                         <div class="card-body p-2">
                             <div class="small text-truncate" title="${file.name}"><strong>${file.name}</strong></div>
                             <div class="text-muted small">Dosya: ${fmtSize(file.size)}</div>
-                            <div class="text-muted small dims">Yükleniyor…</div>
+                            <div class="text-muted small dims">${dimsElText}</div>
                         </div>
                     </div>
                 `;
-                const imgEl = card.querySelector('img');
                 const dimsEl = card.querySelector('.dims');
-                imgEl.src = url;
-
-                await new Promise(res => {
-                    img.onload = () => {
-                        dimsEl.textContent = `Ölçü: ${img.width}×${img.height}px`;
-                        URL.revokeObjectURL(url);
-                        res();
-                    };
-                    imgEl.onerror = () => {
-                        dimsEl.textContent = 'Önizleme açılamadı';
-                        res();
-                    };
-                });
-
+                if (file.type.startsWith('image/')) {
+                    const imgEl = card.querySelector('img');
+                    imgEl.src = url;
+                    await new Promise(res => {
+                        imgEl.onload = () => {
+                            dimsEl.textContent = `Ölçü: ${imgEl.naturalWidth}×${imgEl.naturalHeight}px`;
+                            URL.revokeObjectURL(url);
+                            res();
+                        };
+                        imgEl.onerror = () => {
+                            dimsEl.textContent = 'Önizleme açılamadı';
+                            res();
+                        };
+                    });
+                } else if (file.type.startsWith('video/')) {
+                    const vidEl = card.querySelector('video');
+                    vidEl.src = url;
+                    await new Promise(res => {
+                        vidEl.onloadedmetadata = () => {
+                            dimsEl.textContent = `Süre: ${Math.round(vidEl.duration)} sn, ${Math.round(vidEl.videoWidth)}×${Math.round(vidEl.videoHeight)}px`;
+                            URL.revokeObjectURL(url);
+                            res();
+                        };
+                        vidEl.onerror = () => {
+                            dimsEl.textContent = 'Video önizleme açılamadı';
+                            res();
+                        };
+                    });
+                }
                 previewGrid.appendChild(card);
             }
 

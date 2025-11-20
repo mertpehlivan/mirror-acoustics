@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Showcase', ~{::content})}">
+<th:block th:fragment="content">
+
+    <div class="my-4">
+        <h1 class="h4">Vitrin Görselleri</h1>
+        <p class="text-muted">Ana sayfadaki vitrin alanında gösterilecek içerikleri yönetin.</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <form th:action="@{/admin/showcase/upload}" method="post" enctype="multipart/form-data" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Medya Dosyaları</label>
+                    <input class="form-control" type="file" name="images" multiple accept="image/*,video/*">
+                    <div class="form-text">JPG/PNG gibi görseller veya MP4/WEBM gibi videolar yükleyebilirsiniz. Dosyalar orijinal formatlarıyla kaydedilir.</div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Başlık (TR)</label>
+                    <input class="form-control" type="text" name="titleTr" placeholder="Opsiyonel">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Title (EN)</label>
+                    <input class="form-control" type="text" name="titleEn" placeholder="Optional">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" type="submit">Yükle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-3" th:if="${#lists.size(items) > 0}">
+        <div class="col-md-4" th:each="it : ${items}"
+             th:with="rawType=${it.type != null ? #strings.toLowerCase(it.type) : null},
+                      mediaUrl=${!#strings.isEmpty(it.videoUrl) ? it.videoUrl : it.url},
+                      mediaUrlLc=${!#strings.isEmpty(mediaUrl) ? #strings.toLowerCase(mediaUrl) : ''},
+                      isVideo=${(rawType != null and rawType == 'video') or
+                               (!#strings.isEmpty(mediaUrlLc) and (
+                                   #strings.endsWith(mediaUrlLc, '.mp4') or
+                                   #strings.endsWith(mediaUrlLc, '.webm') or
+                                   #strings.endsWith(mediaUrlLc, '.ogg') or
+                                   #strings.endsWith(mediaUrlLc, '.mov') or
+                                   #strings.endsWith(mediaUrlLc, '.avi')
+                               ))},
+                      mediaType=${isVideo ? 'video' : 'image'},
+                      videoSrc=${isVideo ? mediaUrl : null}">
+            <div class="card h-100">
+                <img th:if="${mediaType == 'image'}"
+                     th:src="${it.url}"
+                     th:alt="${it.titleTr} ?: 'Showcase'"
+                     class="card-img-top" />
+                <div th:if="${mediaType == 'video'}" class="ratio ratio-16x9 bg-dark">
+                    <video th:src="${videoSrc}"
+                           controls
+                           class="card-img-top"
+                           style="max-height:240px;object-fit:contain;">
+                        Tarayıcınız video etiketini desteklemiyor.
+                    </video>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong th:text="${it.titleTr} ?: (it.titleEn ?: 'Görsel')">Görsel</strong>
+                        <span class="badge"
+                              th:classappend="${mediaType == 'video'} ? ' bg-info text-dark' : ' bg-secondary'"
+                              th:text="${mediaType == 'video'} ? 'Video - Sıra: ' + ${it.sortOrder} : 'Sıra: ' + ${it.sortOrder}"></span>
+                    </div>
+                    <div class="btn-group">
+                        <form th:action="@{|/admin/showcase/${it.id}/move|}" method="post" class="me-1">
+                            <input type="hidden" name="dir" value="up" />
+                            <button class="btn btn-sm btn-outline-secondary" type="submit">Yukarı</button>
+                        </form>
+                        <form th:action="@{|/admin/showcase/${it.id}/move|}" method="post" class="me-1">
+                            <input type="hidden" name="dir" value="down" />
+                            <button class="btn btn-sm btn-outline-secondary" type="submit">Aşağı</button>
+                        </form>
+                        <form th:action="@{|/admin/showcase/${it.id}/toggle|}" method="post" class="me-1">
+                            <button th:class="${it.active} ? 'btn btn-sm btn-outline-warning' : 'btn btn-sm btn-outline-success'"
+                                    type="submit"
+                                    th:text="${it.active} ? 'Pasifleştir' : 'Aktifleştir'">Pasifleştir</button>
+                        </form>
+                        <form th:action="@{|/admin/showcase/${it.id}/delete|}" method="post" onsubmit="return confirm('Silinsin mi?');">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Sil</button>
+                        </form>
+                    </div>
+                    <hr />
+                    <form th:action="@{|/admin/showcase/${it.id}/settings|}" method="post" class="row g-2 align-items-center">
+                        <div class="col-12">
+                            <label class="form-label small mb-1">Görüntü Modu</label>
+                            <select name="displayMode" class="form-select form-select-sm">
+                                <option value="cover" th:selected="${it.displayMode == 'cover'}">Kırp (cover)</option>
+                                <option value="contain" th:selected="${it.displayMode == 'contain'}">Sığdır (contain)</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small mb-1">Medya Türü</label>
+                            <select name="type" class="form-select form-select-sm">
+                                <option value="image" th:selected="${mediaType == 'image'}">Resim</option>
+                                <option value="video" th:selected="${mediaType == 'video'}">Video</option>
+                            </select>
+                        </div>
+                        <div class="col-12" th:if="${mediaType == 'video'}">
+                            <label class="form-label small mb-1">Video URL</label>
+                            <input type="text"
+                                   name="videoUrl"
+                                   class="form-control form-control-sm"
+                                   th:value="${it.videoUrl}"
+                                   placeholder="/uploads/video.mp4 veya https://..." />
+                        </div>
+                        <div class="col-8">
+                            <label class="form-label small mb-1">Çerçeve Yüksekliği (px)</label>
+                            <input type="number"
+                                   name="frameHeight"
+                                   min="50"
+                                   class="form-control form-control-sm"
+                                   th:value="${it.frameHeight}"
+                                   placeholder="Otomatik" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label small mb-1">Hizalama (object-position)</label>
+                            <div class="input-group">
+                                <select name="objectPosition" class="form-select form-select-sm">
+                                    <option value="center" th:selected="${it.objectPosition == 'center'}">Orta</option>
+                                    <option value="top" th:selected="${it.objectPosition == 'top'}">Üst</option>
+                                    <option value="bottom" th:selected="${it.objectPosition == 'bottom'}">Alt</option>
+                                    <option value="left" th:selected="${it.objectPosition == 'left'}">Sol</option>
+                                    <option value="right" th:selected="${it.objectPosition == 'right'}">Sağ</option>
+                                    <option value="top left" th:selected="${it.objectPosition == 'top left'}">Üst Sol</option>
+                                    <option value="top right" th:selected="${it.objectPosition == 'top right'}">Üst Sağ</option>
+                                    <option value="bottom left" th:selected="${it.objectPosition == 'bottom left'}">Alt Sol</option>
+                                    <option value="bottom right" th:selected="${it.objectPosition == 'bottom right'}">Alt Sağ</option>
+                                    <option value="custom">Özel...</option>
+                                </select>
+                                <input type="text"
+                                       name="objectPosition"
+                                       class="form-control form-control-sm"
+                                       th:if="${it.objectPosition != null and it.objectPosition != 'center' and it.objectPosition != 'top' and it.objectPosition != 'bottom' and it.objectPosition != 'left' and it.objectPosition != 'right' and it.objectPosition != 'top left' and it.objectPosition != 'top right' and it.objectPosition != 'bottom left' and it.objectPosition != 'bottom right'}"
+                                       th:value="${it.objectPosition}"
+                                       placeholder="25% 75% veya benzeri" />
+                            </div>
+                        </div>
+                        <div class="col-4 d-grid">
+                            <button class="btn btn-sm btn-outline-primary" type="submit">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(items)}" class="alert alert-info">Henüz vitrin içeriği yok.</div>
+
+</th:block>
+</html>

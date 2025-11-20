@@ -1,45 +1,342 @@
-﻿<!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{layout :: layout(${title} ?: 'Ürün', ~{::content})}">
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(${title} ?: 'Ürün', ~{::content})}">
 <th:block th:fragment="content">
 
     <div th:if="${p} == null" class="alert alert-warning mt-3">
         <span th:text="#{products.notFound}">Ürün bulunamadı.</span>
     </div>
 
-        <div th:if="${p} != null" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+    <div th:if="${p} != null" class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
         <div>
-            <div class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100">
-                <img th:if="${#lists.size(p.images)>0}" th:src="${p.images.get(0).url}" class="w-full h-full object-cover" th:alt="${lang=='en'? p.titleEn : p.titleTr}" />
+            <div th:if="${#lists.size(p.images)>0}"
+                th:with="first=${p.images.get(0)},
+                  firstVideoCandidate=${!#strings.isEmpty(first.videoUrl) ? first.videoUrl : first.url},
+                  firstVideoCandidateLc=${!#strings.isEmpty(firstVideoCandidate) ? #strings.toLowerCase(firstVideoCandidate) : ''},
+                  firstIsVideo=${(first.type != null and #strings.equalsIgnoreCase(first.type, 'video')) or
+                                 (!#strings.isEmpty(firstVideoCandidateLc) and (
+                                     #strings.endsWith(firstVideoCandidateLc, '.mp4') or
+                                     #strings.endsWith(firstVideoCandidateLc, '.webm') or
+                                     #strings.endsWith(firstVideoCandidateLc, '.ogg') or
+                                     #strings.endsWith(firstVideoCandidateLc, '.mov') or
+                                     #strings.endsWith(firstVideoCandidateLc, '.avi')
+                                 ))},
+                  firstVideoSrc=${firstIsVideo ? firstVideoCandidate : null},
+                  firstAlt=${lang=='en'
+                      ? (!#strings.isEmpty(first.altTextEn) ? first.altTextEn : (!#strings.isEmpty(first.altTextTr) ? first.altTextTr : p.titleEn))
+                      : (!#strings.isEmpty(first.altTextTr) ? first.altTextTr : (!#strings.isEmpty(first.altTextEn) ? first.altTextEn : p.titleTr))}">
+                <div
+                    class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100 flex items-center justify-center">
+                    <button type="button" id="pdMainTrigger" class="relative h-full w-full">
+                        <img id="pdMainImage" th:src="${first.url}" th:alt="${firstAlt}"
+                            class="h-full w-full object-contain" th:if="${!firstIsVideo}" />
+                        <video id="pdMainVideo" class="h-full w-full rounded-xl bg-black object-contain" controls
+                            playsinline preload="metadata" th:src="${firstVideoSrc}" th:if="${firstIsVideo}"></video>
+                        <span id="pdVideoBadge"
+                            class="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-sm font-semibold text-white"
+                            th:if="${firstIsVideo}">
+                            <span aria-hidden="true">&#9654;</span>
+                            <span>Video</span>
+                        </span>
+                    </button>
+                </div>
             </div>
-            <div class="grid grid-cols-4 gap-3 mt-3" th:if="${#lists.size(p.images)>1}">
-                <img th:each="img : ${p.images}" th:src="${img.url}" class="w-full h-20 object-cover rounded-lg border" th:alt="${img.altTextTr}" loading="lazy" />
+            <div th:if="${#lists.isEmpty(p.images)}"
+                class="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100 flex items-center justify-center text-sm text-neutral-500">
+                <span>Ürün görseli bulunmuyor.</span>
+            </div>
+
+            <div class="grid grid-cols-4 gap-3 mt-3" th:if="${#lists.size(p.images)>0}">
+                <button type="button" th:each="img, iter : ${p.images}"
+                    class="group relative rounded-lg border border-transparent bg-white/70 transition hover:border-brand-500 focus:outline-none"
+                    th:with="
+                        mediaCandidate=${!#strings.isEmpty(img.videoUrl) ? img.videoUrl : img.url},
+                        mediaCandidateLc=${!#strings.isEmpty(mediaCandidate) ? #strings.toLowerCase(mediaCandidate) : ''},
+                        isVideo=${(img.type != null and #strings.equalsIgnoreCase(img.type, 'video')) or
+                                  (!#strings.isEmpty(mediaCandidateLc) and (
+                                      #strings.endsWith(mediaCandidateLc, '.mp4') or
+                                      #strings.endsWith(mediaCandidateLc, '.webm') or
+                                      #strings.endsWith(mediaCandidateLc, '.ogg') or
+                                      #strings.endsWith(mediaCandidateLc, '.mov') or
+                                      #strings.endsWith(mediaCandidateLc, '.avi')
+                                  ))},
+                        thumbAlt=${lang=='en'
+                            ? (!#strings.isEmpty(img.altTextEn) ? img.altTextEn : (!#strings.isEmpty(img.altTextTr) ? img.altTextTr : p.titleEn))
+                            : (!#strings.isEmpty(img.altTextTr) ? img.altTextTr : (!#strings.isEmpty(img.altTextEn) ? img.altTextEn : p.titleTr))}"
+                    th:attr="data-media-index=${iter.index},
+                             data-media-type=${isVideo ? 'video' : 'image'},
+                             data-media-url=${isVideo ? mediaCandidate : img.url},
+                             data-media-alt=${thumbAlt}">
+                    <div class="relative overflow-hidden rounded-md border border-transparent">
+                        <img th:if="${!isVideo}"
+                             th:src="${img.url}"
+                             class="h-20 w-full object-cover"
+                             th:alt="${thumbAlt}" loading="lazy" />
+                        <div th:if="${isVideo}"
+                            class="relative h-20 w-full overflow-hidden rounded-md bg-black flex items-center justify-center">
+                            <span class="text-white text-xs">VIDEO</span>
+                            <span class="absolute inset-0 flex items-center justify-center">
+                                <span
+                                    class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/70 text-white">&#9654;</span>
+                            </span>
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            <div id="pdModal" th:if="${#lists.size(p.images)>0}"
+                style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:1200;">
+                <div
+                    style="position:relative;max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center;">
+                    <button id="pdClose" type="button"
+                        style="position:absolute;top:-42px;right:-6px;background:transparent;border:none;color:#fff;font-size:36px;cursor:pointer;">&times;</button>
+                    <button id="pdPrev" type="button"
+                        style="position:absolute;left:-60px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:42px;cursor:pointer;">&#9664;</button>
+                    <img id="pdModalImg" src="" alt=""
+                        style="max-width:90vw;max-height:90vh;object-fit:contain;display:none;border-radius:12px;" />
+                    <video id="pdModalVideo" controls playsinline preload="metadata"
+                        style="max-width:90vw;max-height:90vh;object-fit:contain;display:none;border-radius:12px;background:black;"></video>
+                    <button id="pdNext" type="button"
+                        style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:42px;cursor:pointer;">&#9654;</button>
+                </div>
+                <div id="pdModalCaption"
+                    style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);color:#fff;font-size:14px;text-align:center;padding:6px 14px;background:rgba(0,0,0,0.4);border-radius:999px;">
+                </div>
             </div>
         </div>
         <div>
-            <h1 class="text-3xl font-semibold text-brand-900" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün Başlığı</h1>
+            <h1 class="text-3xl font-semibold text-brand-900" th:text="${lang=='en'? p.titleEn : p.titleTr}">Ürün
+                Başlığı</h1>
             <div class="text-sm text-neutral-500 mt-1">
                 <span th:text="#{products.createdAt}">Oluşturulma: </span>
                 <span th:text="${#temporals.format(p.createdAt, 'dd.MM.yyyy')}">01.01.2025</span>
             </div>
-            <p class="mt-4 text-neutral-800" th:text="${lang=='en'? p.descriptionEn : p.descriptionTr}">Ürün açıklaması…</p>
+            <p class="mt-4 text-neutral-800" th:text="${lang=='en'? p.descriptionEn : p.descriptionTr}">Ürün açıklaması…
+            </p>
             <div class="mt-6 rounded-2xl border p-5 bg-white/70">
                 <div class="flex items-center justify-between">
                     <span class="text-neutral-500" th:text="#{products.price}">Fiyat</span>
-                    <span class="text-2xl font-semibold text-brand-900" th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺ 0,00</span>
+                    <span class="text-2xl font-semibold text-brand-900"
+                        th:text="${p.currency} + ' ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'POINT')}">₺
+                        0,00</span>
                 </div>
                 <form th:action="@{/cart/add}" method="post" class="mt-4 flex gap-2">
                     <input type="hidden" name="productId" th:value="${p.id}" />
-                    <button type="submit" class="px-4 py-2 bg-brand-700 text-white rounded-lg hover:bg-brand-600" th:text="#{products.addToCart}">Sepete Ekle</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-700 text-white rounded-lg hover:bg-brand-600"
+                        th:text="#{products.addToCart}">Sepete Ekle</button>
                 </form>
                 <form th:action="@{/cart/whatsapp/direct}" method="post" class="mt-3">
                     <input type="hidden" name="productId" th:value="${p.id}" />
-                    <button type="submit" class="w-full rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-500" th:text="#{products.orderViaWhatsApp}">WhatsApp'tan Sipariş Ver</button>
+                    <button type="submit" class="w-full rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-500"
+                        th:text="#{products.orderViaWhatsApp}">WhatsApp'tan Sipariş Ver</button>
                 </form>
-                <p class="mt-2 text-xs text-neutral-500" th:text="#{products.whatsappInfo}">Mobilde WhatsApp açılır, masaüstünde WhatsApp Web kullanılır.</p>
+                <p class="mt-2 text-xs text-neutral-500" th:text="#{products.whatsappInfo}">Mobilde WhatsApp açılır,
+                    masaüstünde WhatsApp Web kullanılır.</p>
             </div>
         </div>
     </div>
+    <script th:if="${#lists.size(p.images)>0}">
+        (function () {
+            const triggers = Array.from(document.querySelectorAll('[data-media-index]'));
+            const modal = document.getElementById('pdModal');
+            const mainTrigger = document.getElementById('pdMainTrigger');
+            const mainImage = document.getElementById('pdMainImage');
+            const mainVideo = document.getElementById('pdMainVideo');
+            const videoBadge = document.getElementById('pdVideoBadge');
+            const modalImage = document.getElementById('pdModalImg');
+            const modalVideo = document.getElementById('pdModalVideo');
+            const modalCaption = document.getElementById('pdModalCaption');
+            const btnPrev = document.getElementById('pdPrev');
+            const btnNext = document.getElementById('pdNext');
+            const btnClose = document.getElementById('pdClose');
+
+            if (!triggers.length || !modal || !mainTrigger) {
+                return;
+            }
+
+            const mediaItems = triggers.map(btn => {
+                const mediaType = (btn.dataset.mediaType || 'image').toLowerCase();
+                const url = btn.dataset.mediaUrl || '';
+
+                return {
+                    type: mediaType,
+                    url: url,
+                    alt: btn.dataset.mediaAlt || ''
+                };
+            });
+
+            let current = 0;
+            let modalOpen = false;
+
+            function isVideoFile(path) {
+                if (!path) return false;
+                return /\.(mp4|webm|ogg|mov|avi)(\?|$)/i.test(path);
+            }
+
+            function normalize(idx) {
+                const total = mediaItems.length || 1;
+                return (idx % total + total) % total;
+            }
+
+            function setActive(index) {
+                const normalized = normalize(index);
+                triggers.forEach(btn => btn.classList.remove('border-brand-500', 'ring-2', 'ring-brand-500', 'shadow-lg'));
+                const active = triggers.find(btn => Number(btn.dataset.mediaIndex) === normalized);
+                if (active) {
+                    active.classList.add('border-brand-500', 'ring-2', 'ring-brand-500', 'shadow-lg');
+                }
+            }
+
+            function updateMain(item) {
+                if (!mainImage || !mainVideo) return;
+                const isVideo = item.type === 'video' && item.url && isVideoFile(item.url);
+
+                if (isVideo) {
+                    mainImage.style.display = 'none';
+                    mainVideo.style.display = 'block';
+                    mainVideo.pause();
+                    mainVideo.src = item.url;
+                    mainVideo.load();
+                } else {
+                    if (mainVideo) {
+                        mainVideo.pause();
+                        mainVideo.removeAttribute('src');
+                        mainVideo.style.display = 'none';
+                    }
+                    if (item.url) {
+                        mainImage.src = item.url;
+                    }
+                    if (item.alt) {
+                        mainImage.alt = item.alt;
+                    }
+                    mainImage.style.display = 'block';
+                }
+
+                if (videoBadge) {
+                    videoBadge.style.display = isVideo ? 'inline-flex' : 'none';
+                }
+            }
+
+            function updateModal(item) {
+                if (!modalImage || !modalVideo) return;
+                const isVideo = item.type === 'video' && item.url && isVideoFile(item.url);
+
+                if (isVideo) {
+                    modalImage.style.display = 'none';
+                    modalImage.removeAttribute('src');
+                    modalVideo.style.display = 'block';
+                    modalVideo.src = item.url;
+                    modalVideo.load();
+                } else {
+                    if (modalVideo) {
+                        modalVideo.pause();
+                        modalVideo.removeAttribute('src');
+                        modalVideo.style.display = 'none';
+                    }
+                    if (item.url) {
+                        modalImage.src = item.url;
+                    }
+                    if (item.alt) {
+                        modalImage.alt = item.alt;
+                    }
+                    modalImage.style.display = 'block';
+                }
+
+                if (modalCaption) {
+                    if (item.alt && item.alt.trim().length > 0) {
+                        modalCaption.textContent = item.alt;
+                        modalCaption.style.display = 'block';
+                    } else {
+                        modalCaption.textContent = '';
+                        modalCaption.style.display = 'none';
+                    }
+                }
+            }
+
+            function goTo(index) {
+                current = normalize(index);
+                const item = mediaItems[current];
+                updateMain(item);
+                if (modalOpen) {
+                    updateModal(item);
+                }
+                setActive(current);
+            }
+
+            function openModal(index) {
+                modalOpen = true;
+                goTo(index);
+                updateModal(mediaItems[current]);
+                modal.style.display = 'flex';
+            }
+
+            function closeModal() {
+                if (!modalOpen) return;
+                modalOpen = false;
+                modal.style.display = 'none';
+                if (modalVideo) {
+                    modalVideo.pause();
+                    modalVideo.removeAttribute('src');
+                    modalVideo.load();
+                }
+            }
+
+            triggers.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const idx = Number(this.dataset.mediaIndex) || 0;
+                    goTo(idx);
+                    current = idx;
+                    openModal(current);
+                });
+            });
+
+            if (mainTrigger) {
+                mainTrigger.addEventListener('click', function () {
+                    openModal(current);
+                });
+            }
+
+            btnPrev && btnPrev.addEventListener('click', function (e) {
+                e.preventDefault();
+                goTo(current - 1);
+            });
+
+            btnNext && btnNext.addEventListener('click', function (e) {
+                e.preventDefault();
+                goTo(current + 1);
+            });
+
+            btnClose && btnClose.addEventListener('click', function (e) {
+                e.preventDefault();
+                closeModal();
+            });
+
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (!modalOpen) return;
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    goTo(current - 1);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    goTo(current + 1);
+                }
+            });
+
+            if (mediaItems.length <= 1) {
+                if (btnPrev) btnPrev.style.display = 'none';
+                if (btnNext) btnNext.style.display = 'none';
+            }
+
+            goTo(0);
+        })();
+    </script>
 </th:block>
 
 </html>

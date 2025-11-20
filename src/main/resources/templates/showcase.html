@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(${title} ?: 'Vitrin', ~{::content})}">
+<th:block th:fragment="content">
+    <section class="py-8">
+        <div class="flex items-end justify-between mb-6 gap-4 flex-wrap">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-semibold text-brand-900" th:text="${lang=='en' ? 'Showcase' : 'Vitrin'}">Vitrin</h1>
+                <p class="text-sm text-neutral-500" th:text="${lang=='en' ? 'Featured gallery' : 'Öne çıkan galeri'}">Öne çıkan galeri</p>
+            </div>
+            <!-- Grid controls (1 / 2 / 4 columns) -->
+            <div class="flex items-center gap-2">
+                <div id="gridControls" class="flex items-center bg-white/50 rounded-lg p-2 shadow-sm">
+                    <button id="btn1" class="grid-btn btn" type="button" onclick="setCols(1)">1</button>
+                    <button id="btn2" class="grid-btn btn" type="button" onclick="setCols(2)">2</button>
+                    <button id="btn3" class="grid-btn btn active" type="button" onclick="setCols(3)">3</button>
+                    <button id="btn4" class="grid-btn btn" type="button" onclick="setCols(4)">4</button>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${showcase == null or #lists.isEmpty(showcase)}" class="alert alert-info">
+            <span th:text="${lang=='en' ? 'No showcase yet.' : 'Henüz vitrin içeriği yok.'}">Henüz vitrin içeriği yok.</span>
+        </div>
+
+        <div th:if="${showcase != null and !#lists.isEmpty(showcase)}">
+            <!-- Controls for adjusting showcase image height -->
+            
+
+            <!-- Image grid: columns adjustable by controls above -->
+            <style>
+                /* Local small styles for the showcase grid (keeps layout self-contained) */
+                .image-grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+                .image-card { border-radius: 0.75rem; overflow: hidden; background: #fff; border: 1px solid rgba(0,0,0,0.06); }
+                .image-card .img-wrap { background: #f3f4f6; }
+                .image-card img { width: 100%; height: auto; display: block; }
+                .btn { border: none; outline: none; padding: 6px 10px; background-color: #f1f1f1; cursor: pointer; font-size: 14px; border-radius: 6px; }
+                .btn:hover { background-color: #e5e7eb; }
+                .btn.active { background-color: #4b5563; color: white; }
+                .grid-btn { margin-right: 6px; }
+            </style>
+
+            <div id="showcaseGrid" class="image-grid">
+                <div th:each="it,iter : ${showcase}" class="image-card"
+                     th:with="rawType=${it.type != null ? #strings.toLowerCase(it.type) : null},
+                              mediaUrl=${!#strings.isEmpty(it.videoUrl) ? it.videoUrl : it.url},
+                              mediaUrlLc=${!#strings.isEmpty(mediaUrl) ? #strings.toLowerCase(mediaUrl) : ''},
+                              isVideo=${(rawType != null and rawType == 'video') or
+                                       (!#strings.isEmpty(mediaUrlLc) and (
+                                           #strings.endsWith(mediaUrlLc, '.mp4') or
+                                           #strings.endsWith(mediaUrlLc, '.webm') or
+                                           #strings.endsWith(mediaUrlLc, '.ogg') or
+                                           #strings.endsWith(mediaUrlLc, '.mov') or
+                                           #strings.endsWith(mediaUrlLc, '.avi')
+                                       ))},
+                              mediaType=${isVideo ? 'video' : 'image'},
+                              videoSrc=${isVideo ? mediaUrl : null},
+                              objectPos=${it.objectPosition != null ? it.objectPosition : 'center'},
+                              frameStyle=${it.frameHeight != null ? 'height:' + it.frameHeight + 'px' : null},
+                              frameHeightValue=${it.frameHeight != null ? it.frameHeight + 'px' : 'auto'},
+                              objectFit=${it.displayMode != null ? it.displayMode : (isVideo ? 'contain' : 'cover')},
+                              mediaStyle=${'width:100%;display:block;object-fit:' + objectFit + ';object-position:' + objectPos + ';height:' + frameHeightValue + ';'}">
+                    <div class="img-wrap" th:style="${frameStyle}">
+                        <a href="#" class="showcase-link" th:attr="data-index=${iter.index}">
+                            <img th:if="${mediaType == 'image'}"
+                                th:src="${it.url}" th:alt="${it.titleTr} ?: (${it.titleEn} ?: 'Showcase')"
+                                loading="lazy" data-showcase-img
+                                th:attr="style=${mediaStyle}, data-admin-frame='1'" />
+                            <video th:if="${mediaType == 'video'}" th:src="${videoSrc}" controls preload="metadata"
+                                th:attr="style=${mediaStyle}, poster=${!#strings.isEmpty(it.url) ? it.url : null}">
+                                Tarayıcınız video etiketini desteklemiyor.
+                            </video>
+                        </a>
+                    </div>
+                    <div class="p-4">
+                        <div class="text-sm text-neutral-600" th:text="${lang=='en' ? it.titleEn : it.titleTr}">Görsel</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination controls -->
+            <div th:if="${totalPages != null and totalPages > 1}" class="mt-6 flex items-center justify-center gap-2">
+                <button id="pagePrev" class="btn" type="button" th:disabled="${currentPage == 0}" th:onclick="|goPage(${currentPage - 1})|">← <span th:text="${lang=='en' ? 'Prev' : 'Önceki'}">Önceki</span></button>
+
+                <div class="inline-flex items-center gap-1">
+            <button class="btn page-num" th:each="i : ${#numbers.sequence(0, totalPages-1)}" type="button"
+                th:id="${'pg' + i}"
+                th:text="${i + 1}"
+                th:classappend="${i == currentPage} ? ' active' : ''"
+                th:onclick="|goPage(${i})|">1</button>
+                </div>
+
+                <button id="pageNext" class="btn" type="button" th:disabled="${currentPage + 1 >= totalPages}" th:onclick="|goPage(${currentPage + 1})|"><span th:text="${lang=='en' ? 'Next' : 'Sonraki'}">Sonraki</span> →</button>
+            </div>
+
+            <script>
+                (function(){
+                    const grid = document.getElementById('showcaseGrid');
+                    const btn1 = document.getElementById('btn1');
+                    const btn2 = document.getElementById('btn2');
+                    const btn3 = document.getElementById('btn3');
+                    const btn4 = document.getElementById('btn4');
+
+                    window.setCols = function(n){
+                        if (!grid) return;
+                        grid.style.gridTemplateColumns = 'repeat(' + n + ', 1fr)';
+                        // active class
+                        [btn1, btn2, btn3, btn4].forEach(b => b && b.classList.remove('active'));
+                        if (n === 1) btn1 && btn1.classList.add('active');
+                        if (n === 2) btn2 && btn2.classList.add('active');
+                        if (n === 3) btn3 && btn3.classList.add('active');
+                        if (n === 4) btn4 && btn4.classList.add('active');
+                    };
+
+                    // initialize default
+                    if (grid) {
+                        // try to use stored preference
+                        try {
+                            const pref = localStorage.getItem('showcaseGridCols');
+                            const cols = pref ? parseInt(pref,10) : 3;
+                            // sanity-check allowed values
+                            const allowed = [1,2,3,4];
+                            setCols(allowed.includes(cols) ? cols : 3);
+                        } catch(e){ setCols(3); }
+                    }
+
+                    // persist changes
+                    const origSetCols = window.setCols;
+                    window.setCols = function(n){
+                        origSetCols(n);
+                        try { localStorage.setItem('showcaseGridCols', String(n)); } catch(e){}
+                    };
+
+                    // pagination navigation helper
+                    window.goPage = function(n) {
+                        // clamp
+                        const tn = Math.max(0, parseInt(n,10) || 0);
+                        const url = new URL(window.location.href);
+                        url.searchParams.set('page', String(tn));
+                        // preserve page size if present
+                        if (!url.searchParams.get('size')) {
+                            url.searchParams.set('size', String(document.body.getAttribute('data-showcase-page-size') || 12));
+                        }
+                        window.location.href = url.toString();
+                    };
+
+                    // Lightbox / modal gallery
+                    const lightbox = (function(){
+                        let items = Array.from(document.querySelectorAll('.showcase-link'));
+                        let current = 0;
+
+                        // create modal DOM
+                        const modal = document.createElement('div');
+                        modal.id = 'showcaseModal';
+                        modal.style.position = 'fixed';
+                        modal.style.top = 0;
+                        modal.style.left = 0;
+                        modal.style.width = '100%';
+                        modal.style.height = '100%';
+                        modal.style.display = 'none';
+                        modal.style.alignItems = 'center';
+                        modal.style.justifyContent = 'center';
+                        modal.style.background = 'rgba(0,0,0,0.85)';
+                        modal.style.zIndex = 1200;
+                        modal.innerHTML = `
+                            <div id="lbContent" style="position:relative;max-width:95vw;max-height:95vh;display:flex;align-items:center;justify-content:center;">
+                                <button id="lbClose" style="position:absolute;top:-36px;right:0;background:transparent;color:#fff;border:none;font-size:28px;cursor:pointer;">×</button>
+                                <img id="lbImage" src="" style="max-width:95vw;max-height:95vh;object-fit:contain;display:none;margin:0 auto;" />
+                                <video id="lbVideo" src="" controls style="max-width:95vw;max-height:95vh;object-fit:contain;display:none;margin:0 auto;" poster=""></video>
+                                <button id="lbPrev" style="position:absolute;left:-60px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:40px;cursor:pointer;">◀</button>
+                                <button id="lbNext" style="position:absolute;right:-60px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#fff;font-size:40px;cursor:pointer;">▶</button>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+
+                        const imgEl = modal.querySelector('#lbImage');
+                        const vidEl = modal.querySelector('#lbVideo');
+                        const btnClose = modal.querySelector('#lbClose');
+                        const btnPrev = modal.querySelector('#lbPrev');
+                        const btnNext = modal.querySelector('#lbNext');
+
+                        function getMediaElements() {
+                            items = Array.from(document.querySelectorAll('.showcase-link'));
+                            return items.map(a => {
+                                const img = a.querySelector('img');
+                                const video = a.querySelector('video');
+                                return {img, video};
+                            });
+                        }
+
+                        function show(i) {
+                            const media = getMediaElements();
+                            if (!media || media.length === 0) return;
+                            current = Math.max(0, Math.min(i, media.length - 1));
+                            const {img, video} = media[current];
+                            if (img) {
+                                imgEl.src = img.src;
+                                imgEl.alt = img.alt || '';
+                                imgEl.style.display = 'block';
+                                vidEl.style.display = 'none';
+                                vidEl.pause();
+                            } else if (video) {
+                                vidEl.src = video.src;
+                                vidEl.style.display = 'block';
+                                imgEl.style.display = 'none';
+                            }
+                            modal.style.display = 'flex';
+                        }
+
+                        function hide() {
+                            modal.style.display = 'none';
+                            imgEl.style.display = 'none';
+                            vidEl.style.display = 'none';
+                            vidEl.pause();
+                        }
+                        function prev() { show((current - 1 + getMediaElements().length) % getMediaElements().length); }
+                        function next() { show((current + 1) % getMediaElements().length); }
+
+                        // events
+                        btnClose.addEventListener('click', hide);
+                        btnPrev.addEventListener('click', prev);
+                        btnNext.addEventListener('click', next);
+                        modal.addEventListener('click', function(e){ if (e.target === modal) hide(); });
+                        document.addEventListener('keydown', function(e){
+                            if (modal.style.display !== 'flex') return;
+                            if (e.key === 'Escape') hide();
+                            if (e.key === 'ArrowLeft') prev();
+                            if (e.key === 'ArrowRight') next();
+                        });
+
+                        // attach click handlers to items
+                        function initItems(){
+                            items = Array.from(document.querySelectorAll('.showcase-link'));
+                            items.forEach((a, idx) => {
+                                a.addEventListener('click', function(ev){ ev.preventDefault(); show(idx); });
+                            });
+                        }
+
+                        // init now and return API
+                        initItems();
+                        return { show, hide, next, prev };
+                    })();
+                })();
+            </script>
+        </div>
+    </section>
+</th:block>
+</html>
+

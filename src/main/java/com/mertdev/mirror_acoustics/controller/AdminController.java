@@ -2,18 +2,26 @@ package com.mertdev.mirror_acoustics.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import com.mertdev.mirror_acoustics.domain.Setting;
 import java.util.UUID;
+import java.util.Locale;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mertdev.mirror_acoustics.domain.Category;
 import com.mertdev.mirror_acoustics.domain.Product;
@@ -24,8 +32,10 @@ import com.mertdev.mirror_acoustics.repository.ProductImageRepository;
 import com.mertdev.mirror_acoustics.repository.OrderDraftRepository;
 import com.mertdev.mirror_acoustics.service.StorageService;
 import com.mertdev.mirror_acoustics.util.Slugger;
+import com.mertdev.mirror_acoustics.web.AdminPasswordForm;
 
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,6 +46,9 @@ public class AdminController {
     private final StorageService storage;
     private final OrderDraftRepository orderDrafts;
     private final ProductImageRepository imagesRepo;
+    private final com.mertdev.mirror_acoustics.repository.ShowcaseImageRepository showcaseRepo;
+    private final com.mertdev.mirror_acoustics.service.SettingService settingService;
+    private final com.mertdev.mirror_acoustics.service.AdminCredentialService adminCredentialService;
 
     @GetMapping("/login")
     public String login() {
@@ -256,4 +269,235 @@ public class AdminController {
         m.addAttribute("items", orderDrafts.findAll(Sort.by(Sort.Direction.DESC, "createdAt")));
         return "admin/orders-drafts";
     }
+
+    // Showcase (Vitrin)
+    @GetMapping("/showcase")
+    public String showcase(Model m) {
+        m.addAttribute("items", showcaseRepo.findAllByOrderBySortOrderAsc());
+        return "admin/showcase";
+    }
+
+    @PostMapping(value = "/showcase/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String showcaseUpload(@RequestParam(name = "images", required = false) List<MultipartFile> images,
+                                 @RequestParam(required = false) String titleTr,
+                                 @RequestParam(required = false) String titleEn) throws Exception {
+        int start = showcaseRepo.findAll().size();
+        if (images != null) {
+            for (int i = 0; i < images.size(); i++) {
+                MultipartFile f = images.get(i);
+                String url = storage.saveShowcaseImage(f);
+                if (url != null) {
+                    String contentType = f.getContentType();
+                    String original = f.getOriginalFilename();
+                    boolean isVideo = false;
+                    if (contentType != null && contentType.toLowerCase(Locale.ROOT).startsWith("video/")) {
+                        isVideo = true;
+                    } else if (original != null) {
+                        String lower = original.toLowerCase(Locale.ROOT);
+                        isVideo = lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".ogg")
+                                || lower.endsWith(".mov") || lower.endsWith(".avi");
+                    }
+
+                    com.mertdev.mirror_acoustics.domain.ShowcaseImage si = new com.mertdev.mirror_acoustics.domain.ShowcaseImage();
+                    si.setUrl(url);
+                    si.setTitleTr(titleTr);
+                    si.setTitleEn(titleEn);
+                    si.setSortOrder(start + i);
+                    si.setType(isVideo ? "video" : "image");
+                    if (isVideo) {
+                        si.setVideoUrl(url);
+                        si.setDisplayMode("contain");
+                    }
+                    showcaseRepo.save(si);
+                }
+            }
+        }
+        return "redirect:/admin/showcase";
+    }
+
+    @PostMapping("/showcase/{id}/delete")
+    public String showcaseDelete(@PathVariable Long id) {
+        showcaseRepo.deleteById(id);
+        return "redirect:/admin/showcase";
+    }
+
+    @PostMapping("/showcase/{id}/toggle")
+    public String showcaseToggle(@PathVariable Long id) {
+        var item = showcaseRepo.findById(id).orElseThrow();
+        item.setActive(!item.isActive());
+        showcaseRepo.save(item);
+        return "redirect:/admin/showcase";
+    }
+
+    @PostMapping("/showcase/{id}/move")
+    public String showcaseMove(@PathVariable Long id, @RequestParam String dir) {
+        var items = showcaseRepo.findAllByOrderBySortOrderAsc();
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getId().equals(id)) {
+                int j = dir.equals("up") ? i - 1 : i + 1;
+                if (j >= 0 && j < items.size()) {
+                    int a = items.get(i).getSortOrder();
+                    int b = items.get(j).getSortOrder();
+                    items.get(i).setSortOrder(b);
+                    items.get(j).setSortOrder(a);
+                    showcaseRepo.save(items.get(i));
+                    showcaseRepo.save(items.get(j));
+                }
+                break;
+            }
+        }
+        return "redirect:/admin/showcase";
+    }
+
+    @PostMapping("/showcase/{id}/settings")
+    public String showcaseSettings(@PathVariable Long id,
+                                   @RequestParam(required = false) String type,
+                                   @RequestParam(required = false) String videoUrl,
+                                   @RequestParam(required = false) String displayMode,
+                                   @RequestParam(required = false) Integer frameHeight,
+                                   @RequestParam(required = false) String objectPosition) {
+        var item = showcaseRepo.findById(id).orElseThrow();
+        if (type != null) {
+            String normalized = type.trim().toLowerCase(Locale.ROOT);
+            item.setType(normalized.equals("video") ? "video" : "image");
+        }
+        if (videoUrl != null) {
+            String trimmed = videoUrl.trim();
+            item.setVideoUrl(trimmed.isEmpty() ? null : trimmed);
+        }
+        if (displayMode != null) item.setDisplayMode(displayMode);
+        item.setFrameHeight(frameHeight);
+        if (objectPosition != null) item.setObjectPosition(objectPosition);
+        if ("video".equalsIgnoreCase(item.getType())) {
+            if (item.getVideoUrl() == null || item.getVideoUrl().isBlank()) {
+                item.setVideoUrl(item.getUrl());
+            }
+            if (item.getDisplayMode() == null || item.getDisplayMode().isBlank()) {
+                item.setDisplayMode("contain");
+            }
+        } else {
+            item.setType("image");
+            item.setVideoUrl(null);
+        }
+        showcaseRepo.save(item);
+        return "redirect:/admin/showcase";
+    }
+
+    @GetMapping("/profile/password")
+    public String adminPasswordForm(Model model) {
+        if (!model.containsAttribute("passwordForm")) {
+            model.addAttribute("passwordForm", new AdminPasswordForm());
+        }
+        model.addAttribute("adminUsername", adminCredentialService.getAdminUsername());
+        return "admin/password-form";
+    }
+
+    @PostMapping("/profile/password")
+    public String updateAdminPassword(
+            @Valid @ModelAttribute("passwordForm") AdminPasswordForm form,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        if (!bindingResult.hasFieldErrors("newPassword") && !bindingResult.hasFieldErrors("confirmPassword")) {
+            if (!form.getNewPassword().equals(form.getConfirmPassword())) {
+                bindingResult.rejectValue("confirmPassword", "password.mismatch", "Yeni şifre tekrarı eşleşmiyor.");
+            }
+        }
+
+        if (!bindingResult.hasFieldErrors("currentPassword")
+                && !adminCredentialService.matchesCurrentPassword(form.getCurrentPassword())) {
+            bindingResult.rejectValue("currentPassword", "password.invalid", "Mevcut şifre yanlış.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("adminUsername", adminCredentialService.getAdminUsername());
+            return "admin/password-form";
+        }
+
+        adminCredentialService.updatePassword(form.getNewPassword());
+        redirectAttributes.addFlashAttribute("passwordChanged", true);
+        return "redirect:/admin/profile/password";
+    }
+
+    // Contact settings (multilanguage)
+    @GetMapping("/contact-settings")
+    public String contactSettings(Model m) {
+        // Group keys to render a more user-friendly admin UI
+        Map<String, List<Setting>> groups = new LinkedHashMap<>();
+
+        groups.put("Address", new ArrayList<>());
+        groups.put("Phone", new ArrayList<>());
+        groups.put("Email", new ArrayList<>());
+        groups.put("WhatsApp", new ArrayList<>());
+        groups.put("Hours", new ArrayList<>());
+
+        // Address
+        groups.get("Address").add(settingService.find("contact.address.value"));
+        groups.get("Address").add(settingService.find("contact.address.note"));
+
+        // Phone
+        groups.get("Phone").add(settingService.find("contact.phone.title"));
+        groups.get("Phone").add(settingService.find("contact.phone.number"));
+        groups.get("Phone").add(settingService.find("contact.phone.hours"));
+
+        // Email
+        groups.get("Email").add(settingService.find("contact.email.title"));
+        groups.get("Email").add(settingService.find("contact.email.address"));
+        groups.get("Email").add(settingService.find("contact.email.note"));
+
+        // WhatsApp
+        groups.get("WhatsApp").add(settingService.find("contact.whatsapp.phone"));
+        groups.get("WhatsApp").add(settingService.find("contact.whatsapp.prefill"));
+        groups.get("WhatsApp").add(settingService.find("contact.whatsapp.button"));
+
+        // Hours
+        groups.get("Hours").add(settingService.find("contact.hours.title"));
+        groups.get("Hours").add(settingService.find("contact.hours.weekdays"));
+        groups.get("Hours").add(settingService.find("contact.hours.saturday"));
+        groups.get("Hours").add(settingService.find("contact.hours.sunday"));
+        groups.get("Hours").add(settingService.find("contact.hours.closed"));
+        groups.get("Hours").add(settingService.find("contact.hours.emergency"));
+
+        m.addAttribute("settingsGroups", groups);
+        return "admin/contact-settings";
+    }
+
+    @PostMapping("/contact-settings")
+    public String saveContactSettings(jakarta.servlet.http.HttpServletRequest req, org.springframework.web.servlet.mvc.support.RedirectAttributes ra) {
+    String[] keys = new String[]{
+        "contact.address.value",
+        "contact.address.note",
+        "contact.phone.title",
+        "contact.phone.number",
+        "contact.phone.hours",
+        "contact.email.title",
+        "contact.email.address",
+        "contact.email.note",
+        "contact.whatsapp.phone",
+        "contact.whatsapp.prefill",
+        "contact.whatsapp.button",
+        "contact.hours.title",
+        "contact.hours.weekdays",
+        "contact.hours.saturday",
+        "contact.hours.sunday",
+        "contact.hours.closed",
+        "contact.hours.emergency"
+    };
+        for (String key : keys) {
+            String base = key.replace('.', '_');
+            String tr = req.getParameter(base + "_tr");
+            String en = req.getParameter(base + "_en");
+            if (tr == null) tr = "";
+            if (en == null) en = "";
+            settingService.save(key, tr, en);
+        }
+        // use flash attribute for success message instead of query param
+        ra.addFlashAttribute("message", "Contact settings saved successfully.");
+        return "redirect:/admin/contact-settings";
+    }
+
+    // About admin endpoints have been removed to restore previous behavior (use message bundles)
 }
+
+

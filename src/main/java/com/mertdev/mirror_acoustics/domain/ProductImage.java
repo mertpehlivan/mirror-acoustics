@@ -32,5 +32,14 @@ public class ProductImage {
     private String altTextTr; // SEO alt text
     private String altTextEn;
     private Integer sortOrder = 0;
+    /**
+     * Type of product image: "image" or "video". Default is "image" for backward compatibility.
+     */
+    private String type = "image";
+
+    /**
+     * If type is "video", this is the video URL (can be local or external).
+     */
+    private String videoUrl;
     // getters/setters
 }

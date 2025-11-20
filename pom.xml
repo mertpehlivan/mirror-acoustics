@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.mertdev</groupId>
 	<artifactId>mirror-acoustics</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>mirror-acoustics</name>
 	<description>Demo project for Spring Boot</description>
 	<url />
@@ -29,6 +29,8 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<!-- Default path to a JDK 17 javac executable on Windows. Override with -Djdk.executable=path or set JAVA_HOME in your shell. -->
+		<jdk.executable>C:/Program Files/Java/jdk-17/bin/javac</jdk.executable>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -83,6 +85,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.26</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
@@ -90,8 +93,38 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.14.0</version>
+				<configuration>
+					<!-- Force the compiler to the javac pointed to by JAVA_HOME. Set JAVA_HOME to a JDK 17 installation before running Maven. -->
+					<fork>true</fork>
+					<!-- Use property so users can override via -Djdk.executable or by setting JAVA_HOME earlier. -->
+					<executable>${jdk.executable}</executable>
+					<compilerArgs>
+						<arg>--release</arg>
+						<arg>17</arg>
+					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.26</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

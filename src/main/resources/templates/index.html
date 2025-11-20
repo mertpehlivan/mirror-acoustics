@@ -53,13 +53,24 @@
         .process-step:hover img {
             transform: scale(1.05);
         }
+
+        /* Modern hero blobs */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(20px, -30px) scale(1.05); }
+            66% { transform: translate(-10px, 20px) scale(0.98); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 12s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </head>
 
 <th:block th:fragment="content">
     <!-- HERO -->
-    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <!-- Arka plan resmi - CNC makinesi ve üretim süreci -->
+    <section class="relative pt-8 md:pt-10 lg:pt-12 pb-12 md:pb-16 lg:pb-20 overflow-hidden">
+        <!-- Arka plan resmi - CNC Üretim Süreci -->
         <div class="absolute inset-0">
             <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
                  alt="Mirror Acoustics CNC Üretim" 
@@ -68,61 +79,106 @@
         </div>
 
         <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute top-20 left-10 w-32 h-32 bg-amber-400/10 rounded-full blur-3xl animate-pulse"></div>
-            <div class="absolute top-40 right-20 w-24 h-24 bg-amber-300/10 rounded-full blur-2xl animate-pulse"></div>
-            <div class="absolute bottom-40 left-20 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl animate-pulse"></div>
+            <!-- Animated blobs -->
+            <div class="absolute -top-10 -left-10 w-72 h-72 bg-amber-400/20 rounded-full blur-3xl animate-blob"></div>
+            <div class="absolute top-20 -right-10 w-80 h-80 bg-amber-300/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-10 left-1/3 w-72 h-72 bg-amber-500/20 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+            <!-- Subtle dot grid overlay -->
+            <svg class="absolute inset-0 w-full h-full opacity-[0.06]" aria-hidden="true">
+                <defs>
+                    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                        <circle cx="1" cy="1" r="1" fill="white" />
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
         </div>
 
         <div class="relative z-10 text-center text-white max-w-6xl mx-auto px-6">
-            <div class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-8">
+            <div class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4">
                 <span class="w-2 h-2 bg-amber-400 rounded-full mr-2 animate-pulse"></span>
                 <span class="text-sm font-medium" th:text="#{hero.tagline}">Premium Audio Solutions</span>
             </div>
 
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-4 leading-tight">
                 <span class="bg-gradient-to-r from-white via-amber-100 to-amber-200 bg-clip-text text-transparent">
                     Mirror Acoustics
                 </span>
             </h1>
 
-            <p class="text-xl md:text-2xl lg:text-3xl font-light mb-8 max-w-4xl mx-auto leading-relaxed">
+            <p class="text-xl md:text-2xl lg:text-3xl font-light mb-6 max-w-4xl mx-auto leading-relaxed">
                 <span th:text="#{hero.subtitle}">El Yapımı Sanatın En Üst Seviyesi</span>
             </p>
 
-            <p class="text-lg md:text-xl text-amber-100 mb-12 max-w-3xl mx-auto leading-relaxed" th:text="#{hero.description}">
-                Mühendislikle el işçiliğinin zarif birleşimi: Kişiye özel hoparlör sistemleriyle müziğin en saf hâli.
+            <p class="text-lg md:text-xl text-amber-100 mb-8 max-w-3xl mx-auto leading-relaxed" th:text="#{hero.description}">
+                MÃ¼hendislikle el iÅŸÃ§iliÄŸinin zarif birleÅŸimi: KiÅŸiye Ã¶zel hoparlÃ¶r sistemleriyle mÃ¼ziÄŸin en saf hÃ¢li.
             </p>
 
-            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-                <a th:href="@{/urun}" 
-                   class="group relative px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold rounded-2xl text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                    <span class="relative z-10" th:text="#{hero.discoverProducts}">Ürünleri Keşfet</span>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+                <a th:href="@{/urun}"
+                   class="group relative px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-semibold rounded-2xl text-lg transition-all duration-300 hover:shadow-[0_10px_30px_rgba(245,158,11,0.4)]">
+                    <i class="fa-solid fa-box-open mr-2 opacity-90"></i>
+                    <span class="relative z-10" th:text="#{hero.discoverProducts}">ÃœrÃ¼nleri KeÅŸfet</span>
                 </a>
-                <a th:href="@{/iletisim}" 
-                   class="px-8 py-4 bg-transparent text-white font-bold rounded-2xl text-lg border-2 border-white/30 transition-all duration-300 hover:scale-105 hover:bg-white/10">
-                    <span th:text="#{hero.contactUs}">Bize Ulaşın</span>
+                <a th:href="@{/iletisim}"
+                   class="px-8 py-3 bg-white/5 text-white font-semibold rounded-2xl text-lg border border-white/20 backdrop-blur-md transition-all duration-300 hover:bg-white/10">
+                    <i class="fa-regular fa-message mr-2 opacity-90"></i>
+                    <span th:text="#{hero.contactUs}">Bize UlaÅŸÄ±n</span>
                 </a>
+            </div>
+
+            <!-- Feature badges -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10">
+                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-amber-100 text-xs" th:text="#{badges.handmade}">Handcrafted in Istanbul</span>
+                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-amber-100 text-xs" th:text="#{badges.hiend}">Hi-End systems</span>
+                <span class="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-amber-100 text-xs" th:text="#{badges.customizable}">Customizable design</span>
             </div>
 
             <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
                 <div class="text-center">
-                    <div class="text-3xl font-bold text-amber-300 mb-2">5+</div>
-                    <div class="text-sm text-amber-100" th:text="#{hero.experience}">Yıllık Deneyim</div>
+                    <div class="text-3xl font-bold text-amber-300 mb-2">15+</div>
+                    <div class="text-sm text-amber-100" th:text="#{hero.experience}">YÄ±llÄ±k Deneyim</div>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl font-bold text-amber-300 mb-2">100%</div>
-                    <div class="text-sm text-amber-100" th:text="#{hero.handcrafted}">El Yapımı</div>
+                    <div class="text-sm text-amber-100" th:text="#{hero.handcrafted}">El YapÄ±mÄ±</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl font-bold text-amber-300 mb-2">∞</div>
-                    <div class="text-sm text-amber-100" th:text="#{hero.customization}">Özelleştirme</div>
+                    <div class="text-3xl font-bold text-amber-300 mb-2">&infin;</div>
+                    <div class="text-sm text-amber-100" th:text="#{hero.customization}">Ã–zelleÅŸtirme</div>
                 </div>
             </div>
         </div>
 
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+        <div class="hidden md:block absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
+            <div class="w-5 h-9 border-2 border-white/30 rounded-full flex justify-center">
                 <div class="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOWCASE -->
+    <section th:if="${showcase != null and !#lists.isEmpty(showcase)}" class="py-10">
+        <div class="mb-6 text-center">
+            <div class="mt-2"><a th:href="${#locale.language == 'en'} ? @{/en/showcase} : @{/vitrin}" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-100 text-sm underline font-medium" th:text="#{showcase.viewAll}">View All</a></div>
+            <h2 class="text-2xl md:text-3xl font-bold text-amber-900" th:text="#{showcase.title}">Vitrin</h2>
+            <p class="text-amber-700 text-sm" th:text="#{showcase.subtitle}">Featured gallery</p>
+        </div>
+        <div class="relative">
+            <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory px-1" style="scrollbar-width: thin;">
+                <a th:each="it : ${showcase}"
+                   class="min-w-[280px] md:min-w-[360px] lg:min-w-[420px] snap-center block rounded-2xl overflow-hidden shadow hover:shadow-lg transition-shadow duration-200">
+                    <!-- Use CSS variable for height so it can be adjusted at runtime -->
+                <th:block th:if="${it.frameHeight} != null">
+                    <img th:src="${it.url}" th:alt="${#locale.language == 'en' ? (it.titleEn ?: 'Showcase') : (it.titleTr ?: 'Vitrin')}"
+                         loading="lazy" data-showcase-img
+                         th:attr="style=${it.displayMode} != null ? ('object-fit:' + ${it.displayMode} + ';object-position:' + (${it.objectPosition} ?: 'center') + ';height:' + ${it.frameHeight} + 'px;') : ('object-fit:cover;object-position:' + (${it.objectPosition} ?: 'center') + ';height:' + ${it.frameHeight} + 'px;'), data-admin-frame='1'" />
+                </th:block>
+                <th:block th:if="${it.frameHeight} == null">
+                    <img th:src="${it.url}" th:alt="${#locale.language == 'en' ? (it.titleEn ?: 'Showcase') : (it.titleTr ?: 'Vitrin')}"
+                         loading="lazy" data-showcase-img data-preserve-original="1" />
+                </th:block>
+                </a>
             </div>
         </div>
     </section>
@@ -137,24 +193,24 @@
             <div class="text-center mb-16">
                 <div class="inline-flex items-center px-4 py-2 bg-amber-100 rounded-full text-amber-800 text-sm font-medium mb-4">
                     <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
-                    <span th:text="#{about.badge}">Hakkımızda</span>
+                    <span th:text="${aboutBadge} ?: #{about.badge}">Hakkımızda</span>
                 </div>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6 gradient-text" th:text="#{about.title}">Mirror Acoustics</h2>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 gradient-text" th:text="${aboutTitle} ?: #{about.title}">Mirror Acoustics</h2>
                 <div class="w-24 h-1 bg-gradient-to-r from-amber-500 to-amber-600 mx-auto rounded-full"></div>
             </div>
 
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 <div class="space-y-8">
                     <div class="bg-white/50 backdrop-blur-sm p-8 rounded-3xl border border-amber-100">
-                        <p class="text-lg text-gray-700 mb-6 leading-relaxed" th:text="#{about.description}">
-                            Mirror Acoustics, İstanbul merkezli bir atölyede İsmet Çataloğlu tarafından
-                            kurulmuş ve onun titiz çalışmalarıyla büyüyen özel bir ses sistemleri markasıdır. Her bir ürün,
-                            yüksek mühendislik bilgisi ile el işçiliğinin zarif birleşimini yansıtır.
+                        <p class="text-lg text-gray-700 mb-6 leading-relaxed" th:text="${aboutP1} ?: #{about.description}">
+                            Mirror Acoustics, Ä°stanbul merkezli bir atÃ¶lyede Ä°smet Ã‡ataloÄŸlu tarafÄ±ndan
+                            kurulmuÅŸ ve onun titiz Ã§alÄ±ÅŸmalarÄ±yla bÃ¼yÃ¼yen Ã¶zel bir ses sistemleri markasÄ±dÄ±r. Her bir Ã¼rÃ¼n,
+                            yÃ¼ksek mÃ¼hendislik bilgisi ile el iÅŸÃ§iliÄŸinin zarif birleÅŸimini yansÄ±tÄ±r.
                         </p>
-                        <p class="text-lg text-gray-700 leading-relaxed" th:text="#{about.description2}">
-                            Bizim için hoparlörler sadece birer elektronik cihaz değil, aynı zamanda sanat eseri ve yaşam
-                            alanlarınıza değer katan tasarımlardır. Seçtiğiniz ahşap türü ve özel tasarım talepleriniz
-                            doğrultusunda, tamamen kişiye özel hoparlör kabinleri ve sistemler üretiyoruz.
+                        <p class="text-lg text-gray-700 leading-relaxed" th:text="${aboutP2} ?: #{about.description2}">
+                            Bizim iÃ§in hoparlÃ¶rler sadece birer elektronik cihaz deÄŸil, aynÄ± zamanda sanat eseri ve yaÅŸam
+                            alanlarÄ±nÄ±za deÄŸer katan tasarÄ±mlardÄ±r. SeÃ§tiÄŸiniz ahÅŸap tÃ¼rÃ¼ ve Ã¶zel tasarÄ±m talepleriniz
+                            doÄŸrultusunda, tamamen kiÅŸiye Ã¶zel hoparlÃ¶r kabinleri ve sistemler Ã¼retiyoruz.
                         </p>
                     </div>
 
@@ -166,8 +222,8 @@
                                     <path d="M7 21l5-3 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                                 </svg>
                             </div>
-                            <h4 class="font-bold text-lg text-gray-800 mb-2" th:text="#{about.expertise}">Beş Yıllık Uzmanlık</h4>
-                            <p class="text-gray-600 text-sm" th:text="#{about.expertiseDesc}">Tutkuyla ve özveriyle müziğin en saf hâlini yaşam alanlarınıza taşıyoruz.</p>
+                            <h4 class="font-bold text-lg text-gray-800 mb-2" th:text="#{about.expertise}">BeÅŸ YÄ±llÄ±k UzmanlÄ±k</h4>
+                            <p class="text-gray-600 text-sm" th:text="#{about.expertiseDesc}">Tutkuyla ve Ã¶zveriyle mÃ¼ziÄŸin en saf hÃ¢lini yaÅŸam alanlarÄ±nÄ±za taÅŸÄ±yoruz.</p>
                         </div>
 
                         <div class="glass-card p-6 rounded-2xl text-center hover:scale-105 transition-all duration-300">
@@ -177,32 +233,37 @@
                                 </svg>
                             </div>
                             <h4 class="font-bold text-lg text-gray-800 mb-2" th:text="#{about.quality}">Kalite Garantisi</h4>
-                            <p class="text-gray-600 text-sm" th:text="#{about.qualityDesc}">Her ürün detaylı testlerden geçer ve kalite standartlarımızı karşılar.</p>
+                            <p class="text-gray-600 text-sm" th:text="#{about.qualityDesc}">Her Ã¼rÃ¼n detaylÄ± testlerden geÃ§er ve kalite standartlarÄ±mÄ±zÄ± karÅŸÄ±lar.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-6">
-                    <!-- Ana atölye resmi -->
+                    <!-- Ana atÃ¶lye resmi -->
                     <div class="relative group">
                         <div class="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-600 rounded-3xl blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
-                        <figure class="relative rounded-3xl overflow-hidden shadow-2xl transform group-hover:scale-105 transition-transform duration-500">
+                        <figure class="relative rounded-3xl overflow-hidden shadow-2xl transform group-hover:scale-105 transition-transform duration-500 aspect-[16/9]">
+                            <video class="absolute inset-0 w-full h-full object-cover z-10" autoplay muted loop playsinline controls poster="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80">
+                                <source src="videos/video.mp4" type="video/mp4" />
+                                <source th:src="@{/videos/video.mp4}" src="/videos/video.mp4" type="video/mp4" />
+                                Tarayıcınız video oynatmayı desteklemiyor.
+                            </video>
                             <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-                                alt="Mirror Acoustics Atölyesi" class="w-full h-auto" loading="lazy" />
+                                alt="Mirror Acoustics Atölyesi" class="w-full h-auto opacity-0 pointer-events-none" loading="lazy" />
                             <figcaption class="absolute bottom-4 left-4 text-sm px-3 py-2 rounded-lg glass-card text-white">
-                                🎵 Atölyeden bir kare
+                                ğŸµ Atölyeden bir kare
                             </figcaption>
                         </figure>
                     </div>
                     
-                    <!-- Atölye detay resimleri -->
+                    <!-- AtÃ¶lye detay resimleri -->
                     <div class="image-gallery">
                         <div class="workshop-image">
-                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                            <img src="images/image1.jpg" 
                                  alt="CNC Üretim Süreci" class="w-full h-32 object-cover" loading="lazy" />
                         </div>
                         <div class="workshop-image">
-                            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                            <img src="images/image2.jpg" 
                                  alt="Ahşap İşçiliği" class="w-full h-32 object-cover" loading="lazy" />
                         </div>
                     </div>
@@ -224,7 +285,7 @@
                     <span th:text="#{why.badge}">Neden Biz?</span>
                 </div>
                 <h2 class="text-4xl md:text-5xl font-bold mb-6 gradient-text" th:text="#{why.title}">Neden Mirror Acoustics?</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" th:text="#{why.subtitle}">El yapımı sanat eserleriyle müzik deneyiminizi üst seviyeye taşıyoruz.</p>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" th:text="#{why.subtitle}">El yapÄ±mÄ± sanat eserleriyle mÃ¼zik deneyiminizi Ã¼st seviyeye taÅŸÄ±yoruz.</p>
                 <div class="w-24 h-1 bg-gradient-to-r from-amber-500 to-amber-600 mx-auto mt-6"></div>
             </div>
 
@@ -237,8 +298,8 @@
                                 <path d="M15 3l6 6L9 21H3v-6L15 3Z" stroke="currentColor" stroke-width="2" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.customDesign}">Özel Tasarım</h3>
-                        <p class="text-gray-600 leading-relaxed" th:text="#{why.customDesignDesc}">Tüm ürünlerimiz müşteri isteğine göre kişiselleştirilir ve özel ihtiyaçlarınıza göre tasarlanır.</p>
+                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.customDesign}">Ã–zel TasarÄ±m</h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="#{why.customDesignDesc}">TÃ¼m Ã¼rÃ¼nlerimiz mÃ¼ÅŸteri isteÄŸine gÃ¶re kiÅŸiselleÅŸtirilir ve Ã¶zel ihtiyaÃ§larÄ±nÄ±za gÃ¶re tasarlanÄ±r.</p>
                     </div>
                 </article>
 
@@ -250,8 +311,8 @@
                                 <path d="M12 8V4m0 16v-4M4 12H8m8 0h4M7 7l2.5 2.5M14.5 14.5L17 17M7 17l2.5-2.5M14.5 9.5 17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.handcraftedCNC}">El Yapımı & CNC</h3>
-                        <p class="text-gray-600 leading-relaxed" th:text="#{why.handcraftedCNCDesc}">Masif ahşap ve CNC işleme ile en ince ayrıntısına kadar hassas üretim.</p>
+                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.handcraftedCNC}">El YapÄ±mÄ± & CNC</h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="#{why.handcraftedCNCDesc}">Masif ahÅŸap ve CNC iÅŸleme ile en ince ayrÄ±ntÄ±sÄ±na kadar hassas Ã¼retim.</p>
                     </div>
                 </article>
 
@@ -264,8 +325,8 @@
                                 <path d="M7 10v4c0 1.7 3 3 5 3s5-1.3 5-3v-4" stroke="currentColor" stroke-width="2" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.engineering}">Mühendislik & Deneyim</h3>
-                        <p class="text-gray-600 leading-relaxed" th:text="#{why.engineeringDesc}">Kurucumuz İsmet Çataloğlu'nun sektörel tecrübesi ve mühendislik bilgisi.</p>
+                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.engineering}">MÃ¼hendislik & Deneyim</h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="#{why.engineeringDesc}">Kurucumuz Ä°smet Ã‡ataloÄŸlu'nun sektÃ¶rel tecrÃ¼besi ve mÃ¼hendislik bilgisi.</p>
                     </div>
                 </article>
 
@@ -279,7 +340,7 @@
                             </svg>
                         </div>
                         <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.hiendAudio}">Hi-End Ses Deneyimi</h3>
-                        <p class="text-gray-600 leading-relaxed" th:text="#{why.hiendAudioDesc}">Ev için hi-end performans, dünyaca ünlü bileşenlerle.</p>
+                        <p class="text-gray-600 leading-relaxed" th:text="#{why.hiendAudioDesc}">Ev iÃ§in hi-end performans, dÃ¼nyaca Ã¼nlÃ¼ bileÅŸenlerle.</p>
                     </div>
                 </article>
 
@@ -291,8 +352,8 @@
                                 <path d="M3 10h18l-1-5H4l-1 5Zm2 0v9h14v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.directSales}">Doğrudan Satış</h3>
-                        <p class="text-gray-600 leading-relaxed" th:text="#{why.directSalesDesc}">Aracı yok: üreticiden size — en adil fiyatla.</p>
+                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.directSales}">DoÄŸrudan SatÄ±ÅŸ</h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="#{why.directSalesDesc}">AracÄ± yok: Ã¼reticiden size â€” en adil fiyatla.</p>
                     </div>
                 </article>
 
@@ -305,49 +366,61 @@
                                 <path d="M7 21l5-3 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.expertise}">5+ Yıllık Uzmanlık</h3>
-                        <p class="text-gray-600 leading-relaxed" th:text="#{why.expertiseDesc}">Süreçten teslimata kadar profesyonel takip ve deneyim.</p>
+                        <h3 class="text-xl font-bold mb-4 text-gray-800" th:text="#{why.expertise}">15+ YÄ±llÄ±k UzmanlÄ±k</h3>
+                        <p class="text-gray-600 leading-relaxed" th:text="#{why.expertiseDesc}">SÃ¼reÃ§ten teslimata kadar profesyonel takip ve deneyim.</p>
                     </div>
                 </article>
             </div>
 
-            <!-- Üretim Süreci Görsel Galerisi -->
+            <!-- Ãœretim SÃ¼reci GÃ¶rsel Galerisi -->
             <div class="mt-20">
-                <h3 class="text-2xl font-bold text-center text-gray-800 mb-12" th:text="#{process.title}">Üretim Sürecimiz</h3>
+                <h3 class="text-2xl font-bold text-center text-gray-800 mb-12" th:text="#{process.title}">Ãœretim SÃ¼recimiz</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="process-step">
-                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                    <div class="process-step border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
+                        <img src="images/cnc-kesim.jpg" 
                              alt="CNC Kesim" class="w-full h-48 object-cover" loading="lazy" />
                         <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-2" th:text="#{process.step1}">1. CNC Kesim</h4>
-                            <p class="text-sm text-gray-600" th:text="#{process.step1Desc}">Hassas CNC makineleriyle ahşap kesimi</p>
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
+                                <span class="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-amber-500 dark:bg-amber-600 text-white text-xs">1</span>
+                                <span th:text="#{process.step1.title}">CNC Kesim</span>
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" th:text="#{process.step1.desc}">Hassas CNC makineleriyle ahÅŸap kesimi</p>
                         </div>
                     </div>
                     
-                    <div class="process-step">
-                        <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
-                             alt="El İşçiliği" class="w-full h-48 object-cover" loading="lazy" />
+                    <div class="process-step border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
+                        <img src="images/el-isciligi.jpg" 
+                             alt="El Ä°ÅŸÃ§iliÄŸi" class="w-full h-48 object-cover" loading="lazy" />
                         <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-2" th:text="#{process.step2}">2. El İşçiliği</h4>
-                            <p class="text-sm text-gray-600" th:text="#{process.step2Desc}">Uzman ellerle detay işçiliği</p>
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
+                                <span class="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-amber-500 dark:bg-amber-600 text-white text-xs">2</span>
+                                <span th:text="#{process.step2.title}">El Ä°ÅŸÃ§iliÄŸi</span>
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" th:text="#{process.step2.desc}">Uzman ellerle detay iÅŸÃ§iliÄŸi</p>
                         </div>
                     </div>
                     
-                    <div class="process-step">
-                        <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                    <div class="process-step border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
+                        <img src="images/montaj.jpg" 
                              alt="Montaj" class="w-full h-48 object-cover" loading="lazy" />
                         <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-2" th:text="#{process.step3}">3. Montaj</h4>
-                            <p class="text-sm text-gray-600" th:text="#{process.step3Desc}">Hassas montaj ve test süreci</p>
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
+                                <span class="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-amber-500 dark:bg-amber-600 text-white text-xs">3</span>
+                                <span th:text="#{process.step3.title}">Montaj</span>
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" th:text="#{process.step3.desc}">Hassas montaj ve test sÃ¼reci</p>
                         </div>
                     </div>
                     
-                    <div class="process-step">
-                        <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                    <div class="process-step border border-neutral-200 dark:bg-neutral-900 dark:border-neutral-800">
+                        <img src="images/kalite-kontorl.jpg" 
                              alt="Kalite Kontrol" class="w-full h-48 object-cover" loading="lazy" />
                         <div class="p-4">
-                            <h4 class="font-semibold text-gray-800 mb-2" th:text="#{process.step4}">4. Kalite Kontrol</h4>
-                            <p class="text-sm text-gray-600" th:text="#{process.step4Desc}">Detaylı test ve kalite kontrolü</p>
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2 flex items-center">
+                                <span class="inline-flex items-center justify-center w-6 h-6 mr-2 rounded-full bg-amber-500 dark:bg-amber-600 text-white text-xs">4</span>
+                                <span th:text="#{process.step4.title}">Kalite Kontrol</span>
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300" th:text="#{process.step4.desc}">DetaylÄ± test ve kalite kontrolÃ¼</p>
                         </div>
                     </div>
                 </div>
@@ -363,8 +436,8 @@
                     <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
                     <span th:text="#{featured.badge}">Ürünlerimiz</span>
                 </div>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6 gradient-text" th:text="#{featured.title}">Öne Çıkan Ürünler</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" th:text="#{featured.subtitle}">El yapımı, kişiye özel hoparlör sistemlerimizden seçkiler</p>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 gradient-text" th:text="#{featured.title}">Ã–ne Ã‡Ä±kan ÃœrÃ¼nler</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed" th:text="#{featured.subtitle}">El yapÄ±mÄ±, kiÅŸiye Ã¶zel hoparlÃ¶r sistemlerimizden seÃ§kiler</p>
                 <div class="w-24 h-1 bg-gradient-to-r from-amber-500 to-amber-600 mx-auto mt-6"></div>
             </div>
 
@@ -382,21 +455,21 @@
                         <p class="text-gray-600 text-sm mb-4 line-clamp-2"
                             th:text="${lang=='en' ? p.descriptionEn : p.descriptionTr}"></p>
                         <div class="flex items-center justify-between">
-                            <span class="text-2xl font-bold text-amber-600" th:text="'₺' + ${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}"></span>
-                            <span class="text-sm text-amber-700 font-medium" th:text="#{featured.viewDetails}">Detay Görüntüle →</span>
+                            <span class="text-2xl font-bold text-amber-600" th:text="₺ + ${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')}"></span>
+                            <span class="text-sm text-amber-700 font-medium" th:text="#{featured.viewDetails}">Detayları görüntüle</span>
                         </div>
                     </div>
                 </a>
             </div>
 
             <div class="text-center mt-12" th:if="${featured == null or featured.empty}">
-                <p class="text-gray-500 text-lg" th:text="#{featured.noProducts}">Henüz ürün bulunmamaktadır.</p>
+                <p class="text-gray-500 text-lg" th:text="#{featured.noProducts}">HenÃ¼z Ã¼rÃ¼n bulunmamaktadÄ±r.</p>
             </div>
 
             <div class="text-center mt-12">
                 <a th:href="@{/urun}" 
                    class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold rounded-2xl hover:from-amber-600 hover:to-amber-700 transition-all duration-300 transform hover:scale-105">
-                    <span th:text="#{featured.viewAll}">Tüm Ürünleri Görüntüle</span>
+                    <span th:text="#{featured.viewAll}">TÃ¼m ÃœrÃ¼nleri GÃ¶rÃ¼ntÃ¼le</span>
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                     </svg>
@@ -414,20 +487,20 @@
         
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <h2 class="text-4xl md:text-5xl font-bold text-white mb-6" th:text="#{cta.title}">
-                Kişiye Özel Hoparlör Sisteminizi Tasarlayalım
+                KiÅŸiye Ã–zel HoparlÃ¶r Sisteminizi TasarlayalÄ±m
             </h2>
             <p class="text-xl text-amber-100 mb-8 leading-relaxed" th:text="#{cta.subtitle}">
-                Müzik zevkinize ve yaşam alanınıza özel, el yapımı hoparlör sistemleri için bugün bizimle iletişime geçin.
+                MÃ¼zik zevkinize ve yaÅŸam alanÄ±nÄ±za Ã¶zel, el yapÄ±mÄ± hoparlÃ¶r sistemleri iÃ§in bugÃ¼n bizimle iletiÅŸime geÃ§in.
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a th:href="@{/iletisim}" 
                    class="px-8 py-4 bg-white text-amber-800 font-bold rounded-2xl hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105">
-                    <span th:text="#{cta.contact}">İletişime Geçin</span>
+                    <span th:text="#{cta.contact}">Ä°letiÅŸime GeÃ§in</span>
                 </a>
-                <a th:href="@{'https://wa.me/' + ${whatsappPhone} + '?text=' + ${#uris.escapePath('Merhaba, özel hoparlör sistemi hakkında bilgi almak istiyorum.')}}" 
+                <a th:href="@{'https://wa.me/' + ${whatsappPhone} + '?text=' + ${#uris.escapePath('Merhaba, Ã¶zel hoparlÃ¶r sistemi hakkÄ±nda bilgi almak istiyorum.')}}" 
                    target="_blank"
                    class="px-8 py-4 bg-green-600 text-white font-bold rounded-2xl hover:bg-green-700 transition-colors duration-300 transform hover:scale-105">
-                    <span th:text="#{cta.whatsapp}">WhatsApp ile Yazın</span>
+                    <span th:text="#{cta.whatsapp}">WhatsApp ile YazÄ±n</span>
                 </a>
             </div>
         </div>
@@ -435,3 +508,12 @@
 </th:block>
 
 </html>
+
+
+
+
+
+
+
+
+
